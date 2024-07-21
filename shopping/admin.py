@@ -1,3 +1,8 @@
 from django.contrib import admin
+# from django.contrib.auth.admin import UserAdmin
+# from .models import BamUser
 
-# Register your models here.
+# class BamUserAdmin(UserAdmin):
+#     model = BamUser
+
+# admin.site.register(BamUser, BamUserAdmin)
