@@ -5,17 +5,20 @@ from django.forms import ValidationError
 from datetime import datetime, date, timedelta
 
 # Create your models here.
+class TimeStampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
 class Country(models.Model):
     name = models.CharField(max_length=50)
     COUNTRY_CHOICES = [
         ('MY', 'Malaysia'),
         ('JP', 'Japan'),
     ]
-    country_code = models.CharField(
-        max_length=2,
-        choices=COUNTRY_CHOICES,
-        default='JP',
-    )
+    country_code = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='JP')
     currency_code = models.CharField(max_length=3)
     calling_code = models.PositiveIntegerField()
 
@@ -50,17 +53,85 @@ class CartProductListing(models.Model):
     class Meta:
         unique_together = ('listing', 'cart')
 
+
+class ProductItemManager(models.Manager):
+     def create(self, *args, **kwargs):
+        expiry_date = kwargs.get('expiry_date')
+
+        # Validate the expiry_date before creation
+        if expiry_date <= date.today() + timedelta(days=30):
+            raise ValidationError(f"expiry_date must > 30 days from today")
+        
+        return super().create(*args, **kwargs)
+
 class ProductItem(models.Model):
     listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE)
     serial_number = models.CharField(max_length=100)
     expiry_date = models.DateField()
 
-# class ProductItemManager(models.ProductItem):
-#      def create(self, *args, **kwargs):
-#         expiry_date = kwargs.get('expiry_date')
+    # Set the custom manager
+    objects = ProductItemManager()
 
-#         # Validate the expiry_date before creation
-#         if expiry_date <= date.today() + timedelta(days=30):
-#             raise ValidationError(f"expiry_date must >= 30 days from today")
-        
-#         return super().create(*args, **kwargs)
+class Address(models.Model):
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE)
+    post_code = models.CharField()
+    prefecture = models.CharField()
+    city = models.CharField()
+    street = models.CharField()
+    building_name = models.CharField()
+    recipient_name = models.CharField()
+    recipient_phone = models.CharField()
+
+class Order(TimeStampedModel):
+    STATUS_CHOICES = [
+        (1, 'Placed'),
+        (2, 'Shipped'),
+        (3, 'Out for delivery'),
+        (4, 'Delivered'),
+        (5, 'Cancelled'),
+    ]
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE)
+    address = models.OneToOneField('Address', on_delete=models.CASCADE)
+    user_coupon = models.OneToOneField('BamUserCoupon',on_delete=models.CASCADE, null=True, blank=True)
+    status = models.PositiveIntegerField(choices=STATUS_CHOICES)
+
+class OrderProductItem(models.Model):
+    #JOINS table
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product_item = models.ForeignKey(ProductItem, on_delete=models.CASCADE) #not on cascade
+    
+    class Meta:
+        unique_together = ('order', 'product_item')
+
+class Coupon(TimeStampedModel):
+    TYPES = [
+        (1, 'Percentage'),
+        (2, 'Price Off')
+    ]
+    code = models.CharField()
+    type = models.CharField(choices = TYPES)
+    amount = models.PositiveIntegerField()
+    num_uses = models.PositiveIntegerField(default = 1)
+    useby_datetime = models.DateTimeField()
+    valid = models.BooleanField(default=True)
+
+class BamUserCoupon(TimeStampedModel):
+    #JOINS table
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE)
+    coupon = models.OneToOneField(Coupon,on_delete=models.CASCADE)
+    times_used = models.PositiveIntegerField(default = 0)
+
+    class Meta:
+        unique_together = ('user', 'coupon')
+
+class Complaint(TimeStampedModel):
+    TYPES = [
+        (1, 'Order Missing'),
+        (2, 'Incomplete Order'),
+        (3, 'Damaged/Defective'),
+    ]
+
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    type = models.PositiveIntegerField(choices = TYPES)
+    resolved = models.BooleanField(default=False)
+    # status = models.PositiveIntegerField(choices = STATUSES)
