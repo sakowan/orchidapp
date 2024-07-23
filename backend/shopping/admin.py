@@ -1,8 +1,5 @@
 from django.contrib import admin
 # from django.contrib.auth.admin import UserAdmin
-# from .models import BamUser
+from .models import Country 
 
-# class BamUserAdmin(UserAdmin):
-#     model = BamUser
-
-# admin.site.register(BamUser, BamUserAdmin)
+admin.site.register(Country)
