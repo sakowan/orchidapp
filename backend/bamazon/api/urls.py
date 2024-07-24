@@ -3,6 +3,8 @@ from shopping.api.urls import country_router
 from django.urls import path, include 
 
 router = DefaultRouter()
+
+# 'countries/'
 router.registry.extend(country_router.registry)
 
 urlpatterns = [
