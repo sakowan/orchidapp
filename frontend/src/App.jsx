@@ -1,14 +1,6 @@
-import { useState, useEffect } from 'react'
-
+// Components can have dedicated stylesheets. Eg. for App.jsx component, it would be App.css  
 function App() {
 
-    useEffect(()=>{
-      console.log(import.meta.env.VITE_API_URL)
-    },[])
-  return (
-    <>
-    </>
-  )
 }
 
 export default App
