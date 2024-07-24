@@ -4,7 +4,8 @@ from django.urls import path, include
 
 router = DefaultRouter()
 
-# 'countries/'
+# FROM backend/shopping/api/urls.py
+# URL: countries/
 router.registry.extend(country_router.registry)
 
 urlpatterns = [
