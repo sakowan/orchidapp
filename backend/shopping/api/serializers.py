@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from ..models import Country, ProductListing, Category
+from ..models import Country, ProductListing, Category, BamUser
 
 #  Converts django models in JSON format for React use
 class CountrySerializer(ModelSerializer):
@@ -15,4 +15,9 @@ class ProductListingSerializer(ModelSerializer):
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
+
+class BamUserSerializer(ModelSerializer):
+    class Meta:
+        model = BamUser
         fields = '__all__'

@@ -57,17 +57,18 @@ class Category(models.Model):
 
 class ProductListing(models.Model):
     seller = models.ForeignKey(BamUser, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=0)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
     price = models.DecimalField(max_digits=8, decimal_places=2, default = 0.00)
     stock = models.PositiveIntegerField()
+    img_url = models.CharField(max_length=100)
 
 class CartProductListing(models.Model):
     #JOINS table
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField()
 
     class Meta:
         unique_together = ('listing', 'cart')

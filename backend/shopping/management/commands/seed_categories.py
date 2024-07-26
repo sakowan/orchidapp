@@ -6,6 +6,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         categories = [
+            {'type': 0, 'name': 'Unspecified'},
             {'type': 1, 'name': 'Skincare'},
             {'type': 2, 'name': 'Makeup'},
             {'type': 3, 'name': 'Beauty Tools'},
