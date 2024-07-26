@@ -38,17 +38,37 @@ class Cart(models.Model):
     user = models.OneToOneField(BamUser, on_delete=models.CASCADE)
     item_count = models.PositiveIntegerField(default=0)
 
+class Category(models.Model):
+    TYPES = [
+        (0, 'Unspecified'),
+        (1, 'Skincare'),
+        (2, 'Makeup'),
+        (3, 'Beauty Tools'),
+        (4, 'Hair products'),
+    ]
+
+    type = models.PositiveIntegerField(choices = TYPES)
+
+    def __str__(self):
+        for value, name in self.TYPES:
+            if self.type == value:
+                return name
+        return 'Blank'  # If no matching type is found
+
 class ProductListing(models.Model):
     seller = models.ForeignKey(BamUser, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
+    price = models.DecimalField(max_digits=8, decimal_places=2, default = 0.00)
     stock = models.PositiveIntegerField()
+    img_url = models.CharField(max_length=100)
 
 class CartProductListing(models.Model):
     #JOINS table
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField()
 
     class Meta:
         unique_together = ('listing', 'cart')
