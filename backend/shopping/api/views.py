@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
-from ..models import Country, ProductListing, Category
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer
+from ..models import Country, ProductListing, Category, BamUser
+from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, BamUserSerializer
 
 class CountryViewSet(ModelViewSet):
     queryset = Country.objects.all()
@@ -16,3 +16,7 @@ class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class BamUserViewSet(ModelViewSet):
+    queryset = BamUser.objects.all()
+    serializer_class = BamUserSerializer
