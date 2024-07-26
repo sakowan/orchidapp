@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const LoginSignup = () => {
-    const [products, setProducts] = useState([]);
+    const [bamuser, setBamsuser] = useState([]);
     
       return (
         <div>
