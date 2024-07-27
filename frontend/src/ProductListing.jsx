@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ProductCard from './ProductCard'
 import axios from 'axios';
 
 const ProductListing = () => {
@@ -23,14 +24,11 @@ const ProductListing = () => {
       if (error) return <div>Error: {error.message}</div>;
     
       return (
-        <div>
-          <h1>Products List</h1>
-          <ul>
+        <div className='flex items-center justify-center'>
+          <ul className='flex flex-wrap'>
             {products.map(product => (
               <li key={product.id}>
-                <h2>{product.name}</h2>
-                <p>{product.description}</p>
-                <p>Price: ${product.price}</p>
+                <ProductCard product={product}/>
               </li>
             ))}
           </ul>

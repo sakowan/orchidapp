@@ -17,6 +17,7 @@ class Command(BaseCommand):
                     price = float(row['price'])
                     stock = int(row['stock'])
                     category_id = int(row['category'])
+                    img_url = row['img_url']
 
                     try:
                         category = Category.objects.get(id=category_id)
@@ -30,7 +31,8 @@ class Command(BaseCommand):
                         price=price,
                         stock=stock,
                         category=category,
-                        seller_id=1
+                        seller_id=1,
+                        img_url=img_url,
                     )
                     self.stdout.write(self.style.SUCCESS(f'ProductListing "{name}" created successfully'))
 
