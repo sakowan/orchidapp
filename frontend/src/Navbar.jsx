@@ -28,7 +28,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`ibm-plex-mono-extralight text-2xl icon-color fixed top-0 left-0 right-0 bg-my-muted p-4 transition-transform duration-300 ease-in-out ${
+      className={`ibm-plex-mono-extralight h-18 text-2xl icon-color fixed top-0 left-0 right-0 bg-my-muted p-4 transition-transform duration-300 ease-in-out ${
         scrollingDown ? 'transform -translate-y-full' : 'transform translate-y-0'
       }`}
     >
