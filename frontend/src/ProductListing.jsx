@@ -24,15 +24,13 @@ const ProductListing = () => {
       if (error) return <div>Error: {error.message}</div>;
     
       return (
-        <div className='flex items-center justify-center'>
-          <ul className='flex flex-wrap'>
-            {products.map(product => (
-              <li key={product.id}>
-                <ProductCard product={product}/>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className='flex flex-wrap items-center justify-center -mx-4'>
+          {products.map(product => (
+            <li className="w-1/3" key={product.id}>
+              <ProductCard product={product}/>
+            </li>
+          ))}
+        </ul>
       );
 };
 
