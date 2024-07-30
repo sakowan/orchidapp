@@ -27,3 +27,8 @@ class LoginAPIView(APIView):
     def get(self, request):
         # Handle GET request
         return Response({'message': 'GET request for Login endpoint'}, status=status.HTTP_200_OK)
+
+class CheckoutAPIView(APIView):
+    def get(self, request):
+        # Handle GET request
+        return Response({'message': 'GET request for Checkout endpoint'}, status=status.HTTP_200_OK)

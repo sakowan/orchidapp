@@ -2,7 +2,7 @@ import React from 'react'
 
 export const ProductCard = ({ product }) => {
   return (
-    <div className="h-[44rem] my-2 mx-auto max-w-md cursor-pointer bg-white shadow duration-150 hover:shadow-lg">
+    <div className="h-[44rem] mb-4 mx-auto max-w-md cursor-pointer bg-white shadow duration-150 hover:shadow-lg">
       <a href={`/product_listings/${product.id}`}>
         <img className="h-5/6 w-full object-cover object-center" src={`/src/assets/images/${product.img_url}`} alt="product" />
         <div className='p-1'>
