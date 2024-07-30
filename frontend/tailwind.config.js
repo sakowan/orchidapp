@@ -7,8 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        'my-muted': '#f5f5f5',  // Example hex color
-        // Add more custom colors here
+        'my-muted': '#f3f4f6',  // Example hex color
+        'brand-color-light': '#d0d7fe',
+        'brand-color-dark': '#9EA8E8',
       },
     },
   },

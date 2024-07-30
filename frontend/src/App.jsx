@@ -4,6 +4,7 @@ import ProductListing from "./ProductListing"
 import LoginSignupForm from "./LoginSignupForm"
 import Navbar from "./Navbar"
 import MainBody from "./MainBody"
+import Checkout from "./Checkout"
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
             <MainBody>
                 <Routes>
                     <Route path='/login' element={<LoginSignupForm/>}></Route>
+                    <Route path='/checkout' element={<Checkout/>}></Route>
                     <Route path='/product_listings' element={<ProductListing/>}></Route>
                 </Routes>
             </MainBody>

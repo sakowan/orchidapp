@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const ProductListing = () => {
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -12,15 +11,12 @@ const ProductListing = () => {
         axios.get('http://127.0.0.1:8000/api/product_listings')
           .then(response => {
             setProducts(response.data); // Set response data to products
-            setLoading(false);
           })
           .catch(error => {
             setError(error);
-            setLoading(false);
           });
       }, []); // Empty dependency array means this effect runs only once after the initial render
     
-      if (loading) return <div>Loading...</div>;
       if (error) return <div>Error: {error.message}</div>;
     
       return (
