@@ -1,12 +1,13 @@
 import React, {useState} from 'react'
 
-const ShippingForm = () => {
+const ShippingForm = (details) => {
   const [isFreeChecked, setisFreeChecked] = useState(false);
   const [isExpChecked, setisExpChecked] = useState(false);
 
 
   const handleChange = (e) => {
     if (e.target.id == 'free_shipping') {
+      console.log('dd')
       setisFreeChecked(true)
       setisExpChecked(false)
 
@@ -27,7 +28,7 @@ const ShippingForm = () => {
           <p className='text-sm text-gray p-2.5'>Details</p>
         </div>
       </div>
-        <label htmlFor="free_shipping" className={`flex w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer ${isFreeChecked ? 'text-brand-color-dark border-brand-color-dark': 'border-gray-200'}`}>
+        <label htmlFor="free_shipping" className={`flex w-full p-5 bg-white rounded-lg cursor-pointer ${isFreeChecked ? 'text-brand-color-dark border border-brand-color-dark': 'border border-gray-200 text-gray-500'}`}>
         
           <div className='w-5/6'>
             <div>Free Shipping</div>
@@ -38,7 +39,7 @@ const ShippingForm = () => {
           </div>
         </label>
 
-        <label htmlFor="express_shipping" className={`flex w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer ${isExpChecked ? 'text-brand-color-dark border-brand-color-dark': 'border-gray-200'}`}>
+        <label htmlFor="express_shipping" className={`flex w-full p-5 bg-white rounded-lg cursor-pointer ${isExpChecked ? 'text-brand-color-dark border border-brand-color-dark': 'border border-gray-200 text-gray-500'}`}>
         
           <div className='w-5/6'>
             <div>Express Shipping</div>

@@ -14,6 +14,10 @@ const Checkout = (children) => {
     payment : 'Pay now'
   }
 
+  const addressDetails = {
+
+  }
+
   const handleNext = () => {
     if (isAddressPage){
       setisShippingPage(true)
@@ -26,8 +30,6 @@ const Checkout = (children) => {
     if (isPaymentPage){
       setisShippingPage(!isShippingPage)
     }
-    // console.log(isAddressPage, isShippingPage, isPaymentPage)
-
   }
   return (
     <div className="flex h-screen">
@@ -36,7 +38,7 @@ const Checkout = (children) => {
         <div className="p-4 pt-2 space-y-4">
           {/* Add content or map through data here */}
           <CheckoutNavigation/>
-          {isAddressPage ? <AddressForm/> : (isShippingPage ? <ShippingForm/> : <PaymentForm/>)}
+          {isAddressPage ? <AddressForm/> : (isShippingPage ? <ShippingForm details={addressDetails}/> : <PaymentForm/>)}
           
           <div className="w-full relative">
             <button onClick={handleNext} className="checkout-button">
