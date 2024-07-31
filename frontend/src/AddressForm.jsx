@@ -4,13 +4,25 @@ import CheckoutNavigation from './CheckoutNavigation';
 
 const AddressForm = (whichPage) => {
     // Optional cleanup function:
+  const [formData, setFormData ] = useState({
+    email : ''
+  });
+
+  const collectFormData = (e) => {
+    const newValue = e.target.value;
+    setFormData((prevFormData) => {
+      const newFormData = { ...prevFormData, email: newValue };
+      console.log(newFormData);
+      return newFormData;
+    });
+  };
   return (
     <>
       <div className="p-4 border border-gray-100 h-50">
         <p className="text-2xl font-bold text-gray">Contact</p>
         <div className="relative z-0 w-full">
           <label className="address-form-labels">Email </label>
-          <input type="email" name="email" className="address-form-inputs" required="" placeholder="contact@gmail.com" />
+          <input type="email" name="email" className="address-form-inputs" value={formData.email} onChange={collectFormData} placeholder="contact@gmail.com" required/>
         </div>
       </div>
       <div className="p-4 border border-gray-100 h-90">
