@@ -19,6 +19,12 @@
   }
 }
 
+@layer components {
+  .flex-centred-spaced {
+    @apply flex justify-center w-full space-x-4
+  }
+}
+
 body {
   font-family: 'IBM Plex Mono', monospace;
 }
