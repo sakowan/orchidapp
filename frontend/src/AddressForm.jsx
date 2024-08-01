@@ -4,33 +4,47 @@ import CheckoutNavigation from './CheckoutNavigation';
 const AddressForm = () => {
   // State initialization
   const [formData, setFormData] = useState({email: '',first_name: '',last_name: '',country: '',post_code: '',prefecture: '',city: '',street: '',building_name: ''});
+  const [formValid, setFormValid] = useState(false);
 
-  const countryRef = useRef(null);
-  const prefectureRef = useRef(null);
-  const cityRef = useRef(null);
+  const refs = {
+    country: useRef(null),
+    prefecture: useRef(null),
+    city: useRef(null)
+  };
 
   useEffect(() => {
-    const initialCountry = countryRef.current?.options[0]?.value || '';
-    const initialPrefecture = prefectureRef.current?.options[0]?.value || '';
-    const initialCity = cityRef.current?.options[0]?.value || '';
+    const initialValues = Object.keys(refs).reduce((acc, key) => {
+      acc[key] = refs[key].current?.options[0]?.value || '';
+      return acc;
+    }, {});
 
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
-      country: initialCountry,
-      prefecture: initialPrefecture,
-      city: initialCity,
+      ...initialValues
     }));
   }, []);
 
   const collectFormData = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value
-    }));
+    
+    const validators = {
+      post_code: /^\d{0,7}$/,
+      first_name: /^[a-zA-Z]*$/,
+      last_name: /^[a-zA-Z]*$/
+    };
+  
+    // Check if there is a validator for the current field
+    const entryValid = validators[name] ? validators[name].test(value) : true;
+  
+    if (entryValid) {
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: value
+      }));
+      
+    }
   };
 
-  console.log(formData)
   return (
     <>
       <div className="p-4 border border-gray-100">
@@ -74,7 +88,7 @@ const AddressForm = () => {
         <div className="relative w-full">
           <label className="address-form-labels">Country</label>
           <select
-            ref={countryRef}
+            ref={refs.country}
             name="country"
             className="address-form-inputs"
             value={formData.country}
@@ -88,16 +102,16 @@ const AddressForm = () => {
             <label className="address-form-labels">Post code</label>
             <input
               name="post_code"
-              className="address-form-inputs"
+              className="address-form-inputs -webkit-appearance: none"
               value={formData.post_code}
-              placeholder="XXX-XXXX"
+              placeholder="1234567"
               onChange={collectFormData}
             />
           </div>
           <div className="flex-1">
             <label className="address-form-labels">Prefecture</label>
             <select
-              ref={prefectureRef}
+              ref={refs.prefecture}
               name="prefecture"
               className="address-form-inputs"
               value={formData.prefecture}
@@ -109,7 +123,7 @@ const AddressForm = () => {
           <div className="flex-1">
             <label className="address-form-labels">City</label>
             <select
-              ref={cityRef}
+              ref={refs.city}
               name="city"
               className="address-form-inputs"
               value={formData.city}
