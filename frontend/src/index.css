@@ -3,6 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .address-form-labels {
   @apply bg-white text-[11px] text-gray-900 relative px-1 top-2.5 left-3 w-auto;
 }; 
