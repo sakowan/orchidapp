@@ -7,7 +7,6 @@ const ShippingForm = (details) => {
 
   const handleChange = (e) => {
     if (e.target.id == 'free_shipping') {
-      console.log('dd')
       setisFreeChecked(true)
       setisExpChecked(false)
 
