@@ -69,11 +69,11 @@ const AddressForm = () => {
       <div className="p-4 border border-gray-100">
         <p className="text-2xl font-bold text-gray">Contact</p>
         <div className="relative z-0 w-full">
-          <label className={`${dataValid.email ? 'address-form-labels text-green-600' : 'address-form-labels'}`}>Email</label>
+          <label className={`address-form-labels ${dataValid.email ? 'text-green-600' : ''}`}>Email</label>
           <input
             type="email"
             name="email"
-            className={`${dataValid.email ? 'address-form-inputs address-form-inputs-valid' : 'address-form-inputs'}`}
+            className={`address-form-inputs ${dataValid.email ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
             value={formData.email}
             placeholder="contact@gmail.com"
             onChange={collectFormData}
@@ -84,10 +84,10 @@ const AddressForm = () => {
         <p className="text-2xl font-bold text-gray">Shipping Address</p>
         <div className="flex-centred-spaced">
           <div className="flex-1">
-            <label className="address-form-labels">First Name</label>
+            <label className={`address-form-labels ${dataValid.first_name ? 'text-green-600' : ''}`}>First Name</label>
             <input
               name="first_name"
-              className="address-form-inputs"
+              className={`address-form-inputs ${dataValid.first_name ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
               placeholder="Hanako"
               value={formData.first_name}
               onChange={collectFormData}
