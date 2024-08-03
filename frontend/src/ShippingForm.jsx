@@ -4,7 +4,6 @@ const ShippingForm = (details) => {
   const [isFreeChecked, setisFreeChecked] = useState(false);
   const [isExpChecked, setisExpChecked] = useState(false);
 
-
   const handleChange = (e) => {
     if (e.target.id == 'free_shipping') {
       setisFreeChecked(true)
