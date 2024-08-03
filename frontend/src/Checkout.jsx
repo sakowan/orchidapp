@@ -14,9 +14,10 @@ const Checkout = (children) => {
     payment : 'Pay now'
   }
 
-  const addressDetails = {
-
-  }
+  const [addressDetails, setAddressDetails] = useState('');
+  const handleAddressDetails = (details) => {
+    setAddressDetails(details);
+  };
 
   const handleNext = () => {
     if (isAddressPage){
@@ -38,13 +39,13 @@ const Checkout = (children) => {
         <div className="p-4 pt-2 space-y-4">
           {/* Add content or map through data here */}
           <CheckoutNavigation/>
-          {isAddressPage ? <AddressForm/> : (isShippingPage ? <ShippingForm details={addressDetails}/> : <PaymentForm/>)}
+          {isAddressPage ? <AddressForm onSendAddressDetails={handleAddressDetails}/> : (isShippingPage ? <ShippingForm details={addressDetails}/> : <PaymentForm/>)}
           
-          <div className="w-full relative">
-            <button onClick={handleNext} className="checkout-button">
+          {/* <div className="w-full relative">
+            <button onClick={handleNext} className="checkout-button bg-gray-300 hover:none">
               {isAddressPage ? btnMsg['address']: (isShippingPage ? btnMsg['shipping'] : btnMsg['payment'])}
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       

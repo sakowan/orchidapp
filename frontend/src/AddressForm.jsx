@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const AddressForm = () => {
+const AddressForm = ({onSendAddressDetails}) => {
   const [formData, setFormData] = useState({email: '',first_name: '',last_name: '',country: '',post_code: '',prefecture: '',city: '',street: '',building: ''});
   const [dataValid, setDataValid] = useState({email: false, first_name: false, last_name: false, country: false, post_code: false, prefecture: false, city: false, street: false, building: false});
   const defaultData = {country: useRef(null),prefecture: useRef(null),city: useRef(null)};
@@ -58,6 +58,12 @@ const AddressForm = () => {
     }
   };
 
+  const allDataValid = Object.values(dataValid).every(Boolean);
+
+  const sendFormData = () => {
+    console.log('sadfdsfa')
+  }
+
   useEffect(() => {
     // console.log('email:', dataValid.email, 'post_code', dataValid.post_code); // Live updated dataValid state
     // console.log('name:', dataValid.first_name);
@@ -70,7 +76,7 @@ const AddressForm = () => {
       <div className="p-4 border border-gray-100">
         <p className="text-2xl font-bold text-gray">Contact</p>
         <div className="relative z-0 w-full">
-          <label className={`address-form-labels ${dataValid.email ? 'text-green-600' : ''}`}>Email</label>
+          <label className={`address-form-labels ${dataValid.email ? 'text-colour-7' : ''}`}>Email</label>
           <input
             type="email"
             name="email"
@@ -85,7 +91,7 @@ const AddressForm = () => {
         <p className="text-2xl font-bold text-gray">Shipping Address</p>
         <div className="flex-centred-spaced">
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.first_name ? 'text-green-600' : ''}`}>First Name</label>
+            <label className={`address-form-labels ${dataValid.first_name ? 'text-colour-7' : ''}`}>First Name</label>
             <input
               name="first_name"
               className={`address-form-inputs ${dataValid.first_name ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
@@ -95,7 +101,7 @@ const AddressForm = () => {
             />
           </div>
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.last_name ? 'text-green-600' : ''}`}>Last Name</label>
+            <label className={`address-form-labels ${dataValid.last_name ? 'text-colour-7' : ''}`}>Last Name</label>
             <input
               name="last_name"
               className={`address-form-inputs ${dataValid.last_name ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
@@ -106,7 +112,7 @@ const AddressForm = () => {
           </div>
         </div>
         <div className="relative w-full">
-          <label className={`address-form-labels ${dataValid.country ? 'text-green-600' : ''}`}>Country</label>
+          <label className={`address-form-labels ${dataValid.country ? 'text-colour-7' : ''}`}>Country</label>
           <select
             ref={defaultData.country}
             name="country"
@@ -120,7 +126,7 @@ const AddressForm = () => {
         </div>
         <div className="flex-centred-spaced">
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.post_code ? 'text-green-600' : ''}`}>Post code</label>
+            <label className={`address-form-labels ${dataValid.post_code ? 'text-colour-7' : ''}`}>Post code</label>
             <input
               name="post_code"
               className={`address-form-inputs ${dataValid.post_code ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
@@ -131,7 +137,7 @@ const AddressForm = () => {
             />
           </div>
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.prefecture ? 'text-green-600' : ''}`}>Prefecture</label>
+            <label className={`address-form-labels ${dataValid.prefecture ? 'text-colour-7' : ''}`}>Prefecture</label>
             <select
               ref={defaultData.prefecture}
               name="prefecture"
@@ -144,7 +150,7 @@ const AddressForm = () => {
             </select>
           </div>
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.city ? 'text-green-600' : ''}`}>City</label>
+            <label className={`address-form-labels ${dataValid.city ? 'text-colour-7' : ''}`}>City</label>
             <select
               ref={defaultData.city}
               name="city"
@@ -159,7 +165,7 @@ const AddressForm = () => {
         </div>
         <div className="flex-centred-spaced">
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.street ? 'text-green-600' : ''}`}>Street</label>
+            <label className={`address-form-labels ${dataValid.street ? 'text-colour-7' : ''}`}>Street</label>
             <input
               name="street"
               className={`address-form-inputs ${dataValid.street ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
@@ -168,7 +174,7 @@ const AddressForm = () => {
             />
           </div>
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.building ? 'text-green-600' : ''}`}>Building</label>
+            <label className={`address-form-labels ${dataValid.building ? 'text-colour-7' : ''}`}>Building</label>
             <input
               name="building"
               className={`address-form-inputs ${dataValid.building ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
@@ -178,6 +184,14 @@ const AddressForm = () => {
           </div>
         </div>
       </div>
+      <div className="w-full relative">
+        <button 
+        disabled={!allDataValid}
+        className={`checkout-button ${allDataValid ? 'bg-colour-4 checkout-button-hover' : 'cursor-default bg-gray-300'}`}
+        
+        >Proceed to shipping</button>
+      </div>
+
     </>
   );
 };

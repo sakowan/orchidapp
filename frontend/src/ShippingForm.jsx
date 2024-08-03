@@ -26,7 +26,7 @@ const ShippingForm = (details) => {
           <p className='text-sm text-gray p-2.5'>Details</p>
         </div>
       </div>
-        <label htmlFor="free_shipping" className={`flex w-full p-5 bg-white rounded-lg cursor-pointer ${isFreeChecked ? 'text-brand-color-dark border border-brand-color-dark': 'border border-gray-200 text-gray-500'}`}>
+        <label htmlFor="free_shipping" className={`flex w-full p-5 bg-white rounded-lg cursor-pointer ${isFreeChecked ? 'text-colour-4 border border-colour-4': 'border border-gray-200 text-gray-500'}`}>
         
           <div className='w-5/6'>
             <div>Free Shipping</div>
@@ -37,7 +37,7 @@ const ShippingForm = (details) => {
           </div>
         </label>
 
-        <label htmlFor="express_shipping" className={`flex w-full p-5 bg-white rounded-lg cursor-pointer ${isExpChecked ? 'text-brand-color-dark border border-brand-color-dark': 'border border-gray-200 text-gray-500'}`}>
+        <label htmlFor="express_shipping" className={`flex w-full p-5 bg-white rounded-lg cursor-pointer ${isExpChecked ? 'text-colour-4 border border-colour-4': 'border border-gray-200 text-gray-500'}`}>
         
           <div className='w-5/6'>
             <div>Express Shipping</div>
