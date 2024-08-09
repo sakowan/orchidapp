@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+#Stripe
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51PjvhiGEkvCddTMkhHMT4uNQPMbbxSSZCX2cog0AgqEFN3V75yGstvBgiO59THwZqifQnZxhhhI4gDqQtHns4n5n00LV8g4A1k'
+STRIPE_SECRET_KEY = 'sk_test_51PjvhiGEkvCddTMkI7McdSlvyjvBLRepuwJbtxXvyed473U7WQ9JWuUvEcQ1NNgJhIlxgWzLnKl6mkf8Exqeiys100zjMrprUJ'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+FRONTEND_URL = 'http://localhost:5173'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

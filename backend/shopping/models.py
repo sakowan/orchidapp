@@ -26,6 +26,14 @@ class Country(models.Model):
         return self.name #can add more desc later
 
 class BamUser(AbstractUser):
+    #Remove username field
+    username = None
+
+    #Set email unique
+    email = models.EmailField(unique=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     phone = models.CharField(
         validators=[RegexValidator(
