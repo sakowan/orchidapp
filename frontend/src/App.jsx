@@ -10,13 +10,11 @@ function App() {
     return (
         <Router>
             <Navbar/>
-            <MainBody>
-                <Routes>
-                    <Route path='/login' element={<LoginSignupForm/>}></Route>
-                    <Route path='/checkout' element={<Checkout/>}></Route>
-                    <Route path='/product_listings' element={<ProductListing/>}></Route>
-                </Routes>
-            </MainBody>
+            <Routes>
+                <Route path='/login' element={<LoginSignupForm/>}></Route>
+                <Route path='/checkout' element={<Checkout/>}></Route>
+                <Route path='/product_listings' element={<ProductListing/>}></Route>
+            </Routes>
         </Router>
     )
 }

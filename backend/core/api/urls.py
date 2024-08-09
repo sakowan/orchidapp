@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from shopping.api.urls import country_router, product_listing_router, category_router, user_router
-from shopping.api.views import LoginAPIView, CheckoutAPIView
+from shopping.api.views import LoginAPIView, CheckoutAPIView, get_csrf_token
 from django.urls import path, include 
 
 router = DefaultRouter()
@@ -22,4 +22,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginAPIView.as_view(), name='login'),
     path('checkout/', CheckoutAPIView.as_view(), name='checkout'),
+    path('csrf-token/', get_csrf_token, name='csrf_token'),
+
 ]
