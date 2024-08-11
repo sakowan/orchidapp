@@ -1,15 +1,18 @@
 import stripe, json
 from django.conf import settings
+from rest_framework.viewsets import ModelViewSet
+
+from django.contrib.auth import get_user_model, login, logout
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, status
+
 from ..models import Country, ProductListing, Category, BamUser, Address, Order
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, BamUserSerializer
+from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserRegisterSerializer, UserLoginSerializer, UserSerializer
 from django.middleware.csrf import get_token
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import requires_csrf_token
-from django.contrib.auth import authenticate, login
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -31,31 +34,70 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class BamUserViewSet(ModelViewSet):
-    queryset = BamUser.objects.all()
-    serializer_class = BamUserSerializer
+# class BamUserViewSet(ModelViewSet):
+#     queryset = BamUser.objects.all()
+#     serializer_class = BamUserSerializer
     
-    def create(self, request, *args, **kwargs):
-        # Serialize and validate the incoming data
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+#     def create(self, request, *args, **kwargs):
+#         # Serialize and validate the incoming data
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
         
-        user = self.perform_create(serializer)
-        # user = authenticate(email=user.email, password=request.data['password'])
-        if user is not None:
-            login(request, user)
-            return Response({"message": "User created and logged in."}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"error": "Authentication failed"}, status=status.HTTP_401_UNAUTHORIZED)
+#         user = self.perform_create(serializer)
+#         # user = authenticate(email=user.email, password=request.data['password'])
+#         if user is not None:
+#             login(request, user)
+#             return Response({serializer.data}, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response({"error": "Authentication failed"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    def perform_create(self, serializer):
-        # Custom logic
-        return serializer.save()
+#     def perform_create(self, serializer):
+#         # Custom logic
+#         return serializer.save()
+
+class UserRegister(APIView):
+    #Who is allowed to access this class
+    permission_classes = (permissions.AllowAny,)
     
+    def post(self, request):
+        #Clean data before passing to serializer by using any validator on the fields first then:
+        clean_data = request.data
+        serializer = UserRegisterSerializer(data=clean_data)
+        if serializer.is_valid(raise_exception=True):
 
-class LoginAPIView(APIView):
+            #User created and returned by serializer function
+            user = serializer.create(clean_data)
+            if user:
+                return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+
+class UserLogin(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)
+
+    def post(self, request):
+        data = request.data
+        # assert validate_email(data)
+        # assert validate_password(data)
+        serializer = UserLoginSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.check_user(data)
+            print(data,'sdfdsafdasdasfdasfdafadsf')
+            login(request, user)
+            return Response(serializer.data, status = status.HTTP_200_OK)
+
+class UserLogout(APIView):
+    def post(self, request):
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
+
+class UserView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (SessionAuthentication, )
+
     def get(self, request):
-        return Response({'message': 'GET request for Login endpoint'}, status=status.HTTP_200_OK)
+        serializer = UserSerializer(request.user)
+        return Response({'user' : serializer.data}, status = status.HTTP_200_OK)
 
 class CheckoutAPIView(APIView):
     def get(self, request):
