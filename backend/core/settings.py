@@ -48,7 +48,15 @@ INSTALLED_APPS = [
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173',
                         'http://127.0.0.1:5173'
                         ]
-CORS_ALLOWED_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_HEADER_NAME = 'X-CSRFToken'
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+] 
 
 FRONTEND_URL = 'http://localhost:5173'
 
@@ -149,5 +157,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
     ),
 }

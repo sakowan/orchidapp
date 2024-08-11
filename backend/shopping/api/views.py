@@ -11,7 +11,7 @@ from rest_framework import permissions, status
 from ..models import Country, ProductListing, Category, BamUser, Address, Order
 from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserRegisterSerializer, UserLoginSerializer, UserSerializer
 from django.middleware.csrf import get_token
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, JsonResponse
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -91,7 +91,7 @@ class UserLogout(APIView):
 
 class UserView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (SessionAuthentication, )
+    authentication_classes = (SessionAuthentication,)
 
     def get(self, request):
         serializer = UserSerializer(request.user)

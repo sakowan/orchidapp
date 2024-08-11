@@ -1,13 +1,18 @@
 import './index.css';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const LoginSignupForm = ({client, onLoginUser}) => {
+const LoginSignupForm = ({client, onLoginUser, currentUser}) => {
+  const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(false);
   const [formUrl, setFormUrl] = useState('');
   const [data, setData] = useState({first_name: "", last_name: "", phone_number: "", email: "", password: ""});
 
   useEffect(() => {
+    console.log('loginsignup', currentUser)
+    if (currentUser) {
+      return navigate('/')
+    }
     isRegister ? setFormUrl("/api/register") : setFormUrl("/api/login/");
   }, []);
 
@@ -43,6 +48,7 @@ const LoginSignupForm = ({client, onLoginUser}) => {
         }
       ).then(function(result){
         onLoginUser(true);
+        navigate('/');
       })
     })
   };
@@ -57,6 +63,7 @@ const LoginSignupForm = ({client, onLoginUser}) => {
       }
     ).then(function(result){
       onLoginUser(true);
+      navigate('/');
     })
   }
     
