@@ -13,7 +13,6 @@ from .serializers import CountrySerializer, ProductListingSerializer, CategorySe
 from django.middleware.csrf import get_token
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
-
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def get_csrf_token(request):
@@ -82,7 +81,6 @@ class UserLogin(APIView):
         serializer = UserLoginSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.check_user(data)
-            print(data,'sdfdsafdasdasfdasfdafadsf')
             login(request, user)
             return Response(serializer.data, status = status.HTTP_200_OK)
 
