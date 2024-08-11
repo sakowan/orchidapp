@@ -6,7 +6,6 @@ import PaymentForm from './PaymentForm'
 import CheckoutNavigation from './CheckoutNavigation'
 
 const Checkout = (children) => {
-  const [csrfToken, setCsrfToken] = useState('');
   const [isAddressPage, setisAddressPage] = useState(true);
   const [isShippingPage, setisShippingPage] = useState(false);
   const [isPaymentPage, setisPaymentPage] = useState(false);
