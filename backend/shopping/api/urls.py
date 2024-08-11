@@ -11,5 +11,5 @@ product_listing_router.register(r'product_listings', ProductListingViewSet )
 category_router =  DefaultRouter()
 category_router.register(r'categories', CategoryViewSet )
 
-user_router =  DefaultRouter()
+# user_router =  DefaultRouter()
 # user_router.register(r'users', BamUserViewSet )

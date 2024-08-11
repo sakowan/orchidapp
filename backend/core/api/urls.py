@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from shopping.api.urls import country_router, product_listing_router, category_router, user_router
+from shopping.api.urls import country_router, product_listing_router, category_router
 # from shopping.api.views import LoginAPIView, CheckoutAPIView, get_csrf_token
 from shopping.api.views import *
 from django.urls import path, include 
@@ -17,7 +17,7 @@ router.registry.extend(product_listing_router.registry)
 router.registry.extend(category_router.registry)
 
 # URL: users/
-router.registry.extend(user_router.registry)
+# router.registry.extend(user_router.registry)
 
 urlpatterns = [
     path('', include(router.urls)),
