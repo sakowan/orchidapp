@@ -5,8 +5,26 @@ import axios from 'axios';
 
 const LoginSignupForm = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const user = { email, password };
   const [isRegister, setIsRegister] = useState(false);
+  const [formUrl, setFormUrl] = useState('');
   const [data, setData] = useState({first_name: "", last_name: "", phone_number: "", email: "", password: ""});
+
+  useEffect(() => {
+    // Function to fetch data
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/login');
+        console.log(response)
+      } catch (error) {
+        setError(error);
+      }
+    };
+
+    isRegister ? setFormUrl("http://127.0.0.1:8000/api/users/") : setFormUrl("http://127.0.0.1:8000/api/login/")
+    fetchData();  // Call fetch function when the component mounts
+  }, []);
 
   const handleRegisterToggle = () => {
     setIsRegister(!isRegister);
@@ -20,7 +38,7 @@ const LoginSignupForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = {
       first_name: data.first_name,
@@ -29,11 +47,12 @@ const LoginSignupForm = () => {
       email: data.email,
       password: data.password
     };
-    axios
-      .post("http://127.0.0.1:8000/api/users/", userData)
+
+    const response = await axios.post(formUrl, userData)
       .then((response) => {
         console.log(response);
-        navigate('/');
+        setUser(userData.email, userData.password)
+        navigate('/product_listings');
       })
       .catch((error) => {
         if (error.response) {
@@ -57,11 +76,11 @@ const LoginSignupForm = () => {
       </div>
       
       {/* Right Side */}
-      <div className="flex w-2/5 bg-gray-100 bg-opacity-75 p-12 fixed right-0 h-full">
+      <div className="login-parent-sm">
         {/* Content here will be static */}
         <form onSubmit={handleSubmit}>
           <div className='w-full p-12 space-y-4'>
-            <h1 className="mt-14 text-2xl font-bold text-gray text-center">{isRegister ? `Register` : `Sign in`}</h1>
+            <h1 className="mt-14 pb-4 text-2xl font-bold text-gray-600">{isRegister ? `Register` : `Sign in`}</h1>
             {isRegister &&
             <>
               <input type="text" 
