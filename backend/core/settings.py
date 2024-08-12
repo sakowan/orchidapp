@@ -45,13 +45,16 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173',
+                        'http://127.0.0.1:5173',
+                        ]
+CORS_ALLOW_CREDENTIALS = True
 FRONTEND_URL = 'http://localhost:5173'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -92,6 +95,17 @@ DATABASES = {
         'HOST': 'localhost',  # Set to your PostgreSQL server address
         'PORT': '5432',  # Default port for PostgreSQL
     }
+}
+
+# Application definition
+AUTH_USER_MODEL = 'shopping.BamUser'
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    )
 }
 
 
@@ -135,6 +149,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Application definition
-AUTH_USER_MODEL = 'shopping.BamUser'
