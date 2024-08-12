@@ -3,10 +3,15 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, status
 from ..models import Country, ProductListing, Category, BamUser, Address, Order
 from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, BamUserSerializer
+from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, BamUserSerializer
 from django.middleware.csrf import get_token
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import requires_csrf_token
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import authenticate, login
@@ -34,7 +39,14 @@ class CategoryViewSet(ModelViewSet):
 class BamUserViewSet(ModelViewSet):
     queryset = BamUser.objects.all()
     serializer_class = BamUserSerializer
+class BamUserViewSet(ModelViewSet):
+    queryset = BamUser.objects.all()
+    serializer_class = BamUserSerializer
     
+    def create(self, request, *args, **kwargs):
+        # Serialize and validate the incoming data
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
     def create(self, request, *args, **kwargs):
         # Serialize and validate the incoming data
         serializer = self.get_serializer(data=request.data)
@@ -93,6 +105,7 @@ class UserView(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def get(self, request):
+        return Response({'message': 'GET request for Login endpoint'}, status=status.HTTP_200_OK)
         return Response({'message': 'GET request for Login endpoint'}, status=status.HTTP_200_OK)
 
 class CheckoutAPIView(APIView):
