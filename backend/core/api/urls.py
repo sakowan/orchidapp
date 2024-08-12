@@ -27,6 +27,6 @@ urlpatterns = [
     path('user', UserView.as_view(), name='user'),
 
     path('checkout/', CheckoutAPIView.as_view(), name='checkout'),
-    path('csrf-token/', get_csrf_token, name='csrf_token'),
+    # path('csrf-token/', get_csrf_token, name='csrf_token'),
 
 ]
