@@ -10,7 +10,8 @@ import client from './axiosInstance';
 
 function App() {
     const [currentUser, setCurrentUser] = useState(false);
-    const [csrfToken, setCsrfToken] = useState('');
+    const [csrfToken, setCsrfToken] = useState();
+    // console.log('token', client.get("/api/csrf-token"))
     useEffect(() => {
         client.get("/api/user")
         .then(function(res){
