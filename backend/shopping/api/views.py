@@ -1,20 +1,15 @@
-import stripe, json
+import stripe, json, pdb
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.authentication import SessionAuthentication
 from rest_framework import permissions, status
-from ..models import Country, ProductListing, Category, BamUser, Address, Order
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, BamUserSerializer
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, BamUserSerializer
+from ..models import Country, ProductListing, Category
 from django.middleware.csrf import get_token
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import requires_csrf_token
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import requires_csrf_token
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login, logout
+from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserLoginSerializer, UserRegisterSerializer, UserSerializer
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -35,34 +30,6 @@ class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-class BamUserViewSet(ModelViewSet):
-    queryset = BamUser.objects.all()
-    serializer_class = BamUserSerializer
-class BamUserViewSet(ModelViewSet):
-    queryset = BamUser.objects.all()
-    serializer_class = BamUserSerializer
-    
-    def create(self, request, *args, **kwargs):
-        # Serialize and validate the incoming data
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-    def create(self, request, *args, **kwargs):
-        # Serialize and validate the incoming data
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
-#         user = self.perform_create(serializer)
-#         # user = authenticate(email=user.email, password=request.data['password'])
-#         if user is not None:
-#             login(request, user)
-#             return Response({serializer.data}, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response({"error": "Authentication failed"}, status=status.HTTP_401_UNAUTHORIZED)
-
-#     def perform_create(self, serializer):
-#         # Custom logic
-#         return serializer.save()
 
 class UserRegister(APIView):
     #Who is allowed to access this class
@@ -96,7 +63,6 @@ class UserLogin(APIView):
 
 class UserLogout(APIView):
     def post(self, request):
-        print(get_csrf_token)
         logout(request)
         return Response(status=status.HTTP_200_OK)
 
@@ -105,9 +71,10 @@ class UserView(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def get(self, request):
-        return Response({'message': 'GET request for Login endpoint'}, status=status.HTTP_200_OK)
-        return Response({'message': 'GET request for Login endpoint'}, status=status.HTTP_200_OK)
-
+        serializer = UserSerializer(request.user)
+        print(request.COOKIES)
+        return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+ 
 class CheckoutAPIView(APIView):
     def get(self, request):
         csrf_token = get_token(request)
@@ -142,3 +109,24 @@ class CheckoutAPIView(APIView):
             return HttpResponse(e) 
         return
         # return redirect(checkout_session.url, code=303)
+
+# class BamUserViewSet(ModelViewSet):
+#     queryset = BamUser.objects.all()
+#     serializer_class = BamUserSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         # Serialize and validate the incoming data
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+        
+#         user = self.perform_create(serializer)
+#         # user = authenticate(email=user.email, password=request.data['password'])
+#         if user is not None:
+#             login(request, user)
+#             return Response({serializer.data}, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response({"error": "Authentication failed"}, status=status.HTTP_401_UNAUTHORIZED)
+
+#     def perform_create(self, serializer):
+#         # Custom logic
+#         return serializer.save()

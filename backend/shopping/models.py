@@ -26,11 +26,9 @@ class Country(models.Model):
         return self.name #can add more desc later
 
 class BamUser(AbstractUser):
-    #Remove username field
-    username = None
-
     #Set email unique
     email = models.EmailField(unique=True)
+    username = models.CharField(default=email, unique=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
