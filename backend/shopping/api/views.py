@@ -1,17 +1,15 @@
 import stripe, json
 from django.conf import settings
-from rest_framework.viewsets import ModelViewSet
-
-from django.contrib.auth import get_user_model, login, logout
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, status
-
 from ..models import Country, ProductListing, Category, BamUser, Address, Order
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserRegisterSerializer, UserLoginSerializer, UserSerializer
+from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, BamUserSerializer
 from django.middleware.csrf import get_token
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import requires_csrf_token
+from django.contrib.auth import authenticate, login
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -33,14 +31,14 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-# class BamUserViewSet(ModelViewSet):
-#     queryset = BamUser.objects.all()
-#     serializer_class = BamUserSerializer
+class BamUserViewSet(ModelViewSet):
+    queryset = BamUser.objects.all()
+    serializer_class = BamUserSerializer
     
-#     def create(self, request, *args, **kwargs):
-#         # Serialize and validate the incoming data
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
+    def create(self, request, *args, **kwargs):
+        # Serialize and validate the incoming data
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         
 #         user = self.perform_create(serializer)
 #         # user = authenticate(email=user.email, password=request.data['password'])
@@ -95,8 +93,7 @@ class UserView(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response({'user' : serializer.data}, status = status.HTTP_200_OK)
+        return Response({'message': 'GET request for Login endpoint'}, status=status.HTTP_200_OK)
 
 class CheckoutAPIView(APIView):
     def get(self, request):

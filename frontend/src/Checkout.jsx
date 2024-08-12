@@ -27,6 +27,19 @@ const Checkout = (children) => {
     setisPaymentPage(true);
   };
 
+  const handleNext = () => {
+    if (isAddressPage){
+      setisShippingPage(true)
+      setisAddressPage(!isAddressPage)
+    }
+    else if (isShippingPage){
+      setisShippingPage(!isShippingPage)
+      setisPaymentPage(true)
+    }
+    else if (isPaymentPage){
+      setisShippingPage(!isShippingPage)
+    }
+  }
   return (
     <MainBody>
       <div className="flex h-screen">
