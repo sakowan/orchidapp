@@ -18,6 +18,10 @@ input::-webkit-inner-spin-button {
   }
 }
 
+.login-parent-sm {
+  @apply flex w-2/5 bg-gray-100 bg-opacity-60 p-12 fixed right-0 h-full
+}
+
 .address-form-labels {
   @apply bg-white text-[11px] relative px-1 top-2.5 left-3 w-auto;
 }; 
