@@ -2,13 +2,30 @@ import './index.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const LoginSignupForm = ({onLoginUser, currentUser}) => {
+// // Axios
+// import axios from 'axios';
+// axios.defaults.xsrfCookieName= 'csrftoken';
+// axios.defaults.xsrfHeaderName= 'X-CSRFToken';
+// axios.defaults.withCredentials= true;
+// const client = axios.create({
+//     baseURL: "http://127.0.0.1:8000"
+// });
+
+const LoginSignupForm = ({client}) => {
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
-  const [data, setData] = useState({first_name: "", last_name: "", phone_number: "", email: "", password: ""});
+  const [data, setData] = useState({first_name: "", last_name: "", phone: "", email: "", password: ""});
 
   useEffect(() => {
-    console.log('Current user signup', currentUser)
+    console.log('clientt', client)
+    client.get("/api/user")
+    .then(function(rest){
+      setCurrentUser(true);
+    })
+    .catch(function(error){
+      setCurrentUser
+    })
   }, []);
 
   const handleRegisterToggle = () => {
@@ -23,12 +40,51 @@ const LoginSignupForm = ({onLoginUser, currentUser}) => {
     });
   };
 
-  const handleRegister = async (e) => {
-    console.log('handleRegister')
-  };
-
-  const handleLogin = async (e) => {
-    console.log('handleLogin')
+  function submitForm(e) {
+    e.preventDefault();
+    if(isRegister){
+      console.log('hit register');
+      client.post(
+        "/api/register",
+        {
+          email: data.email,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          phone: data.phone,
+          password: data.password
+        }
+      ).then(function(res){
+        client.post(
+          "/api/login",
+          {
+            email: data.email,
+            password: data.password
+          }
+        ).then(function(res){
+          setCurrentUser(true);
+        })
+      })
+    } else {
+      console.log('hit login');
+      client.post(
+        "/api/login",
+        {
+          email: data.email,
+          password: data.password
+        }
+      ).then(function(res){
+        setCurrentUser(true);
+      })
+    }
+  }
+  function submitLogout(e) {
+    e.preventDefault();
+    client.post(
+      "/api/logout",
+      {withCredentials: true}
+    ).then(function(res){
+      setCurrentUser(false);
+    })
   }
     
   return (
@@ -43,8 +99,10 @@ const LoginSignupForm = ({onLoginUser, currentUser}) => {
       {/* Right Side */}
       <div className="login-parent-sm">
         {/* Content here will be static */}
-        <form onSubmit={handleLogin}>
-          <div className='w-full p-12 space-y-4'>
+        <div className='w-full p-12'>
+          <form
+          className='space-y-4' 
+          onSubmit={submitForm}>
             <h1 className="mt-14 pb-4 text-2xl font-bold text-gray-600">{isRegister ? `Register` : `Sign in`}</h1>
             {isRegister &&
             <>
@@ -58,7 +116,7 @@ const LoginSignupForm = ({onLoginUser, currentUser}) => {
               
               <input type="tel" 
               className="login-inputs"
-              name="phone_number" value={data.phone_number} onChange={handleChange} placeholder='Phone Number'/>
+              name="phone" value={data.phone} onChange={handleChange} placeholder='Phone Number'/>
             </> }
             <input type="email" 
             className="login-inputs"
@@ -79,8 +137,13 @@ const LoginSignupForm = ({onLoginUser, currentUser}) => {
               <p className='text-xs px-0'>Don't have an account? <span onClick={handleRegisterToggle} className='text-colour-7 cursor-pointer'>Register</span> here.</p>
             </>
             }
-          </div>
-      </form>
+          </form>
+          <form onSubmit={submitLogout}>
+            <button
+            className='main-button-hover w-full rounded-lg h-12 bg-colour-4 text-white'
+            type="Logout">Logout</button>
+          </form>
+      </div>
       </div>
     </div>
   );
