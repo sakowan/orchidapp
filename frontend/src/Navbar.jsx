@@ -1,6 +1,6 @@
 // Navbar.js
 import React, { useState, useEffect } from 'react';
-import { Menu, ShoppingCart, User } from 'lucide-react';
+import { Menu, ShoppingCart } from 'lucide-react';
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
@@ -44,9 +44,8 @@ const Navbar = () => {
         </div>
         
         <div className="flex items-center space-x-6">
-          <User className='lucide'/>
-          <ShoppingCart className='lucide'/>
-          <Menu className='lucide'/>
+          <ShoppingCart strokeWidth={1}/>
+          <Menu strokeWidth={1} />
         </div>
         <div className="w-16"></div>
       </div>

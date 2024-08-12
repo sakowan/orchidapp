@@ -5,16 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const LoginSignupForm = ({client, onLoginUser, currentUser}) => {
   const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(false);
-  const [formUrl, setFormUrl] = useState('');
   const [data, setData] = useState({first_name: "", last_name: "", phone_number: "", email: "", password: ""});
-
-  useEffect(() => {
-    console.log('loginsignup', currentUser)
-    if (currentUser) {
-      return navigate('/')
-    }
-    isRegister ? setFormUrl("/api/register") : setFormUrl("/api/login/");
-  }, []);
 
   const handleRegisterToggle = () => {
     setIsRegister(!isRegister);
@@ -28,27 +19,19 @@ const LoginSignupForm = ({client, onLoginUser, currentUser}) => {
     });
   };
 
-  const handleRegister = async (e) => {
-    console.log('hit')
+  const handleSubmit = (e) => {
     e.preventDefault();
-    client.post(
-      formUrl,
-      {
-        first_name: data.first_name,
-        last_name: data.last_name,
-        phone: data.phone_number,
-        email: data.email,
-        password: data.password
-      }
-    ).then(function(result){
-      client.post(
-        formUrl,
-        {
-          email: data.email,
-          password: data.password
-        }
-      ).then(function(result){
-        onLoginUser(true);
+    const userData = {
+      first_name: data.first_name,
+      last_name: data.last_name,
+      phone: data.phone_number,
+      email: data.email,
+      password: data.password
+    };
+    axios
+      .post("http://127.0.0.1:8000/api/users/", userData)
+      .then((response) => {
+        console.log(response);
         navigate('/');
       })
     })
@@ -79,11 +62,11 @@ const LoginSignupForm = ({client, onLoginUser, currentUser}) => {
       </div>
       
       {/* Right Side */}
-      <div className="login-parent-sm">
+      <div className="flex w-2/5 bg-gray-100 bg-opacity-75 p-12 fixed right-0 h-full">
         {/* Content here will be static */}
         <form onSubmit={isRegister ? handleRegister : handleLogin}>
           <div className='w-full p-12 space-y-4'>
-            <h1 className="mt-14 pb-4 text-2xl font-bold text-gray-600">{isRegister ? `Register` : `Sign in`}</h1>
+            <h1 className="mt-14 text-2xl font-bold text-gray text-center">{isRegister ? `Register` : `Sign in`}</h1>
             {isRegister &&
             <>
               <input type="text" 
