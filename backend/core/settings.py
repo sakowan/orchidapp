@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 #Stripe
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51PjvhiGEkvCddTMkhHMT4uNQPMbbxSSZCX2cog0AgqEFN3V75yGstvBgiO59THwZqifQnZxhhhI4gDqQtHns4n5n00LV8g4A1k'
 STRIPE_SECRET_KEY = 'sk_test_51PjvhiGEkvCddTMkI7McdSlvyjvBLRepuwJbtxXvyed473U7WQ9JWuUvEcQ1NNgJhIlxgWzLnKl6mkf8Exqeiys100zjMrprUJ'
@@ -29,7 +33,20 @@ SECRET_KEY = 'django-insecure-mjpeg*@2(oj+^wvlc0&26x49kgpv+l)r*&ncg2d%!akve!%jbx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
+}
 
 INSTALLED_APPS = [
     'shopping.apps.ShoppingConfig', #added
@@ -45,10 +62,6 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173',
-                        'http://127.0.0.1:5173',
-                        ]
-CORS_ALLOW_CREDENTIALS = True
 FRONTEND_URL = 'http://localhost:5173'
 
 MIDDLEWARE = [
@@ -99,15 +112,6 @@ DATABASES = {
 
 # Application definition
 AUTH_USER_MODEL = 'shopping.BamUser'
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-    )
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -149,3 +153,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS_ALLOWED_ORIGINS = ['http://localhost:5173',
+#                         'http://127.0.0.1:5173',
+#                         ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
