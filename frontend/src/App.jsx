@@ -7,6 +7,7 @@ import Checkout from "./Checkout"
 import Landing from "./Landing"
 import ProductListing from "./ProductListing"
 import LoginSignupForm from "./LoginSignupForm"
+import ProtectedRoute from './ProtectedRoute';
 
 // Axios
 import axios from 'axios';
@@ -25,7 +26,11 @@ function App() {
                 <Route path='/login' element={<LoginSignupForm client={client}/>}></Route>
                 <Route path='/' element={<Landing/>}></Route>
                 <Route path='/product_listings' element={<ProductListing/>}></Route>
-                <Route path='/checkout' element={<Checkout/>}></Route>
+                <Route path='/checkout' element={
+                    <ProtectedRoute>
+                        <Checkout/>
+                    </ProtectedRoute>
+                    }></Route>
             </Routes>
         </Router>
     )
