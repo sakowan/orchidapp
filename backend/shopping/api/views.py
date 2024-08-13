@@ -1,21 +1,25 @@
-import stripe, json, pdb
+import stripe, json
 from django.conf import settings
+from django.middleware.csrf import get_token
+from django.http import HttpResponse, JsonResponse
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.authentication import SessionAuthentication
-from rest_framework import permissions, status
-from ..models import Country, ProductListing, Category
-from django.middleware.csrf import get_token
-from django.http import HttpResponse, JsonResponse
-from django.contrib.auth import login, logout
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserLoginSerializer, UserRegisterSerializer, UserSerializer
+from rest_framework import permissions, status, generics
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+from ..models import Country, ProductListing, Category, BamUser
+from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserSerializer
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
     return JsonResponse({'csrfToken': csrf_token})
+
+class CreateUserView(generics.CreateAPIView):
+    queryset = BamUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
 
 class CountryViewSet(ModelViewSet):
     queryset = Country.objects.all()
@@ -30,50 +34,6 @@ class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-class UserRegister(APIView):
-    #Who is allowed to access this class
-    permission_classes = (permissions.AllowAny,)
-    
-    def post(self, request):
-        #Clean data before passing to serializer by using any validator on the fields first then:
-        clean_data = request.data
-        serializer = UserRegisterSerializer(data=clean_data)
-        if serializer.is_valid(raise_exception=True):
-
-            #User created and returned by serializer function
-            user = serializer.create(clean_data)
-            if user:
-                return Response(serializer.data, status = status.HTTP_201_CREATED)
-        return Response(status = status.HTTP_400_BAD_REQUEST)
-
-class UserLogin(APIView):
-    permission_classes = (permissions.AllowAny,)
-    authentication_classes = (SessionAuthentication,)
-
-    def post(self, request):
-        data = request.data
-        # assert validate_email(data)
-        # assert validate_password(data)
-        serializer = UserLoginSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.check_user(data)
-            login(request, user)
-            return Response(serializer.data, status = status.HTTP_200_OK)
-
-class UserLogout(APIView):
-    def post(self, request):
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
-
-class UserView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (SessionAuthentication,)
-
-    def get(self, request):
-        serializer = UserSerializer(request.user)
-        print(request.COOKIES)
-        return Response({'user': serializer.data}, status=status.HTTP_200_OK)
  
 class CheckoutAPIView(APIView):
     def get(self, request):
@@ -110,23 +70,46 @@ class CheckoutAPIView(APIView):
         return
         # return redirect(checkout_session.url, code=303)
 
-# class BamUserViewSet(ModelViewSet):
-#     queryset = BamUser.objects.all()
-#     serializer_class = BamUserSerializer
+# class UserRegister(APIView):
+#     #Who is allowed to access this class
+#     permission_classes = (permissions.AllowAny,)
+    
+#     def post(self, request):
+#         #Clean data before passing to serializer by using any validator on the fields first then:
+#         clean_data = request.data
+#         serializer = UserRegisterSerializer(data=clean_data)
+#         if serializer.is_valid(raise_exception=True):
 
-#     def create(self, request, *args, **kwargs):
-#         # Serialize and validate the incoming data
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-        
-#         user = self.perform_create(serializer)
-#         # user = authenticate(email=user.email, password=request.data['password'])
-#         if user is not None:
+#             #User created and returned by serializer function
+#             user = serializer.create(clean_data)
+#             if user:
+#                 return Response(serializer.data, status = status.HTTP_201_CREATED)
+#         return Response(status = status.HTTP_400_BAD_REQUEST)
+
+# class UserLogin(APIView):
+#     permission_classes = (permissions.AllowAny,)
+#     authentication_classes = (SessionAuthentication,)
+
+#     def post(self, request):
+#         data = request.data
+#         # assert validate_email(data)
+#         # assert validate_password(data)
+#         serializer = UserLoginSerializer(data=data)
+#         if serializer.is_valid(raise_exception=True):
+#             user = serializer.check_user(data)
 #             login(request, user)
-#             return Response({serializer.data}, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response({"error": "Authentication failed"}, status=status.HTTP_401_UNAUTHORIZED)
+#             return Response(serializer.data, status = status.HTTP_200_OK)
 
-#     def perform_create(self, serializer):
-#         # Custom logic
-#         return serializer.save()
+# class UserLogout(APIView):
+#     def post(self, request):
+#         logout(request)
+#         return Response(status=status.HTTP_200_OK)
+
+# class UserView(APIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     authentication_classes = (SessionAuthentication,)
+
+#     def get(self, request):
+#         serializer = UserSerializer(request.user)
+#         print(request.COOKIES)
+#         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
