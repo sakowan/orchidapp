@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, ShoppingCart, User } from 'lucide-react';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants';
+import DropdownUser from './DropdownUser';
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
@@ -30,30 +31,33 @@ const Navbar = () => {
   }, [lastScrollTop]);
 
   return (
-    <nav
-      className={`z-10 ibm-plex-mono-extralight h-18 text-2xl icon-color fixed top-0 left-0 right-0 bg-my-muted p-4 transition-transform duration-300 ease-in-out ${
-        scrollingDown ? 'transform -translate-y-full' : 'transform translate-y-0'
-      }`}
-    >
-      <div className="container mx-auto flex items-center">
-        {/* Left section: menu and shop link */}
-        <div className="flex items-center space-x-6">
-          <a className='mx-3.5 ibm-plex-mono-extralight text-xl' href="/product_listings">Shop</a>
+    <>
+      <nav
+        className={`flex z-10 ibm-plex-mono-extralight h-16 text-2xl icon-color fixed top-0 left-0 right-0 bg-my-muted transition-transform duration-300 ease-in-out ${
+          scrollingDown ? 'transform -translate-y-full' : 'transform translate-y-0'
+        }`}
+      >
+        <div className="container mx-auto my-auto flex items-center">
+          {/* Left section: menu and shop link */}
+          <div className="flex items-center space-x-6">
+            <a className='mx-3.5 ibm-plex-mono-extralight text-xl' href="/product_listings">Shop</a>
+          </div>
+          
+          {/* Centered logo */}
+          <div className="flex-1 flex justify-center">
+            <img src="/src/assets/images/princess1.webp" alt="Brand Logo" className="h-12" />
+          </div>
+          
+          <div className="flex items-center">
+            {authorized && <User className="lucide-icon mx-3"/>}
+            <DropdownUser/>
+            <ShoppingCart className="lucide-icon mx-3"/>
+            <Menu className="lucide-icon mx-3" />
+          </div>
+          <div className="w-16"></div>
         </div>
-        
-        {/* Centered logo */}
-        <div className="flex-1 flex justify-center">
-          <img src="/src/assets/images/princess1.webp" alt="Brand Logo" className="h-12" />
-        </div>
-        
-        <div className="flex items-center space-x-6">
-          <ShoppingCart strokeWidth={1}/>
-          <Menu strokeWidth={1} />
-          {authorized && <User strokeWidth={1} />} 
-        </div>
-        <div className="w-16"></div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 

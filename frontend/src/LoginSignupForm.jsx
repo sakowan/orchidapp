@@ -1,6 +1,5 @@
 import './index.css';
 import api from "./api"
-import {jwtDecode} from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "./constants";
 import { useState, useEffect } from 'react';
