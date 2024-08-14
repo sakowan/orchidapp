@@ -1,12 +1,16 @@
 // Navbar.js
 import React, { useState, useEffect } from 'react';
-import { Menu, ShoppingCart } from 'lucide-react';
+import { Menu, ShoppingCart, User } from 'lucide-react';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants';
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
+    (localStorage.getItem(ACCESS_TOKEN)&&localStorage.getItem(REFRESH_TOKEN)) && setAuthorized(true);
+    
     const handleScroll = () => {
       const currentScrollTop = document.documentElement.scrollTop;
 
@@ -15,7 +19,6 @@ const Navbar = () => {
       } else {
         setScrollingDown(false);
       }
-
       setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop); // For Mobile or negative scrolling
     };
 
@@ -46,6 +49,7 @@ const Navbar = () => {
         <div className="flex items-center space-x-6">
           <ShoppingCart strokeWidth={1}/>
           <Menu strokeWidth={1} />
+          {authorized && <User strokeWidth={1} />} 
         </div>
         <div className="w-16"></div>
       </div>

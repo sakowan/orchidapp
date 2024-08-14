@@ -10,13 +10,11 @@ const LoginSignupForm = ({client}) => {
   const [isRegister, setIsRegister] = useState(false);
   const [data, setData] = useState({first_name: "", last_name: "", phone: "", username: "", email: "", password: ""});
 
-  // useEffect(() => {
-  //   try {
-
-  //   } catch(error){
-  //     console.log(error)
-  //   }
-  // }, []);
+  useEffect(() => {
+    if(localStorage.getItem(ACCESS_TOKEN)&&localStorage.getItem(REFRESH_TOKEN)){
+      navigate("/product_listings")
+    }
+  }, []);
 
   const handleRegisterToggle = () => {
     setIsRegister(!isRegister);
@@ -31,28 +29,37 @@ const LoginSignupForm = ({client}) => {
     });
   };
 
+  const login = async (e) => {
+    e.preventDefault();
+    try {
+      const token = await api.post("/token/", {
+        "email": data.email,
+        "password": data.password
+      })
+      if (token.status === 200){
+        console.log('token', token.data)
+        localStorage.setItem(ACCESS_TOKEN, token.data.access)
+        localStorage.setItem(REFRESH_TOKEN, token.data.refresh)
+        navigate("/product_listings")
+      } 
+    } catch {
+      console.log(e)
+    }
+  }
   const submitForm = async(e) => {
     e.preventDefault();
     if(isRegister){
       try{
         const resRegister = await api.post("/user/register/", data);
         console.log('resRegister', resRegister.data)
-        const token = await api.post("/token/", {
-          "email": data.email,
-          "password": data.password
-        })
-        if (token.status === 200){
-          console.log('token', token.data)
-          localStorage.setItem(ACCESS_TOKEN, token.data.access)
-          localStorage.setItem(REFRESH_TOKEN, token.data.refresh)
-          navigate("/product_listings")
-        }
+        login(e);
       } catch (error) {
         console.log(error)
       }
     }
     else {
       console.log('hit signin')
+      login(e);
     }
   }
   function submitLogout(e) {
