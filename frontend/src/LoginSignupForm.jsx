@@ -1,32 +1,22 @@
 import './index.css';
-import React, { useState, useEffect } from 'react';
+import api from "./api"
+import {jwtDecode} from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
-
-// // Axios
-// import axios from 'axios';
-// axios.defaults.xsrfCookieName= 'csrftoken';
-// axios.defaults.xsrfHeaderName= 'X-CSRFToken';
-// axios.defaults.withCredentials= true;
-// const client = axios.create({
-//     baseURL: "http://127.0.0.1:8000"
-// });
+import { REFRESH_TOKEN, ACCESS_TOKEN } from "./constants";
+import { useState, useEffect } from 'react';
 
 const LoginSignupForm = ({client}) => {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
-  const [data, setData] = useState({first_name: "", last_name: "", phone: "", email: "", password: ""});
+  const [data, setData] = useState({first_name: "", last_name: "", phone: "", username: "", email: "", password: ""});
 
-  useEffect(() => {
-    console.log('clientt', client)
-    client.get("/api/user")
-    .then(function(rest){
-      setCurrentUser(true);
-    })
-    .catch(function(error){
-      setCurrentUser
-    })
-  }, []);
+  // useEffect(() => {
+  //   try {
+
+  //   } catch(error){
+  //     console.log(error)
+  //   }
+  // }, []);
 
   const handleRegisterToggle = () => {
     setIsRegister(!isRegister);
@@ -36,55 +26,38 @@ const LoginSignupForm = ({client}) => {
     const value = e.target.value;
     setData({
       ...data,
-      [e.target.name]: value
+      [e.target.name]: value,
+      ...(e.target.name === "email" && { username: value })
     });
   };
 
-  function submitForm(e) {
+  const submitForm = async(e) => {
     e.preventDefault();
     if(isRegister){
-      console.log('hit register');
-      client.post(
-        "/api/register",
-        {
-          email: data.email,
-          first_name: data.first_name,
-          last_name: data.last_name,
-          phone: data.phone,
-          password: data.password
-        }
-      ).then(function(res){
-        client.post(
-          "/api/login",
-          {
-            email: data.email,
-            password: data.password
-          }
-        ).then(function(res){
-          setCurrentUser(true);
+      try{
+        const resRegister = await api.post("/user/register/", data);
+        console.log('resRegister', resRegister.data)
+        const token = await api.post("/token/", {
+          "email": data.email,
+          "password": data.password
         })
-      })
-    } else {
-      console.log('hit login');
-      client.post(
-        "/api/login",
-        {
-          email: data.email,
-          password: data.password
+        if (token.status === 200){
+          console.log('token', token.data)
+          localStorage.setItem(ACCESS_TOKEN, token.data.access)
+          localStorage.setItem(REFRESH_TOKEN, token.data.refresh)
+          navigate("/product_listings")
         }
-      ).then(function(res){
-        setCurrentUser(true);
-      })
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    else {
+      console.log('hit signin')
     }
   }
   function submitLogout(e) {
     e.preventDefault();
-    client.post(
-      "/api/logout",
-      {withCredentials: true}
-    ).then(function(res){
-      setCurrentUser(false);
-    })
+
   }
     
   return (

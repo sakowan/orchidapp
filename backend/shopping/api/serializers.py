@@ -28,6 +28,7 @@ class UserSerializer(ModelSerializer):
 
     def create(self, validated_data):
         user = BamUser.objects.create_user(**validated_data)
+        print(user)
         return user
     
 # class UserRegisterSerializer(ModelSerializer):
