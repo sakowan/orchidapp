@@ -1,17 +1,16 @@
-// Navbar.js
 import React, { useState, useEffect } from 'react';
 import { Menu, ShoppingCart, User } from 'lucide-react';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants';
 import DropdownUser from './DropdownUser';
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const [authorized, setAuthorized] = useState(false);
+
+  const [hoverUserIcon, setHoverUserIcon] = useState(false);
+  const [hoverDropdown, setHoverDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    (localStorage.getItem(ACCESS_TOKEN)&&localStorage.getItem(REFRESH_TOKEN)) && setAuthorized(true);
-    
     const handleScroll = () => {
       const currentScrollTop = document.documentElement.scrollTop;
 
@@ -20,7 +19,7 @@ const Navbar = () => {
       } else {
         setScrollingDown(false);
       }
-      setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop); // For Mobile or negative scrolling
+      setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -38,20 +37,22 @@ const Navbar = () => {
         }`}
       >
         <div className="container mx-auto my-auto flex items-center">
-          {/* Left section: menu and shop link */}
           <div className="flex items-center space-x-6">
             <a className='mx-3.5 ibm-plex-mono-extralight text-xl' href="/product_listings">Shop</a>
           </div>
-          
-          {/* Centered logo */}
+
           <div className="flex-1 flex justify-center">
             <img src="/src/assets/images/princess1.webp" alt="Brand Logo" className="h-12" />
           </div>
-          
+
           <div className="flex items-center">
-            {authorized && <User className="lucide-icon mx-3"/>}
-            <DropdownUser/>
-            <ShoppingCart className="lucide-icon mx-3"/>
+            <div className="hover:cursor-pointer group flex items-center h-[4rem]">
+              <User className="group my-auto lucide-icon mx-3"/>
+              <div className="invisible group-hover:visible">
+                <DropdownUser user={user}/>
+              </div>
+            </div>
+            <ShoppingCart className="lucide-icon mx-3" />
             <Menu className="lucide-icon mx-3" />
           </div>
           <div className="w-16"></div>
@@ -60,5 +61,4 @@ const Navbar = () => {
     </>
   );
 };
-
 export default Navbar;
