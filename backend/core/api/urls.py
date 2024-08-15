@@ -23,8 +23,11 @@ urlpatterns = [
     path('', include(router.urls)),
     
     path("user/register/", CreateUserView.as_view(), name='register'),
-    path("token/", TokenObtainPairView.as_view(), name='get_token'),
+    path("user/<int:pk>/", GetUserView.as_view(), name='get-user'),
+
+    path("token/", TokenObtainPairView.as_view(), name='get-token'),
     path("token/refresh/", TokenRefreshView.as_view(), name='refresh'),
+
 
     path('checkout/', CheckoutAPIView.as_view(), name='checkout'),
     # path('csrf-token/', get_csrf_token, name='csrf_token'),

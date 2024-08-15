@@ -21,6 +21,10 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
 
+class GetUserView(generics.RetrieveAPIView):
+    queryset = BamUser.objects.all()
+    serializer_class = UserSerializer
+
 class CountryViewSet(ModelViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
