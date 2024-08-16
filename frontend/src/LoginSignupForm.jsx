@@ -10,8 +10,12 @@ const LoginSignupForm = ({client}) => {
   const [data, setData] = useState({first_name: "", last_name: "", phone: "", username: "", email: "", password: ""});
 
   useEffect(() => {
-    if(localStorage.getItem(ACCESS_TOKEN)&&localStorage.getItem(REFRESH_TOKEN)){
-      navigate("/product_listings")
+    const now = Math.floor(Date.now() / 1000);
+    const a_token = localStorage.getItem(ACCESS_TOKEN);
+    const r_token = localStorage.getItem(REFRESH_TOKEN);
+    
+    if(a_token){ // If access token is sitll valid
+      a_token.exp > now && navigate("/product_listings")
     }
   }, []);
 
@@ -36,7 +40,6 @@ const LoginSignupForm = ({client}) => {
         "password": data.password
       })
       if (token.status === 200){
-        console.log('token', token.data)
         localStorage.setItem(ACCESS_TOKEN, token.data.access)
         localStorage.setItem(REFRESH_TOKEN, token.data.refresh)
         navigate("/product_listings")
@@ -50,20 +53,14 @@ const LoginSignupForm = ({client}) => {
     if(isRegister){
       try{
         const resRegister = await api.post("/user/register/", data);
-        console.log('resRegister', resRegister.data)
         login(e);
       } catch (error) {
         console.log(error)
       }
     }
     else {
-      console.log('hit signin')
       login(e);
     }
-  }
-  function submitLogout(e) {
-    e.preventDefault();
-
   }
     
   return (
@@ -116,11 +113,6 @@ const LoginSignupForm = ({client}) => {
               <p className='text-xs px-0'>Don't have an account? <span onClick={handleRegisterToggle} className='text-colour-7 cursor-pointer'>Register</span> here.</p>
             </>
             }
-          </form>
-          <form onSubmit={submitLogout}>
-            <button
-            className='main-button-hover w-full rounded-lg h-12 bg-colour-4 text-white'
-            type="Logout">Logout</button>
           </form>
       </div>
       </div>
