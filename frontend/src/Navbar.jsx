@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, ShoppingCart, User } from 'lucide-react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Heart, ShoppingCart, User } from 'lucide-react';
+
 import DropdownUser from './DropdownUser';
 
-const Navbar = ({ user }) => {
+const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-
-  const [hoverUserIcon, setHoverUserIcon] = useState(false);
-  const [hoverDropdown, setHoverDropdown] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,16 +43,15 @@ const Navbar = ({ user }) => {
           </div>
 
           <div className="flex items-center">
+            <ShoppingCart className="lucide-icon mx-3" />
+            <Heart className="lucide-icon mx-3" />
             <div className="hover:cursor-pointer group flex items-center h-[4rem]">
               <User className="group my-auto lucide-icon mx-3"/>
               <div className="invisible group-hover:visible">
-                <DropdownUser user={user}/>
+                <DropdownUser/>
               </div>
             </div>
-            <ShoppingCart className="lucide-icon mx-3" />
-            <Menu className="lucide-icon mx-3" />
           </div>
-          <div className="w-16"></div>
         </div>
       </nav>
     </>
