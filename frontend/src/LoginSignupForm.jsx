@@ -19,7 +19,7 @@ const LoginSignupForm = ({client}) => {
     }
   }, []);
 
-  const handleRegisterToggle = () => {
+  const handleRegisterToggle = () => { //Changes which form is displayed
     setIsRegister(!isRegister);
   }
 
