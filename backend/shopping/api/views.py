@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, status, generics
 
-from ..models import Country, ProductListing, Category, BamUser
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserSerializer
+from ..models import Country, ProductListing, Category, BamUser, CartProductListing
+from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserSerializer, CartProductListingSerializer
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
@@ -25,6 +25,10 @@ class GetUserView(generics.RetrieveAPIView):
     queryset = BamUser.objects.all()
     serializer_class = UserSerializer
 
+class CartProductListingView(ModelViewSet):
+    queryset = CartProductListing.objects.all()
+    serializer_class = CartProductListingSerializer
+
 class GetProductView(generics.RetrieveAPIView):
     queryset = ProductListing.objects.all()
     serializer_class = ProductListingSerializer
@@ -32,7 +36,6 @@ class GetProductView(generics.RetrieveAPIView):
     lookup_field = 'url_name'
     
     def get_object(self):
-        print("dsdsfdsafdfsadsfadsfadsafdfsadsafdsfdasfdsafdasfdsfa")
         # Get url name from the url on browser
         url_name = self.kwargs.get('url_name')
 

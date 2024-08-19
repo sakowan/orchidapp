@@ -1,4 +1,4 @@
-import api from "./api"
+import api_any from "./api"
 import React from 'react';
 import MainBody from './MainBody'
 
@@ -20,12 +20,12 @@ const ProductView = () => {
 
   const getProduct = async () => {
     try{
-      const response = await api.get(location.pathname)
+      const response =  await api_any.get(location.pathname.substring(1))
       if (response.data.id != null) {
         setProduct(response.data)
       }
     } catch (e) {
-      console.log('Error fetching product listings:', e)
+      console.log('Error fetching product view:', e)
       navigate("/product_listings")
     }
   };
