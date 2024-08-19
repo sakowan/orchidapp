@@ -1,4 +1,4 @@
-import api_any from "./api"
+import axios from 'axios'
 import React from 'react';
 import MainBody from './MainBody'
 
@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Rating, ThinStar } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
+import { ShoppingCart } from 'lucide-react';
+
 
 const starStyling = {
   itemShapes: ThinStar,
@@ -20,7 +22,7 @@ const ProductView = () => {
 
   const getProduct = async () => {
     try{
-      const response =  await api_any.get(location.pathname.substring(1))
+      const response =  await axios.get(import.meta.env.VITE_API_URL + location.pathname.substring(1))
       if (response.data.id != null) {
         setProduct(response.data)
       }
@@ -57,7 +59,10 @@ const ProductView = () => {
           </div>
           <div className="my-10">{product.desc_long}</div>
           <hr/>
-          <button className="main-button-product-view">ADD TO CART</button>
+          <button className="main-button-product-view main-button-hover flex justify-center">
+            <span>ADD TO CART</span>
+            <ShoppingCart className="lucide-icon ml-4"/>
+          </button>
         </div>
       </div>
 
