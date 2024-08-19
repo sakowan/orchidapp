@@ -1,4 +1,4 @@
-import api from "./api"
+import api_any from "./api"
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const ProductListings = () => {
     // Fetch user data once when the app loads
     const fetchProducts = async () => {
       try{
-        const response = await api.get("product_listings")
+        const response = await api_any.get("product_listings")
         setProducts(response.data)
       } catch (e) {
           console.log('Error fetching product listings:', e)

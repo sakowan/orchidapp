@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { ACCESS_TOKEN } from './constants';
 
+// No need token to access
+export const api_any = axios.create({
+    baseURL: import.meta.env.VITE_API_URL 
+})
+
+// Protected with tokens
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL 
 })
@@ -22,4 +28,4 @@ api.interceptors.request.use(
     }
 )
 
-export default api
+export default api;

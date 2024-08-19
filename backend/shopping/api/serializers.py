@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth import get_user_model, authenticate
-from ..models import Country, ProductListing, Category, BamUser
+from ..models import Country, ProductListing, Category, BamUser, CartProductListing
 
 class CountrySerializer(ModelSerializer):
     class Meta:
@@ -19,6 +19,11 @@ class CategorySerializer(ModelSerializer):
         model = Category
         fields = '__all__'
 
+class CartProductListingSerializer(ModelSerializer):
+    class Meta:
+        model = CartProductListing
+        fields = '__all__'
+
 class UserSerializer(ModelSerializer):
     class Meta:
         model = BamUser
@@ -27,5 +32,4 @@ class UserSerializer(ModelSerializer):
 
     def create(self, validated_data):
         user = BamUser.objects.create_user(**validated_data)
-        print(user)
         return user
