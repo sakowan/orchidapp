@@ -65,10 +65,17 @@ class ProductListing(models.Model):
     seller = models.ForeignKey(BamUser, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=500)
+    url_name = models.CharField(max_length=150, blank=True, editable=False, unique=True)
+    desc_brief = models.CharField(max_length=100)
+    desc_long = models.CharField(max_length=500)
     price = models.DecimalField(max_digits=8, decimal_places=2, default = 0.00)
     stock = models.PositiveIntegerField()
     img_url = models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        # Set url_name based on name
+        self.url_name = self.name.lower().replace(' ', '-')
+        super().save(*args, **kwargs)
 
 class CartProductListing(models.Model):
     #JOINS table

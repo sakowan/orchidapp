@@ -28,13 +28,7 @@ urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name='get-token'),
     path("token/refresh/", TokenRefreshView.as_view(), name='refresh'),
 
-
     path('checkout/', CheckoutAPIView.as_view(), name='checkout'),
     # path('csrf-token/', get_csrf_token, name='csrf_token'),
 
 ]
-
-# path('register', UserRegister.as_view(), name='register'),
-# path('login', UserLogin.as_view(), name='login'),
-# path('logout', UserLogout.as_view(), name='logout'),
-# path('user', UserView.as_view(), name='user'),

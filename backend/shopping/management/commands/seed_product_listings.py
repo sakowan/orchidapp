@@ -13,11 +13,12 @@ class Command(BaseCommand):
 
                 for row in reader:
                     name = row['name']
-                    description = row['description']
+                    desc_brief = row['desc_brief']
                     price = float(row['price'])
                     stock = int(row['stock'])
                     category_id = int(row['category'])
                     img_url = row['img_url']
+                    desc_long = row['desc_long']
 
                     try:
                         category = Category.objects.get(id=category_id)
@@ -27,12 +28,13 @@ class Command(BaseCommand):
 
                     ProductListing.objects.create(
                         name=name,
-                        description=description,
+                        desc_brief=desc_brief,
                         price=price,
                         stock=stock,
                         category=category,
                         seller_id=1,
                         img_url=img_url,
+                        desc_long=desc_long,
                     )
                     self.stdout.write(self.style.SUCCESS(f'ProductListing "{name}" created successfully'))
 

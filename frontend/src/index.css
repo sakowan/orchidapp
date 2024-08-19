@@ -56,6 +56,10 @@ input::-webkit-inner-spin-button {
   }
 }
 
+.main-button-product-view {
+  @apply main-button relative text-lg w-full rounded-3xl mx-auto my-5
+}
+
 @layer components {
   .flex-centred-spaced {
     @apply flex justify-center w-full space-x-4
@@ -64,6 +68,10 @@ input::-webkit-inner-spin-button {
 
 body {
   font-family: 'IBM Plex Mono', monospace;
+}
+
+.h1-product-view {
+  @apply text-gray-600 text-3xl ibm-plex-mono-bold
 }
 
 .icon-color {

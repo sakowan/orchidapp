@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useLocation } from 'react';
 import { Heart, ShoppingCart, User } from 'lucide-react';
 
 import DropdownUser from './DropdownUser';
