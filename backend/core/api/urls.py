@@ -1,7 +1,7 @@
 from shopping.api.views import *
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from shopping.api.urls import country_router, product_listing_router, category_router
+from shopping.api.urls import country_router, product_listing_router, category_router, cart_product_listing_router
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView #Prebuilt views that let me access and refresh tokens
 
 router = DefaultRouter()
@@ -15,6 +15,9 @@ router.registry.extend(product_listing_router.registry)
 
 # URL: categories/
 router.registry.extend(category_router.registry)
+
+# URL: cart_product_listings/
+router.registry.extend(cart_product_listing_router.registry)
 
 # URL: users/
 # router.registry.extend(user_router.registry)

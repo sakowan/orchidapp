@@ -2,9 +2,9 @@ import axios from 'axios';
 import { ACCESS_TOKEN } from './constants';
 
 // No need token to access
-export const api_any = axios.create({
-    baseURL: import.meta.env.VITE_API_URL 
-})
+// export const api_any = axios.get({
+//     baseURL: import.meta.env.VITE_API_URL 
+// })
 
 // Protected with tokens
 const api = axios.create({

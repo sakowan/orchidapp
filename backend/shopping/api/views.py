@@ -25,9 +25,17 @@ class GetUserView(generics.RetrieveAPIView):
     queryset = BamUser.objects.all()
     serializer_class = UserSerializer
 
-class CartProductListingView(ModelViewSet):
+class CartProductListingViewSet(ModelViewSet):
     queryset = CartProductListing.objects.all()
     serializer_class = CartProductListingSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def list(self, request):
+        user = request.user
+        cart = user.cart
+        queryset = CartProductListing.objects.get(cart_id = cart.id)
+        serializer = CartProductListingSerializer(queryset)
+        return Response(serializer.data)
 
 class GetProductView(generics.RetrieveAPIView):
     queryset = ProductListing.objects.all()

@@ -1,10 +1,9 @@
-import api_any from "./api"
+import axios from 'axios'
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import MainBody from './MainBody'
 import ProductCard from './ProductCard'
-import ProductView from './ProductView'
 
 const ProductListings = () => {
   const [products, setProducts] = useState([]);
@@ -14,7 +13,7 @@ const ProductListings = () => {
     // Fetch user data once when the app loads
     const fetchProducts = async () => {
       try{
-        const response = await api_any.get("product_listings")
+        const response = await axios.get(import.meta.env.VITE_API_URL + "product_listings")
         setProducts(response.data)
       } catch (e) {
           console.log('Error fetching product listings:', e)
