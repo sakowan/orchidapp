@@ -4,6 +4,10 @@ from django.core.validators import RegexValidator
 from django.forms import ValidationError
 from datetime import datetime, date, timedelta
 
+# Signals
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
 # Create your models here.
 class TimeStampedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,7 +45,7 @@ class BamUser(AbstractUser):
         )])
 
 class Cart(models.Model):
-    user = models.OneToOneField(BamUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(BamUser, on_delete=models.CASCADE, related_name='cart')
     item_count = models.PositiveIntegerField(default=0)
 
 class Category(models.Model):
@@ -168,3 +172,8 @@ class Complaint(TimeStampedModel):
     type = models.PositiveIntegerField(choices = TYPES)
     resolved = models.BooleanField(default=False)
     # status = models.PositiveIntegerField(choices = STATUSES)
+
+@receiver(post_save, sender=BamUser)
+def create_cart_for_user(sender, instance, created, **kwargs):
+    if created:
+        Cart.objects.create(user=instance)
