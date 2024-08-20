@@ -31,9 +31,12 @@ class CartProductListingViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
     def list(self, request):
-        user = request.user
+        user = BamUser.objects.get(email=request.user)
         cart = user.cart
-        queryset = CartProductListing.objects.get(cart_id = cart.id)
+        queryset = CartProductListing.objects.filter(cart_id = cart.id)
+        if not queryset:
+            return Response()
+        
         serializer = CartProductListingSerializer(queryset)
         return Response(serializer.data)
 
@@ -121,47 +124,3 @@ class CheckoutAPIView(APIView):
             return HttpResponse(e) 
         return
         # return redirect(checkout_session.url, code=303)
-
-# class UserRegister(APIView):
-#     #Who is allowed to access this class
-#     permission_classes = (permissions.AllowAny,)
-    
-#     def post(self, request):
-#         #Clean data before passing to serializer by using any validator on the fields first then:
-#         clean_data = request.data
-#         serializer = UserRegisterSerializer(data=clean_data)
-#         if serializer.is_valid(raise_exception=True):
-
-#             #User created and returned by serializer function
-#             user = serializer.create(clean_data)
-#             if user:
-#                 return Response(serializer.data, status = status.HTTP_201_CREATED)
-#         return Response(status = status.HTTP_400_BAD_REQUEST)
-
-# class UserLogin(APIView):
-#     permission_classes = (permissions.AllowAny,)
-#     authentication_classes = (SessionAuthentication,)
-
-#     def post(self, request):
-#         data = request.data
-#         # assert validate_email(data)
-#         # assert validate_password(data)
-#         serializer = UserLoginSerializer(data=data)
-#         if serializer.is_valid(raise_exception=True):
-#             user = serializer.check_user(data)
-#             login(request, user)
-#             return Response(serializer.data, status = status.HTTP_200_OK)
-
-# class UserLogout(APIView):
-#     def post(self, request):
-#         logout(request)
-#         return Response(status=status.HTTP_200_OK)
-
-# class UserView(APIView):
-#     permission_classes = (permissions.IsAuthenticated,)
-#     authentication_classes = (SessionAuthentication,)
-
-#     def get(self, request):
-#         serializer = UserSerializer(request.user)
-#         print(request.COOKIES)
-#         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
