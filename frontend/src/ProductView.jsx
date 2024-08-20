@@ -19,6 +19,26 @@ const ProductView = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [product, setProduct] = useState(location.state?.product || {});
+  const [reviews, setReviews] = useState([]);
+  const [avgRating, setAvgRating] = useState(0);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try{
+        const response = await axios.get(import.meta.env.VITE_API_URL + "reviews", {
+          params: {
+            product_id: product.id
+          }
+        })
+        setReviews(response.data)
+        setAvgRating(response.data.avg_rating)
+        console.log('reviews', response.data)
+      } catch (e) {
+          console.log('Error fetching product listings:', e)
+      }
+    };
+    fetchReviews();
+  }, [])
 
   const getProduct = async () => {
     try{
@@ -34,7 +54,7 @@ const ProductView = () => {
   
   useEffect(() => {
     getProduct();
-  }, [product])
+  }, [])
 
   return (
     <MainBody>
@@ -53,9 +73,10 @@ const ProductView = () => {
           <h1 className="h1-product-view">{product.name}</h1>
           
           {/* Review indicator */}
-          <div className="flex">
-            <span className="pt-2 w-4/5">{product.desc_brief}</span>
-            <Rating className="w-1/5" readOnly value={3.5} itemStyles={starStyling}/>
+          <div className="flex items-center">
+            <span className="w-4/5">{product.desc_brief}</span>
+            <Rating className="pr-[0.5rem] pb-[0.1rem] w-[7rem]" readOnly value={avgRating} itemStyles={starStyling}/>
+            <span className="">{avgRating}</span>
           </div>
           <div className="my-10">{product.desc_long}</div>
           <hr/>

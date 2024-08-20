@@ -10,7 +10,6 @@ const Navbar = () => {
   const [cartProds, setCartProds] = useState([]);
 
   useEffect(() => {
-    // Fetch user data once when the app loads
     const fetchCartProds = async () => {
       try{
         const response = await api.get(import.meta.env.VITE_API_URL + "cart_products")

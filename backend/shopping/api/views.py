@@ -1,4 +1,5 @@
 import stripe, json
+from django.db.models import Avg
 from django.conf import settings
 from django.middleware.csrf import get_token
 from django.http import HttpResponse, JsonResponse
@@ -9,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, status, generics
 
-from ..models import Country, ProductListing, Category, BamUser, CartProductListing
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserSerializer, CartProductListingSerializer
+from ..models import Country, ProductListing, Category, BamUser, CartProductListing, Review
+from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserSerializer, CartProductListingSerializer, ReviewSerializer
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
@@ -56,6 +57,34 @@ class GetProductView(generics.RetrieveAPIView):
 class CountryViewSet(ModelViewSet):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
+
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def list(self, request, *args, **kwargs):
+        product_id = request.query_params.get('product_id')
+        queryset = Review.objects.filter(product_listing_id = product_id)
+        serializer = self.get_serializer(queryset, many=True)
+        print('REQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUEST', queryset)
+
+        #Add average rating
+        avg_rating = queryset.aggregate(avg_rating=Avg('rating'))['avg_rating']
+        avg_rating = format(round(avg_rating, 1), ".1f")
+        
+        #Handle the case where there are no reviews
+        if avg_rating is None:
+            avg_rating = 0.0
+        
+        #Prepare the response data
+        response_data = {
+            'reviews': serializer.data,
+            'avg_rating': avg_rating
+        }
+    
+        # Return the response with appended average rating
+        return Response(response_data)
 
 class ProductListingViewSet(ModelViewSet):
     queryset = ProductListing.objects.all()

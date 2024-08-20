@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.forms import ValidationError
 from datetime import datetime, date, timedelta
 
@@ -172,6 +172,25 @@ class Complaint(TimeStampedModel):
     type = models.PositiveIntegerField(choices = TYPES)
     resolved = models.BooleanField(default=False)
     # status = models.PositiveIntegerField(choices = STATUSES)
+
+class Review(TimeStampedModel):
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='reviews')
+    product_listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveIntegerField(validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ])
+    title = models.CharField(blank=True, null=True)
+    body = models.CharField(blank=True, null=True)
+
+    def clean(self):
+        super().clean()
+        if (self.title and not self.body) or (not self.title and self.body):
+            raise ValidationError(f'Both title and body must be provided together.')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # Calls the clean method and validates the title & body field must be present tgt
+        super().save(*args, **kwargs)
 
 @receiver(post_save, sender=BamUser)
 def create_cart_for_user(sender, instance, created, **kwargs):
