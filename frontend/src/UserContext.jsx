@@ -15,7 +15,6 @@ export const UserProvider = ({ children }) => {
         const a_token = localStorage.getItem(ACCESS_TOKEN);
         const a_decoded = jwtDecode(a_token);
         const u = await api.get(`user/${a_decoded.user_id}`)
-
         setUser(u.data)
       } catch (e) {
           console.log('Error fetching user data:', e)
@@ -28,7 +27,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider value={{user, setUser}}>
       {children}
     </UserContext.Provider>
   );
