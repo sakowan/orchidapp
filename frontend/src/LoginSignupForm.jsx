@@ -2,9 +2,12 @@ import './index.css';
 import api from "./api"
 import { useNavigate } from 'react-router-dom';
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "./constants";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from './UserContext';
+import { jwtDecode } from 'jwt-decode';
 
 const LoginSignupForm = ({client}) => {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [isRegister, setIsRegister] = useState(false);
   const [data, setData] = useState({first_name: "", last_name: "", phone: "", username: "", email: "", password: ""});
@@ -35,18 +38,25 @@ const LoginSignupForm = ({client}) => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const token = await api.post("/token/", {
+      api.post("/token/", {
         "email": data.email,
         "password": data.password
-      })
-      if (token.status === 200){
-        localStorage.setItem(ACCESS_TOKEN, token.data.access)
-        localStorage.setItem(REFRESH_TOKEN, token.data.refresh)
+      }).then((tokenResponse) => {
+        if (tokenResponse.status === 200){
+          localStorage.setItem(ACCESS_TOKEN, tokenResponse.data.access)
+          localStorage.setItem(REFRESH_TOKEN, tokenResponse.data.refresh)
+          const a_decoded = jwtDecode(tokenResponse.data.access)
+          return api.get(`user/${a_decoded.user_id}`)
+        } else {
+          return navigate(0);
+        }
+      }).then((userResponse) => {
+        setUser(userResponse.data)
         navigate("/product_listings")
-      } 
-    } catch {
-      console.log(e)
-    }
+      })
+      } catch {
+        console.log("Error logging in user:", e)
+      }
   }
   const submitForm = async(e) => {
     e.preventDefault();

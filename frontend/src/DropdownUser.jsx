@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { UserContext } from './UserContext';
 
 const DropdownUser = () => {
-    const user = useContext(UserContext);
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
     function submitLogout(e) {
