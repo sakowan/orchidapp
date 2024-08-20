@@ -15,7 +15,6 @@ const LoginSignupForm = ({client}) => {
   useEffect(() => {
     const now = Math.floor(Date.now() / 1000);
     const a_token = localStorage.getItem(ACCESS_TOKEN);
-    const r_token = localStorage.getItem(REFRESH_TOKEN);
     
     if(a_token){ // If access token is sitll valid
       a_token.exp > now && navigate("/product_listings")
@@ -41,11 +40,11 @@ const LoginSignupForm = ({client}) => {
       api.post("/token/", {
         "email": data.email,
         "password": data.password
-      }).then((tokenResponse) => {
-        if (tokenResponse.status === 200){
-          localStorage.setItem(ACCESS_TOKEN, tokenResponse.data.access)
-          localStorage.setItem(REFRESH_TOKEN, tokenResponse.data.refresh)
-          const a_decoded = jwtDecode(tokenResponse.data.access)
+      }).then((token) => {
+        if (token.status === 200){
+          localStorage.setItem(ACCESS_TOKEN, token.data.access)
+          localStorage.setItem(REFRESH_TOKEN, token.data.refresh)
+          const a_decoded = jwtDecode(token.data.access)
           return api.get(`user/${a_decoded.user_id}`)
         } else {
           return navigate(0);
@@ -56,13 +55,15 @@ const LoginSignupForm = ({client}) => {
       })
       } catch {
         console.log("Error logging in user:", e)
+        navigate(0);
       }
   }
+
   const submitForm = async(e) => {
     e.preventDefault();
     if(isRegister){
       try{
-        const resRegister = await api.post("/user/register/", data);
+        await api.post("/user/register/", data);
         login(e);
       } catch (error) {
         console.log(error)
