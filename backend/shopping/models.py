@@ -71,7 +71,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     url_name = models.CharField(max_length=150, blank=True, editable=False, unique=True)
     desc_brief = models.CharField(max_length=100)
-    desc_long = models.CharField(max_length=500)
+    desc_long = models.CharField()
     price = models.DecimalField(max_digits=8, decimal_places=2, default = 0.00)
     stock = models.PositiveIntegerField()
     main_img = models.CharField(max_length=100)
