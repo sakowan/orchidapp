@@ -4,10 +4,11 @@ import MainBody from './MainBody'
 
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
 import { Rating, ThinStar } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
-import { ShoppingCart } from 'lucide-react';
-
+import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
+import {Collapse} from "@material-tailwind/react";
 
 const starStyling = {
   itemShapes: ThinStar,
@@ -22,6 +23,20 @@ const ProductView = () => {
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
 
+
+  const [collapseStates, setCollapseStates] = useState({
+    benefits: false,
+    application: false,
+    ingredients: false
+  });
+
+  const toggleCollapse = (section) => {
+    setCollapseStates((prevStates) => ({
+      ...prevStates,
+      [section]: !prevStates[section]
+    }));
+  };
+
   useEffect(() => {
     const fetchReviews = async () => {
       try{
@@ -33,7 +48,7 @@ const ProductView = () => {
         setReviews(response.data)
         setAvgRating(response.data.avg_rating)
       } catch (e) {
-          console.log('Error fetching product listings:', e)
+          console.log('Error fetching reviews:', e)
       }
     };
     fetchReviews();
@@ -68,7 +83,7 @@ const ProductView = () => {
         </div>
 
         {/* Right Side */}
-        <div className="w-1/2 p-6 bg-gray-100 rounded-lg text-gray-500">
+        <div className="w-1/2 p-12 bg-gray-100 rounded-lg text-gray-500">
           <h1 className="h1-product-view">{product.name}</h1>
           
           {/* Review indicator */}
@@ -78,7 +93,57 @@ const ProductView = () => {
             <span className="">{avgRating}</span>
           </div>
           <div className="my-10">{product.desc_long}</div>
+
           <hr/>
+
+          <div className="py-4">
+            <button 
+            onClick={() => toggleCollapse('benefits')}
+            className="w-full text-left flex justify-between">
+              <h2 className="h2-product-view">BENEFITS</h2>
+              {collapseStates.benefits ? <CircleMinus className='lucide-fat'/> : <CirclePlus className='lucide-fat'/>}
+            </button>
+            <Collapse open={collapseStates.benefits}>
+              <p className="pt-4">
+                {/* {product.} */}
+                123123123
+              </p>
+            </Collapse>
+          </div>
+
+          <hr/>
+
+          <div className="py-4">
+            <button 
+            onClick={() => toggleCollapse('application')}
+            className="w-full text-left flex justify-between">
+              <h2 className="h2-product-view">APPLICATION</h2>
+              {collapseStates.application ? <CircleMinus className='lucide-fat'/> : <CirclePlus className='lucide-fat'/>}
+            </button>
+            <Collapse open={collapseStates.application}>
+              <p className="pt-4">
+                {/* {product.} */}
+                123123123
+              </p>
+            </Collapse>
+          </div>
+
+          <hr/>
+
+          <div className="py-4">
+            <button 
+            onClick={() => toggleCollapse('ingredients')}
+            className="w-full text-left flex justify-between">
+              <h2 className="h2-product-view">INGREDIENTS</h2>
+              {collapseStates.ingredients ? <CircleMinus className='lucide-fat'/> : <CirclePlus className='lucide-fat'/>}
+            </button>
+            <Collapse open={collapseStates.ingredients}>
+              <p className="pt-4">
+                {product.ingredients}
+              </p>
+            </Collapse>
+          </div>
+
           <button className="main-button-product-view main-button-hover flex justify-center">
             <span>ADD TO CART</span>
             <ShoppingCart className="lucide-icon ml-4"/>
@@ -91,7 +156,6 @@ const ProductView = () => {
       className="w-full bg-gray-100 rounded-lg m-5 p-5">
         <h1 className="h1-product-view">Reviews</h1>
       </div>
-
     </MainBody>
   );
 };
