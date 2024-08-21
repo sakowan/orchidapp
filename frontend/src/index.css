@@ -23,6 +23,10 @@ input::-webkit-inner-spin-button {
   stroke-width: 1;
 }
 
+.lucide-fat {
+  @apply cursor-pointer text-colour-5 stroke-[1.5px]
+}
+
 .login-parent-sm {
   @apply flex w-2/5 bg-gray-100 bg-opacity-60 p-12 fixed right-0 h-full
 }
@@ -72,6 +76,10 @@ body {
 
 .h1-product-view {
   @apply text-gray-600 text-3xl ibm-plex-mono-bold
+}
+
+.h2-product-view {
+  @apply text-gray-500 text-xl
 }
 
 .icon-color {
