@@ -17,7 +17,7 @@ const LoginSignupForm = ({client}) => {
     const a_token = localStorage.getItem(ACCESS_TOKEN);
     
     if(a_token){ // If access token is sitll valid
-      a_token.exp > now && navigate("/product_listings")
+      a_token.exp > now && navigate("/products")
     }
   }, []);
 
@@ -51,7 +51,7 @@ const LoginSignupForm = ({client}) => {
         }
       }).then((userResponse) => {
         setUser(userResponse.data)
-        navigate("/product_listings")
+        navigate("/products")
       })
       } catch {
         console.log("Error logging in user:", e)

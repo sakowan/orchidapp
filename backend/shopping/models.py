@@ -65,7 +65,7 @@ class Category(models.Model):
                 return name
         return 'Blank'  # If no matching type is found
 
-class ProductListing(models.Model):
+class Product(models.Model):
     seller = models.ForeignKey(BamUser, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -74,17 +74,27 @@ class ProductListing(models.Model):
     desc_long = models.CharField(max_length=500)
     price = models.DecimalField(max_digits=8, decimal_places=2, default = 0.00)
     stock = models.PositiveIntegerField()
-    img_url = models.CharField(max_length=100)
+    main_img = models.CharField(max_length=100)
+    img_urls = models.JSONField(default=list)
+
+    benefits = models.CharField(max_length=400)
+    application = models.CharField(max_length=300)
+    ingredients = models.CharField()
 
     def save(self, *args, **kwargs):
         # Set url_name based on name
         self.url_name = self.name.lower().replace(' ', '-')
+        
+        # Can only store <= 5 img urls
+        if len(self.img_urls) > 5:
+            raise ValueError("You can only store up to 5 image URLs.")
+        
         super().save(*args, **kwargs)
 
-class CartProductListing(models.Model):
+class CartProduct(models.Model):
     #JOINS table
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
     class Meta:
@@ -102,7 +112,7 @@ class ProductItemManager(models.Manager):
         return super().create(*args, **kwargs)
 
 class ProductItem(models.Model):
-    listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Product, on_delete=models.CASCADE)
     serial_number = models.CharField(max_length=100)
     expiry_date = models.DateField()
 
@@ -175,7 +185,7 @@ class Complaint(TimeStampedModel):
 
 class Review(TimeStampedModel):
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='reviews')
-    product_listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE, related_name='reviews')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     rating = models.PositiveIntegerField(validators=[
             MinValueValidator(1),
             MaxValueValidator(5)

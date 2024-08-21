@@ -1,9 +1,9 @@
 import csv
 from django.core.management.base import BaseCommand
-from shopping.models import ProductListing, Category
+from shopping.models import Product, Category
 
 class Command(BaseCommand):
-    help = 'Seed the database with ProductListings from a CSV file'
+    help = 'Seed the database with Products from a CSV file'
 
     def handle(self, *args, **kwargs):
         csv_file_path = 'shopping/management/seeder_csvs/product_listings.csv'
@@ -17,7 +17,7 @@ class Command(BaseCommand):
                     price = float(row['price'])
                     stock = int(row['stock'])
                     category_id = int(row['category'])
-                    img_url = row['img_url']
+                    main_img = row['main_img']
                     desc_long = row['desc_long']
 
                     try:
@@ -26,19 +26,19 @@ class Command(BaseCommand):
                         self.stdout.write(self.style.ERROR(f'Category with ID {category_id} does not exist.'))
                         continue
 
-                    ProductListing.objects.create(
+                    Product.objects.create(
                         name=name,
                         desc_brief=desc_brief,
                         price=price,
                         stock=stock,
                         category=category,
                         seller_id=1,
-                        img_url=img_url,
+                        main_img=main_img,
                         desc_long=desc_long,
                     )
-                    self.stdout.write(self.style.SUCCESS(f'ProductListing "{name}" created successfully'))
+                    self.stdout.write(self.style.SUCCESS(f'Product "{name}" created successfully'))
 
-            self.stdout.write(self.style.SUCCESS('Successfully imported ProductListings from CSV'))
+            self.stdout.write(self.style.SUCCESS('Successfully imported Products from CSV'))
         except FileNotFoundError:
             self.stdout.write(self.style.ERROR(f'The file {csv_file_path} was not found'))
         except Exception as e:
