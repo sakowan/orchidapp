@@ -6,7 +6,7 @@ import { UserProvider } from './UserContext';
 import Navbar from "./Navbar"
 import Checkout from "./Checkout"
 import Landing from "./Landing"
-import ProductListings from "./ProductListings"
+import Products from "./Products"
 import ProductView from "./ProductView"
 import LoginSignupForm from "./LoginSignupForm"
 import ProtectedRoute from './ProtectedRoute';
@@ -18,9 +18,9 @@ function App() {
             {(location.pathname != "/login" && location.pathname != "/checkout") && <Navbar/>}
             <Routes>
                 <Route path='/login' element={<LoginSignupForm/>}></Route>
-                <Route path='/' element={<ProductListings/>}></Route>
-                <Route path='/product_listings' element={<ProductListings/>}></Route>
-                <Route path='/product_listings/:url_name' element={<ProductView/>}></Route>
+                <Route path='/' element={<Products/>}></Route>
+                <Route path='/products' element={<Products/>}></Route>
+                <Route path='/products/:url_name' element={<ProductView/>}></Route>
                 <Route path='/checkout' element={
                     <ProtectedRoute>
                         <Checkout/>

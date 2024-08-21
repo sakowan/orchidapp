@@ -50,7 +50,7 @@ const Navbar = () => {
       >
         <div className="h-full container mx-auto my-auto flex items-center">
           <div className="flex items-center space-x-6">
-            <a className='mx-3.5 ibm-plex-mono-extralight text-xl' href="/product_listings">Shop</a>
+            <a className='mx-3.5 ibm-plex-mono-extralight text-xl' href="/products">Shop</a>
           </div>
 
           <div className="flex-1 flex justify-center">

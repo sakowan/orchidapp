@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, status, generics
 
-from ..models import Country, ProductListing, Category, BamUser, CartProductListing, Review
-from .serializers import CountrySerializer, ProductListingSerializer, CategorySerializer, UserSerializer, CartProductListingSerializer, ReviewSerializer
+from ..models import Country, Product, Category, BamUser, CartProduct, Review
+from .serializers import CountrySerializer, ProductSerializer, CategorySerializer, UserSerializer, CartProductSerializer, ReviewSerializer
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
@@ -26,24 +26,24 @@ class GetUserView(generics.RetrieveAPIView):
     queryset = BamUser.objects.all()
     serializer_class = UserSerializer
 
-class CartProductListingViewSet(ModelViewSet):
-    queryset = CartProductListing.objects.all()
-    serializer_class = CartProductListingSerializer
+class CartProductViewSet(ModelViewSet):
+    queryset = CartProduct.objects.all()
+    serializer_class = CartProductSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def list(self, request):
         user = BamUser.objects.get(email=request.user)
         cart = user.cart
-        queryset = CartProductListing.objects.filter(cart_id = cart.id)
+        queryset = CartProduct.objects.filter(cart_id = cart.id)
         if not queryset:
             return Response()
         
-        serializer = CartProductListingSerializer(queryset)
+        serializer = CartProductSerializer(queryset)
         return Response(serializer.data)
 
 class GetProductView(generics.RetrieveAPIView):
-    queryset = ProductListing.objects.all()
-    serializer_class = ProductListingSerializer
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
     lookup_field = 'url_name'
     
@@ -52,7 +52,7 @@ class GetProductView(generics.RetrieveAPIView):
         url_name = self.kwargs.get('url_name')
 
         # Get and return the product instance based on `url_name`
-        return generics.get_object_or_404(ProductListing, url_name=url_name)
+        return generics.get_object_or_404(Product, url_name=url_name)
 
 class CountryViewSet(ModelViewSet):
     queryset = Country.objects.all()
@@ -65,7 +65,7 @@ class ReviewViewSet(ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         product_id = request.query_params.get('product_id')
-        queryset = Review.objects.filter(product_listing_id = product_id)
+        queryset = Review.objects.filter(product_id = product_id)
         serializer = self.get_serializer(queryset, many=True)
         print('REQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUEST', queryset)
 
@@ -86,9 +86,9 @@ class ReviewViewSet(ModelViewSet):
         # Return the response with appended average rating
         return Response(response_data)
 
-class ProductListingViewSet(ModelViewSet):
-    queryset = ProductListing.objects.all()
-    serializer_class = ProductListingSerializer
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = 'url_name'
 
@@ -104,11 +104,11 @@ class ProductListingViewSet(ModelViewSet):
         url_name = self.kwargs.get('url_name')
 
         # Get and return the product instance based on `url_name`
-        return generics.get_object_or_404(ProductListing, url_name=url_name)
+        return generics.get_object_or_404(Product, url_name=url_name)
     
     def list(self, request, *args, **kwargs):
         queryset = self.queryset
-        serializer = ProductListingSerializer(queryset, many=True)
+        serializer = ProductSerializer(queryset, many=True)
         self.permission_classes = [permissions.AllowAny]
         
         return Response(serializer.data)

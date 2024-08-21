@@ -32,7 +32,6 @@ const ProductView = () => {
         })
         setReviews(response.data)
         setAvgRating(response.data.avg_rating)
-        console.log('reviews', response.data)
       } catch (e) {
           console.log('Error fetching product listings:', e)
       }
@@ -48,7 +47,7 @@ const ProductView = () => {
       }
     } catch (e) {
       console.log('Error fetching product view:', e)
-      navigate("/product_listings")
+      navigate("/products")
     }
   };
   
@@ -64,7 +63,7 @@ const ProductView = () => {
         <div className="w-1/2 mr-5">
           <img 
           className="rounded-lg h-full border border-gray-100"
-          src={`/src/assets/images/${product.img_url}`} alt="product"/>
+          src={`/src/assets/images/${product.main_img}`} alt="product"/>
 
         </div>
 

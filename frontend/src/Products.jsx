@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import MainBody from './MainBody'
 import ProductCard from './ProductCard'
 
-const ProductListings = () => {
+const Products = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ const ProductListings = () => {
     // Fetch user data once when the app loads
     const fetchProducts = async () => {
       try{
-        const response = await axios.get(import.meta.env.VITE_API_URL + "product_listings")
+        const response = await axios.get(import.meta.env.VITE_API_URL + "products")
         setProducts(response.data)
       } catch (e) {
           console.log('Error fetching product listings:', e)
@@ -25,7 +25,7 @@ const ProductListings = () => {
 
   const goProductView = (product) => {
     console.log(product.name);
-    navigate(`/product_listings/${product.url_name}`, { state: { product } });
+    navigate(`/products/${product.url_name}`, { state: { product } });
     // navigate to the product view, e.g., navigate(`/products/${product.url_name}`);
   };
 
@@ -42,4 +42,4 @@ const ProductListings = () => {
   );
 };
 
-export default ProductListings;
+export default Products;

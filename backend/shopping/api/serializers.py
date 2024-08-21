@@ -2,16 +2,16 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth import get_user_model, authenticate
-from ..models import Country, ProductListing, Category, BamUser, CartProductListing, Review
+from ..models import Country, Product, Category, BamUser, CartProduct, Review
 
 class CountrySerializer(ModelSerializer):
     class Meta:
         model = Country
         fields = ('id',  'name', 'country_code', 'currency_code', 'calling_code')
 
-class ProductListingSerializer(ModelSerializer):
+class ProductSerializer(ModelSerializer):
     class Meta:
-        model = ProductListing
+        model = Product
         fields = '__all__'
 
 class CategorySerializer(ModelSerializer):
@@ -19,9 +19,9 @@ class CategorySerializer(ModelSerializer):
         model = Category
         fields = '__all__'
 
-class CartProductListingSerializer(ModelSerializer):
+class CartProductSerializer(ModelSerializer):
     class Meta:
-        model = CartProductListing
+        model = CartProduct
         fields = '__all__'
 
 class ReviewSerializer(ModelSerializer):

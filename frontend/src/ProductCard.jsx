@@ -22,7 +22,6 @@ export const ProductCard = ({ product }) => {
           }
         })
         setAvgRating(response.data.avg_rating)
-        console.log('reviews', response.data)
       } catch (e) {
           console.log('Error fetching product listings:', e)
       }
@@ -32,7 +31,7 @@ export const ProductCard = ({ product }) => {
 
   return (
     <div className="h-[44rem] mb-4 mx-auto max-w-md cursor-pointer bg-white shadow duration-150 hover:shadow-lg">
-      <img className="h-5/6 w-full object-cover object-center" src={`/src/assets/images/${product.img_url}`} alt="product" />
+      <img className="h-5/6 w-full object-cover object-center" src={`/src/assets/images/${product.main_img}`} alt="product" />
       <div className='p-1'>
         <div className='flex justify-between items-center'>
           <p className="my-4 pl-4 ibm-plex-mono-medium text-black-800">{product.name}</p>
