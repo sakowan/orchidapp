@@ -1,10 +1,11 @@
 import axios from 'axios'
 import React from 'react';
-import MainBody from './MainBody'
-
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Drawer, ThemeProvider} from "@material-tailwind/react";
 
+
+import MainBody from './MainBody'
 import { Rating, ThinStar } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
 import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
@@ -16,25 +17,63 @@ const starStyling = {
   inactiveFillColor: '#D1D5DB' //gray-300
 }
 
+const myTheme = {
+  drawer: {
+    styles: {
+      base: {
+        drawer: {
+          position: "fixed",
+          zIndex: "z-[9999]",
+          pointerEvents: "pointer-events-auto",
+          backgroundColor: "bg-white",
+          boxSizing: "box-border",
+          width: "w-full",
+          boxShadow: "shadow-2xl shadow-blue-gray-900/10",
+        },
+        overlay: {
+          position: "fixed",
+          inset: "inset-0",
+          width: "w-full",
+          height: "h-full",
+          pointerEvents: "pointer-events-auto",
+          zIndex: "z-[9995]",
+          backgroundColor: "bg-black",
+          backgroundOpacity: "bg-opacity-30",
+          backdropBlur: "backdrop-blur-sm",
+        },
+      },
+    },
+  },
+};
+
 const ProductView = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [product, setProduct] = useState(location.state?.product || {});
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
-
-
-  const [collapseStates, setCollapseStates] = useState({
-    benefits: false,
-    application: false,
-    ingredients: false
-  });
+  const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
+  const [open, setOpen] = useState(false);
+  const openDrawer = () => setOpen(true);
+  const closeDrawer = () => setOpen(false);
 
   const toggleCollapse = (section) => {
     setCollapseStates((prevStates) => ({
       ...prevStates,
       [section]: !prevStates[section]
     }));
+  };
+
+  const getProduct = async () => {
+    try{
+      const response =  await axios.get(import.meta.env.VITE_API_URL + location.pathname.substring(1))
+      if (response.data.id != null) {
+        setProduct(response.data)
+      }
+    } catch (e) {
+      console.log('Error fetching product view:', e)
+      navigate("/products")
+    }
   };
 
   useEffect(() => {
@@ -52,89 +91,73 @@ const ProductView = () => {
       }
     };
     fetchReviews();
-  }, [])
-
-  const getProduct = async () => {
-    try{
-      const response =  await axios.get(import.meta.env.VITE_API_URL + location.pathname.substring(1))
-      if (response.data.id != null) {
-        setProduct(response.data)
-      }
-    } catch (e) {
-      console.log('Error fetching product view:', e)
-      navigate("/products")
-    }
-  };
-  
-  useEffect(() => {
     getProduct();
   }, [])
-
+  
   return (
     <MainBody>
+      {/* Drawer */}
+      <ThemeProvider value={myTheme}>
+        <Drawer placement="right" open={open} onClose={closeDrawer} className={open ? '!w-2/5 !max-w-none' : ''}>
+          lalalalalalala
+        </Drawer>
+      </ThemeProvider>
+
+
       {/* First Row */}
-      <div className="flex w-full h-full p-5">
+      <div className="flex w-full p-5">
         {/* Left Side */}
         <div className="w-1/2 mr-5">
           <img 
-          className="rounded-lg h-full border border-gray-100"
+          className="rounded-lg h-screen border border-gray-100"
           src={`/src/assets/images/${product.main_img}`} alt="product"/>
-
         </div>
 
         {/* Right Side */}
-        <div className="w-1/2 p-12 bg-gray-100 rounded-lg text-gray-500">
-          <h1 className="h1-product-view">{product.name}</h1>
+        <div className="grid w-1/2 p-12 bg-gray-100 rounded-lg text-gray-500">
+          <h1 className="pv-h1">{product.name}</h1>
           
           {/* Review indicator */}
           <div className="flex items-center">
             <span className="w-4/5">{product.desc_brief}</span>
-            <Rating className="pr-[0.5rem] pb-[0.1rem] w-[7rem]" readOnly value={avgRating} itemStyles={starStyling}/>
+            <Rating className="pv-rating" readOnly value={avgRating} itemStyles={starStyling}/>
             <span className="">{avgRating}</span>
           </div>
           <div className="my-10">{product.desc_long}</div>
 
           <hr/>
 
-          <div className="py-4">
-            <button 
-            onClick={() => toggleCollapse('benefits')}
-            className="w-full text-left flex justify-between">
-              <h2 className="h2-product-view">BENEFITS</h2>
+          <div className="py-2">
+            <button onClick={() => toggleCollapse('benefits')} className="pv-collapse-btn">
+              <h2 className="pv-h2">BENEFITS</h2>
               {collapseStates.benefits ? <CircleMinus className='lucide-fat'/> : <CirclePlus className='lucide-fat'/>}
             </button>
             <Collapse open={collapseStates.benefits}>
               <p className="pt-4">
-                {/* {product.} */}
-                123123123
+                {product.benefits}
               </p>
             </Collapse>
           </div>
 
           <hr/>
 
-          <div className="py-4">
-            <button 
-            onClick={() => toggleCollapse('application')}
-            className="w-full text-left flex justify-between">
-              <h2 className="h2-product-view">APPLICATION</h2>
+          <div className="py-2">
+            <button onClick={() => toggleCollapse('application')} className="pv-collapse-btn">
+              <h2 className="pv-h2">APPLICATION</h2>
               {collapseStates.application ? <CircleMinus className='lucide-fat'/> : <CirclePlus className='lucide-fat'/>}
             </button>
             <Collapse open={collapseStates.application}>
               <p className="pt-4">
-                {/* {product.} */}
-                123123123
+                {product.application}
               </p>
             </Collapse>
           </div>
 
           <hr/>
 
-          <div className="py-4">
-            <button 
-            onClick={() => toggleCollapse('ingredients')}
-            className="w-full text-left flex justify-between">
-              <h2 className="h2-product-view">INGREDIENTS</h2>
+          <div className="py-2">
+            <button onClick={() => toggleCollapse('ingredients')} className="pv-collapse-btn">
+              <h2 className="pv-h2">INGREDIENTS</h2>
               {collapseStates.ingredients ? <CircleMinus className='lucide-fat'/> : <CirclePlus className='lucide-fat'/>}
             </button>
             <Collapse open={collapseStates.ingredients}>
@@ -144,9 +167,10 @@ const ProductView = () => {
             </Collapse>
           </div>
 
-          <button className="main-button-product-view main-button-hover flex justify-center">
+          <button id="atc" className="pv-add-to-cart-btn" onClick={openDrawer}>
+            <ShoppingCart className="lucide-icon mr-2"/>
             <span>ADD TO CART</span>
-            <ShoppingCart className="lucide-icon ml-4"/>
+            <span className="ml-2">- ¥{product.price}</span>
           </button>
         </div>
       </div>
@@ -154,7 +178,7 @@ const ProductView = () => {
       {/* Reviews */}
       <div
       className="w-full bg-gray-100 rounded-lg m-5 p-5">
-        <h1 className="h1-product-view">Reviews</h1>
+        <h1 className="pv-h1">Reviews</h1>
       </div>
     </MainBody>
   );
