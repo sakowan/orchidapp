@@ -12,6 +12,13 @@ import LoginSignupForm from "./LoginSignupForm"
 import ProtectedRoute from './ProtectedRoute';
 
 function App() {
+    const customTheme = {
+        drawer: {
+            styles: {
+                backgroundColor: "red"
+            }
+        }
+    }
     const location = useLocation();
     return (
         <UserProvider>
