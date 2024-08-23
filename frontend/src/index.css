@@ -90,10 +90,17 @@ body {
   @apply text-gray-500 text-xl
 }
 
+.pv-h3 {
+  @apply text-gray-500 text-lg
+}
+
 .pv-rating {
   @apply pr-[0.5rem] pb-[0.1rem] w-[7rem]
 }
 
+.pv-qty-btn {
+  @apply flex items-center bg-gray-100 hover:bg-gray-200 border border-gray-300 p-3 h-10 w-10 focus:ring-gray-100 focus:ring-2 focus:outline-none
+}
 .icon-color {
     color: #000000; /* Your desired color */
 }

@@ -29,7 +29,41 @@ class GetUserView(generics.RetrieveAPIView):
 class CartProductViewSet(ModelViewSet):
     queryset = CartProduct.objects.all()
     serializer_class = CartProductSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        cart_id = request.data.get('cart_id')
+        product_id = request.data.get('product_id')
+        quantity = request.data.get('qty')
+        # cp = CartProduct.objects.get(cart_id=cart_id, product_id=product_id)
+
+        # If cp already exists
+        if (product_id == 19191919):
+            print("EXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTS")
+            cp.quantity = quantity
+            cp.save()
+            return Response({'CartProduct updated': cp}, status=status.HTTP_200_OK)
+
+        else:
+            cp = CartProduct(cart_id=cart_id, product_id=product_id, quantity=quantity)
+            cp.save()
+            return Response('CartProduct created', status=status.HTTP_201_CREATED)
+
+
+
+    def update(self, request, *args, **kwargs):
+        
+        try:
+            print('REQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUEST')
+            cp.quantity = quantity
+            cp.save()
+        except CartProduct.DoesNotExist:
+            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    def retrieve(self, request):
+        # Get url name from the url on browser
+        print('GETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGET', request.data.get('product_id'))
+        # cp = CartProduct.objects.get(cart_id=request.params.cart_id, product_id=request.params.product_id)
 
     def list(self, request):
         user = BamUser.objects.get(email=request.user)
@@ -67,7 +101,6 @@ class ReviewViewSet(ModelViewSet):
         product_id = request.query_params.get('product_id')
         queryset = Review.objects.filter(product_id = product_id)
         serializer = self.get_serializer(queryset, many=True)
-        print('REQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUEST', queryset)
 
         #Add average rating
         avg_rating = queryset.aggregate(avg_rating=Avg('rating'))['avg_rating']
