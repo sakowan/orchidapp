@@ -93,12 +93,12 @@ class Product(models.Model):
 
 class CartProduct(models.Model):
     #JOINS table
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    listing = models.ForeignKey(Product, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_products")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_products")
     quantity = models.PositiveIntegerField()
 
     class Meta:
-        unique_together = ('listing', 'cart')
+        unique_together = ('product', 'cart')
 
 
 class ProductItemManager(models.Manager):
