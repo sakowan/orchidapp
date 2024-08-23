@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from './api'
 import axios from 'axios'
+import { useUser } from './UserContext';
 import MainBody from './MainBody'
 import { Rating } from '@smastrom/react-rating'
 import { drawerTheme, starStyling } from "./constants";
@@ -9,6 +10,8 @@ import { Collapse, Drawer, ThemeProvider} from "@material-tailwind/react";
 import { ShoppingCart, CirclePlus, CircleMinus, Plus, Minus } from 'lucide-react';
 
 const ProductView = () => {
+  const { user } = useUser();
+  const [cartProds, setCartProds] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
   const [product, setProduct] = useState(location.state?.product || {});
@@ -52,9 +55,9 @@ const ProductView = () => {
   };
 
   const handleProduct = async (e) => {
-    console.log(e)
+    console.log('user pv', user)
     const data = {
-      cart_id: 1,
+      cart_id: 2,
       product_id: product.id,
       qty: qty
     }
@@ -67,6 +70,14 @@ const ProductView = () => {
   }
 
   useEffect(() => {
+    const fetchCartProds = async () => {
+      try{
+        const response = await api.get(import.meta.env.VITE_API_URL + "cart_products")
+        setCartProds(response.data)
+      } catch (e) {
+        console.log('Error fetching user cart products:', e)
+      }
+    }
     const fetchReviews = async () => {
       try{
         const response = await axios.get(import.meta.env.VITE_API_URL + "reviews", {
@@ -80,6 +91,7 @@ const ProductView = () => {
           console.log('Error fetching reviews:', e)
       }
     };
+    fetchCartProds();
     fetchReviews();
     getProduct();
   }, [])

@@ -26,6 +26,19 @@ class GetUserView(generics.RetrieveAPIView):
     queryset = BamUser.objects.all()
     serializer_class = UserSerializer
 
+    # def retrieve(self, request, *args, **kwargs):
+    #     # Get the user instance
+    #     user = self.get_object()
+    #     # Serialize the user instance
+    #     user_serializer = UserSerializer(user)
+    #     cp_serializer = CartProductSerializer(user.cart.cart_products.all(), many=True)
+    #     # Create a response that includes both serialized data and the raw instance
+    #     response_data = {
+    #         'user': user_serializer.data,
+    #         'cart_products': cp_serializer.data
+    #     }
+    #     return Response(response_data)
+
 class CartProductViewSet(ModelViewSet):
     queryset = CartProduct.objects.all()
     serializer_class = CartProductSerializer
@@ -35,44 +48,29 @@ class CartProductViewSet(ModelViewSet):
         cart_id = request.data.get('cart_id')
         product_id = request.data.get('product_id')
         quantity = request.data.get('qty')
-        # cp = CartProduct.objects.get(cart_id=cart_id, product_id=product_id)
+        cp = CartProduct.objects.get(cart_id=cart_id, product_id=product_id)
 
         # If cp already exists
-        if (product_id == 19191919):
-            print("EXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTS")
+        if (cp):
+            print("EXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTS", request.user)
             cp.quantity = quantity
             cp.save()
-            return Response({'CartProduct updated': cp}, status=status.HTTP_200_OK)
+            return Response('CartProduct updated', status=status.HTTP_200_OK)
 
         else:
             cp = CartProduct(cart_id=cart_id, product_id=product_id, quantity=quantity)
             cp.save()
             return Response('CartProduct created', status=status.HTTP_201_CREATED)
 
-
-
-    def update(self, request, *args, **kwargs):
-        
-        try:
-            print('REQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUESTREQUEST')
-            cp.quantity = quantity
-            cp.save()
-        except CartProduct.DoesNotExist:
-            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-    def retrieve(self, request):
-        # Get url name from the url on browser
-        print('GETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGETGET', request.data.get('product_id'))
-        # cp = CartProduct.objects.get(cart_id=request.params.cart_id, product_id=request.params.product_id)
-
     def list(self, request):
-        user = BamUser.objects.get(email=request.user)
+        print('CARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLIST')
+        user = request.user
         cart = user.cart
         queryset = CartProduct.objects.filter(cart_id = cart.id)
         if not queryset:
             return Response()
         
-        serializer = CartProductSerializer(queryset)
+        serializer = CartProductSerializer(queryset, many=True)
         return Response(serializer.data)
 
 class GetProductView(generics.RetrieveAPIView):

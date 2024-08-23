@@ -93,6 +93,7 @@ class Product(models.Model):
 
 class CartProduct(models.Model):
     #JOINS table
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name="cart_products")
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_products")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_products")
     quantity = models.PositiveIntegerField()

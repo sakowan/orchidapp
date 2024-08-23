@@ -1,7 +1,7 @@
 import api from "./api"
 import { jwtDecode } from "jwt-decode";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from './constants';
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 
 export const UserContext = createContext();
 
@@ -32,3 +32,6 @@ export const UserProvider = ({ children }) => {
     </UserContext.Provider>
   );
 };
+
+// Custom hook to use the UserContext
+export const useUser = () => useContext(UserContext);
