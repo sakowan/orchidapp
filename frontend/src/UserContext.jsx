@@ -14,8 +14,11 @@ export const UserProvider = ({ children }) => {
       try{
         const a_token = localStorage.getItem(ACCESS_TOKEN);
         const a_decoded = jwtDecode(a_token);
-        const u = await api.get(`user/${a_decoded.user_id}`)
-        setUser(u.data)
+        
+        //User api call
+        const user = await api.get(`user/${a_decoded.user_id}`)
+        setUser(user.data)
+
       } catch (e) {
           console.log('Error fetching user data:', e)
       }
