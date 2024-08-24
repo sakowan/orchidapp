@@ -1,5 +1,5 @@
 import stripe, json
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from django.conf import settings
 from django.middleware.csrf import get_token
 from django.http import HttpResponse, JsonResponse
@@ -64,14 +64,17 @@ class CartProductViewSet(ModelViewSet):
 
     def list(self, request):
         print('CARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLIST')
-        user = request.user
-        cart = user.cart
-        queryset = CartProduct.objects.filter(cart_id = cart.id)
+        queryset = request.user.cart_products.all()
         if not queryset:
             return Response()
         
-        serializer = CartProductSerializer(queryset, many=True)
-        return Response(serializer.data)
+        num_items = queryset.aggregate(total=Sum('quantity'))['total']
+        cart_products = CartProductSerializer(queryset, many=True).data
+        data = {
+            'cart_products': cart_products,
+            'num_items': num_items
+        }
+        return Response(data)
 
 class GetProductView(generics.RetrieveAPIView):
     queryset = Product.objects.all()

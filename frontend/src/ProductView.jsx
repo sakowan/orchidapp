@@ -103,7 +103,7 @@ const ProductView = () => {
         <Drawer placement="right" open={open} onClose={closeDrawer} className={open ? '!w-2/5 !max-w-none' : ''}>
           <div className='p-6'>
             <h1 className='pv-h1 text-center pb-6'>ITEMS</h1>
-            <hr/>
+            <hr className='pv-hr'/>
             <div className='flex py-2'>
               <img src={`/src/assets/images/${product.main_img}`} className="w-[6rem] h-[6rem] mr-4 border border-gray-100 rounded-sm" alt="product"/>
               <div className="flex flex-col justify-between w-full">
@@ -158,7 +158,7 @@ const ProductView = () => {
           </div>
           <div className="my-10">{product.desc_long}</div>
 
-          <hr/>
+          <hr className='pv-hr'/>
 
           <div className="py-2">
             <button onClick={() => toggleCollapse('benefits')} className="pv-collapse-btn">
@@ -172,7 +172,7 @@ const ProductView = () => {
             </Collapse>
           </div>
 
-          <hr/>
+          <hr className='pv-hr'/>
 
           <div className="py-2">
             <button onClick={() => toggleCollapse('application')} className="pv-collapse-btn">
@@ -186,7 +186,7 @@ const ProductView = () => {
             </Collapse>
           </div>
 
-          <hr/>
+          <hr className='pv-hr'/>
 
           <div className="py-2">
             <button onClick={() => toggleCollapse('ingredients')} className="pv-collapse-btn">
