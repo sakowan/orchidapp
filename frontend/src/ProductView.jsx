@@ -89,9 +89,12 @@ const ProductView = () => {
   useEffect(() => { //User & cart
     if (user) {
       setCartProds(user.cart_products)
+      console.log(user.cart_products)
 
       //Set intial quantity if current product already exists in the user cart
       for (var i=0; i<user.cart_products.length; i++) {
+
+        // Initialise the quantity for the product of the current page
         if(product.id == user.cart_products[i]['product']){
           setQty(user.cart_products[i]['quantity'])
           return;
@@ -108,6 +111,9 @@ const ProductView = () => {
           <div className='p-6'>
             <h1 className='pv-h1 text-center pb-6'>ITEMS</h1>
             <hr className='pv-hr'/>
+            {/* {cartProds.map(product => (
+              
+            ))} */}
             <div className='flex py-2'>
               <img src={`/src/assets/images/${product.main_img}`} className="w-[6rem] h-[6rem] mr-4 border border-gray-100 rounded-sm" alt="product"/>
               <div className="flex flex-col justify-between w-full">
@@ -116,23 +122,28 @@ const ProductView = () => {
                   <h3 className="pv-h3 text-right w-1/5">¥{(product.price * qty).toFixed(2)}</h3>
                 </div>
 
-                <div className="flex max-w-[10rem]">
-                  <button onClick={decrementQty} type="button" className="rounded-s-lg pv-qty-btn">
-                    <Minus className='lucide-icon'/>
-                  </button>
-                  <input
-                    type="text"
-                    data-input-counter
-                    data-input-counter-min="1"
-                    className="bg-gray-50 border-x-0 border-gray-300 h-10 text-center text-gray-900 text-sm block w-full py-2.5"
-                    placeholder="1"
-                    value={qty}
-                    onChange={handleProduct}
-                    required
-                  />
-                  <button onClick={incrementQty} type="button" className="rounded-e-lg pv-qty-btn">
-                    <Plus className='lucide-icon'/>
-                  </button>
+                <div className="flex justify-between">
+                  <div className="flex max-w-[10rem]">
+                    <button onClick={decrementQty} type="button" className="rounded-s-lg pv-qty-btn">
+                      <Minus className='lucide-icon'/>
+                    </button>
+                    <input
+                      type="text"
+                      data-input-counter
+                      data-input-counter-min="1"
+                      className="bg-gray-50 border-x-0 border-gray-300 h-10 text-center text-gray-900 text-sm block w-full py-2.5"
+                      placeholder="1"
+                      value={qty}
+                      onChange={handleProduct}
+                      required
+                    />
+                    <button onClick={incrementQty} type="button" className="rounded-e-lg pv-qty-btn">
+                      <Plus className='lucide-icon'/>
+                    </button>
+                  </div>
+                  <div className="flex text-left">
+                    <button className='pv-rm-btn'>Remove</button>
+                  </div>
                 </div>
               </div>
             </div>
