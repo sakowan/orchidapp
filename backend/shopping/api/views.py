@@ -26,19 +26,6 @@ class GetUserView(generics.RetrieveAPIView):
     queryset = BamUser.objects.all()
     serializer_class = UserSerializer
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     # Get the user instance
-    #     user = self.get_object()
-    #     # Serialize the user instance
-    #     user_serializer = UserSerializer(user)
-    #     cp_serializer = CartProductSerializer(user.cart.cart_products.all(), many=True)
-    #     # Create a response that includes both serialized data and the raw instance
-    #     response_data = {
-    #         'user': user_serializer.data,
-    #         'cart_products': cp_serializer.data
-    #     }
-    #     return Response(response_data)
-
 class CartProductViewSet(ModelViewSet):
     queryset = CartProduct.objects.all()
     serializer_class = CartProductSerializer
@@ -47,23 +34,22 @@ class CartProductViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         cart_id = request.data.get('cart_id')
         product_id = request.data.get('product_id')
-        quantity = request.data.get('qty')
-        cp = CartProduct.objects.get(cart_id=cart_id, product_id=product_id)
+        quantity = request.data.get('quantity')
+        cp = CartProduct.objects.filter(cart_id=cart_id, product_id=product_id).first()
 
         # If cp already exists
         if (cp):
-            print("EXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTSEXISTS", request.user)
             cp.quantity = quantity
             cp.save()
             return Response('CartProduct updated', status=status.HTTP_200_OK)
 
         else:
             cp = CartProduct(cart_id=cart_id, product_id=product_id, quantity=quantity)
+            cp.user = request.user
             cp.save()
             return Response('CartProduct created', status=status.HTTP_201_CREATED)
 
     def list(self, request):
-        print('CARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLISTCARTLIST')
         queryset = request.user.cart_products.all()
         if not queryset:
             return Response()

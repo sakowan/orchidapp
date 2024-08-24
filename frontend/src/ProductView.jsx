@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import api from './api'
 import axios from 'axios'
-import { useUser } from './UserContext';
+import { UserContext } from './UserContext';
 import MainBody from './MainBody'
 import { Rating } from '@smastrom/react-rating'
 import { drawerTheme, starStyling } from "./constants";
@@ -10,7 +10,7 @@ import { Collapse, Drawer, ThemeProvider} from "@material-tailwind/react";
 import { ShoppingCart, CirclePlus, CircleMinus, Plus, Minus } from 'lucide-react';
 
 const ProductView = () => {
-  const { user } = useUser();
+  const { user } = useContext(UserContext);
   const [cartProds, setCartProds] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -29,16 +29,16 @@ const ProductView = () => {
     }));
   };
 
-  const incrementQty = () => {
-    const newQty = qty+1;
+  const incrementQty = (e) => {
+    var newQty = qty+1;
     setQty(newQty)
-    handleProduct({ target: { value: newQty } });
+    handleProduct(e, newQty);
   }
-  const decrementQty = () => {
+  const decrementQty = (e) => {
     if((qty-1) >= 1){
       const newQty = qty-1;
       setQty(newQty)
-      handleProduct({ target: { value: newQty } });
+      handleProduct(e, newQty);
     }
   }
 
@@ -54,12 +54,11 @@ const ProductView = () => {
     }
   };
 
-  const handleProduct = async (e) => {
-    console.log('user pv', user)
+  const handleProduct = async (e, newQty) => {
     const data = {
-      cart_id: 2,
+      cart_id: user.cart_id,
       product_id: product.id,
-      qty: qty
+      quantity: newQty
     }
     try{
       const response = await api.post(`/cart_products/`, data);
@@ -69,15 +68,7 @@ const ProductView = () => {
     }
   }
 
-  useEffect(() => {
-    const fetchCartProds = async () => {
-      try{
-        const response = await api.get(import.meta.env.VITE_API_URL + "cart_products")
-        setCartProds(response.data)
-      } catch (e) {
-        console.log('Error fetching user cart products:', e)
-      }
-    }
+  useEffect(() => { //Reviews & products
     const fetchReviews = async () => {
       try{
         const response = await axios.get(import.meta.env.VITE_API_URL + "reviews", {
@@ -91,10 +82,23 @@ const ProductView = () => {
           console.log('Error fetching reviews:', e)
       }
     };
-    fetchCartProds();
     fetchReviews();
     getProduct();
   }, [])
+
+  useEffect(() => { //User & cart
+    if (user) {
+      setCartProds(user.cart_products)
+
+      //Set intial quantity if current product already exists in the user cart
+      for (var i=0; i<user.cart_products.length; i++) {
+        if(product.id == user.cart_products[i]['product']){
+          setQty(user.cart_products[i]['quantity'])
+          return;
+        }
+      }
+    }
+  }, [user]);
   
   return (
     <MainBody>
@@ -200,7 +204,11 @@ const ProductView = () => {
             </Collapse>
           </div>
 
-          <button id="atc" className="pv-add-to-cart-btn" onClick={openDrawer}>
+          <button id="atc" className="pv-add-to-cart-btn" 
+          onClick={(e) => {
+            incrementQty(e)
+            openDrawer();
+          }}>
             <ShoppingCart className="lucide-icon mr-2"/>
             <span>ADD TO CART</span>
             <span className="ml-2">- ¥{product.price}</span>

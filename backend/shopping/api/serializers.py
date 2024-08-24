@@ -30,9 +30,12 @@ class ReviewSerializer(ModelSerializer):
         fields = '__all__'
 
 class UserSerializer(ModelSerializer):
+    cart_products = CartProductSerializer(many=True)
+    cart_id = serializers.PrimaryKeyRelatedField(source='cart', read_only=True)
+    
     class Meta:
         model = BamUser
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'cart_id', 'cart_products']
         extra_kwargs = {'password': {'write_only': True}} #Accept pw when creating a user but not when returning a user for safety.
 
     def create(self, validated_data):
