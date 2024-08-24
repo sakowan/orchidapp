@@ -7,13 +7,14 @@ import DropdownUser from './DropdownUser';
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const [cartProds, setCartProds] = useState([]);
+  const [cartProds, setCartProds] = useState(0);
 
   useEffect(() => {
     const fetchCartProds = async () => {
       try{
         const response = await api.get(import.meta.env.VITE_API_URL + "cart_products")
-        setCartProds(response.data)
+        // console.log(response.data.num_items)
+        setCartProds(response.data.num_items)
       } catch (e) {
           console.log('Error fetching cart items:', e)
       }
@@ -61,7 +62,7 @@ const Navbar = () => {
 
             {/* Cart counter */}
             <div className='h-full relative grid place-items-center'>
-              <p className='absolute flex text-sm right-2 top-3'>{cartProds.length}</p>
+              <p className='absolute flex text-sm right-2 top-3'>{cartProds}</p>
               <ShoppingCart className="lucide-icon mx-3" />
             </div>
 
