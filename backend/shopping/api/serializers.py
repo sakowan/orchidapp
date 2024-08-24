@@ -20,9 +20,21 @@ class CategorySerializer(ModelSerializer):
         fields = '__all__'
 
 class CartProductSerializer(ModelSerializer):
+    product_info = serializers.SerializerMethodField()
     class Meta:
         model = CartProduct
         fields = '__all__'
+    
+    def get_product_info(self, obj):
+        # Fetch the product associated with this CartProduct instance
+        product = obj.product
+
+        # Return the product data you want to include
+        return {
+            'name': product.name,
+            'price': product.price,
+            'main_img': product.main_img,
+        }
 
 class ReviewSerializer(ModelSerializer):
     class Meta:
