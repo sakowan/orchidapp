@@ -110,6 +110,14 @@ body {
   @apply text-gray-500 underline
 }
 
+.home-phrase {
+  @apply ibm-plex-mono-light text-colour-7 text-5xl 
+}
+
+.nav-link {
+  @apply ibm-plex-mono-extralight text-xl cursor-pointer
+}
+
 .icon-color {
     color: #000000; /* Your desired color */
 }

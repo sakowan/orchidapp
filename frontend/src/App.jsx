@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation} from 'react-router
 import { UserProvider } from './UserContext';
 import Navbar from "./Navbar"
 import Checkout from "./Checkout"
-import Landing from "./Landing"
+import Home from "./Home"
 import Products from "./Products"
 import ProductView from "./ProductView"
 import LoginSignupForm from "./LoginSignupForm"
@@ -25,7 +25,7 @@ function App() {
             {(location.pathname != "/login" && location.pathname != "/checkout") && <Navbar/>}
             <Routes>
                 <Route path='/login' element={<LoginSignupForm/>}></Route>
-                <Route path='/' element={<Products/>}></Route>
+                <Route path='/' element={<Home/>}></Route>
                 <Route path='/products' element={<Products/>}></Route>
                 <Route path='/products/:url_name' element={<ProductView/>}></Route>
                 <Route path='/checkout' element={

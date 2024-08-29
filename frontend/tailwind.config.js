@@ -17,7 +17,46 @@ export default withMT({
         'colour-2': '#c7cdf2',
         'colour-1': '#dcdff7',
       },
+      keyframes: {
+        zoomOut: {
+          '0%': { transform: 'scale(1.1)' },
+          '100%': { transform: 'scale(1.0)' },
+        },
+        fadeInOut: {
+          '0%': { opacity: '0' },
+          '10%': { opacity: '0' },
+          '20%': { opacity: '1' },
+          '30%': { opacity: '1' },
+          '40%': { opacity: '0' },
+          '100%': { opacity: '0' },
+        },
+      },
+      animation: {
+        zoomOut: 'zoomOut 0.75s ease-out',
+        fadeInOut: 'fadeInOut 15s infinite',
+      },
+      transitionProperty: {
+        opacity: 'opacity',
+      },
+      transitionDuration: {
+        'fade': '1s',
+      },
+      transitionTimingFunction: {
+        'fade': 'ease-in-out',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities, theme }) {
+      const newUtilities = {
+        '.fade-in': {
+          opacity: '1',
+          transitionProperty: 'opacity',
+          transitionDuration: theme('transitionDuration.fade'),
+          transitionTimingFunction: theme('transitionTimingFunction.fade'),
+        },
+      }
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],
 });

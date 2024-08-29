@@ -29,16 +29,27 @@ const ProductView = () => {
     }));
   };
 
-  const incrementQty = (e) => {
-    var newQty = qty+1;
-    setQty(newQty)
-    handleProduct(e, newQty);
+  const updateQty = (index, qty) => {
+    setCartProds(prev => {
+      // Create a shallow copy of the array
+      const updated = [...prev];
+      
+      // Update the specific review
+      updated[index] = { ...updated[index], quantity: qty };
+      return updated;
+    });
   }
-  const decrementQty = (e) => {
-    if((qty-1) >= 1){
-      const newQty = qty-1;
-      setQty(newQty)
-      handleProduct(e, newQty);
+  const incrementQty = (index, pid, p_qty) => {
+    console.log(pid, p_qty, cartProds)
+    const newQty = p_qty+1;
+    updateQty(index, newQty);
+    handleProduct(pid, newQty);
+  }
+  const decrementQty = (index, pid, p_qty) => {
+    if((p_qty-1) >= 1){
+      const newQty = p_qty-1;
+      updateQty(index, newQty);
+      handleProduct(pid, newQty);
     }
   }
 
@@ -54,10 +65,10 @@ const ProductView = () => {
     }
   };
 
-  const handleProduct = async (e, newQty) => {
+  const handleProduct = async (pid, newQty) => {
     const data = {
       cart_id: user.cart_id,
-      product_id: product.id,
+      product_id: pid,
       quantity: newQty
     }
     try{
@@ -111,42 +122,44 @@ const ProductView = () => {
           <div className='p-6'>
             <h1 className='pv-h1 text-center pb-6'>ITEMS</h1>
             <hr className='pv-hr'/>
-            {/* {cartProds.map(product => (
-              
-            ))} */}
-            <div className='flex py-2'>
-              <img src={`/src/assets/images/${product.main_img}`} className="w-[6rem] h-[6rem] mr-4 border border-gray-100 rounded-sm" alt="product"/>
-              <div className="flex flex-col justify-between w-full">
-                <div className="flex justify-between w-full">
-                  <h3 className="pv-h3 w-4/5">{product.name}</h3>
-                  <h3 className="pv-h3 text-right w-1/5">¥{(product.price * qty).toFixed(2)}</h3>
-                </div>
+            {cartProds.map((p, index) => (
+              <div key={p.id} className="my-2">
+                <div className='flex py-2'>
+                  <img src={`/src/assets/images/${p.product_info.main_img}`} className="w-[6rem] h-[6rem] mr-4 border border-gray-100 rounded-sm" alt={p.product_info.name}/>
+                  <div className="flex flex-col justify-between w-full">
+                    <div className="flex justify-between w-full">
+                      <h3 className="pv-h3 w-4/5">{p.product_info.name}</h3>
+                      <h3 className="pv-h3 text-right w-1/5">¥{(p.product_info.price * p.quantity).toFixed(2)}</h3>
+                    </div>
 
-                <div className="flex justify-between">
-                  <div className="flex max-w-[10rem]">
-                    <button onClick={decrementQty} type="button" className="rounded-s-lg pv-qty-btn">
-                      <Minus className='lucide-icon'/>
-                    </button>
-                    <input
-                      type="text"
-                      data-input-counter
-                      data-input-counter-min="1"
-                      className="bg-gray-50 border-x-0 border-gray-300 h-10 text-center text-gray-900 text-sm block w-full py-2.5"
-                      placeholder="1"
-                      value={qty}
-                      onChange={handleProduct}
-                      required
-                    />
-                    <button onClick={incrementQty} type="button" className="rounded-e-lg pv-qty-btn">
-                      <Plus className='lucide-icon'/>
-                    </button>
-                  </div>
-                  <div className="flex text-left">
-                    <button className='pv-rm-btn'>Remove</button>
+                    <div className="flex justify-between">
+                      <div className="flex max-w-[10rem]">
+                        <button onClick={() => decrementQty(index, p.product, p.quantity)} type="button" className="rounded-s-lg pv-qty-btn">
+                          <Minus className='lucide-icon'/>
+                        </button>
+                        <input
+                          type="text"
+                          data-input-counter
+                          data-input-counter-min="1"
+                          className="bg-gray-50 border-x-0 border-gray-300 h-10 text-center text-gray-900 text-sm block w-full py-2.5"
+                          placeholder="1"
+                          value={p.quantity}
+                          onChange={handleProduct}
+                          required
+                        />
+                        <button onClick={() => incrementQty(index, p.product, p.quantity)}type="button" className="rounded-e-lg pv-qty-btn">
+                          <Plus className='lucide-icon'/>
+                        </button>
+                      </div>
+                      <div className="flex text-left">
+                        <button className='pv-rm-btn'>Remove</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <hr className='pv-hr'/>
               </div>
-            </div>
+            ))}
           </div>
         </Drawer>
       </ThemeProvider>
