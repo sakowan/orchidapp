@@ -1,6 +1,5 @@
 import axios from 'axios'
-import React from 'react'
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Rating, ThinStar } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
@@ -42,7 +41,6 @@ export const ProductCard = ({ product }) => {
         </div>
         <p className="mb-4 ml-4 ibm-plex-mono-light text-black-400">¥{product.price}</p>
       </div>
-
     </div>
   )
 }

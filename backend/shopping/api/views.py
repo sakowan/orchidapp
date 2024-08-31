@@ -1,4 +1,5 @@
 import stripe, json
+from rest_framework.decorators import api_view, permission_classes
 from django.db.models import Avg, Sum
 from django.conf import settings
 from django.middleware.csrf import get_token
@@ -12,6 +13,19 @@ from rest_framework import permissions, status, generics
 
 from ..models import Country, Product, Category, BamUser, CartProduct, Review
 from .serializers import CountrySerializer, ProductSerializer, CategorySerializer, UserSerializer, CartProductSerializer, ReviewSerializer
+
+######### STRIPE ######
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def test_payment(request):
+    test_payment_intent = stripe.PaymentIntent.create(
+        amount=1000, currency='pln', 
+        payment_method_types=['card'],
+        receipt_email='test@example.com')
+    return Response(status=status.HTTP_200_OK, data=test_payment_intent)
+
+###### END STRIPE ######
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
