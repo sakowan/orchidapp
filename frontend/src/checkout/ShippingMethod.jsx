@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react'
 
-const ShippingForm = ({formData, onSendShippingData }) => {
+const ShippingMethod = ({onSendShippingData}) => {
   const [isFreeChecked, setIsFreeChecked] = useState(false);
   const [isExpChecked, setIsExpChecked] = useState(false);
-  const [contact, setContact] = useState('');
-  const [addressInfo, setAddressInfo] = useState('');
   const [shippingType, setShippingType] = useState('');
   
-  useEffect(() => {
-    const formattedAddress = `${formData.first_name} ${formData.last_name}, ${formData.building}, ${formData.street}, ${formData.city}, ${formData.prefecture}, ${formData.post_code}, ${formData.country}`
-    // Set up onload
-    setAddressInfo(formattedAddress);
-    setContact(formData.email);
-  }, [formData]);
-
   const handleChange = (e) => {
     if (e.target.id === 'free_shipping') {
       setIsFreeChecked(true);
@@ -27,23 +18,12 @@ const ShippingForm = ({formData, onSendShippingData }) => {
 
   const sendShippingData = () => {
     if (shippingType) {
+      console.log('shipping type', shippingType)
       onSendShippingData(shippingType);
     }
   };
-
   return (
     <>
-      <div className="p-4 border border-gray-100 h-50">
-        <div className="flex">
-          <p className="text-sm text-gray p-2.5 w-1/4">Contact</p>
-          <p className="text-sm text-gray p-2.5 w-3/4">{contact}</p>
-        </div>
-        <hr />
-        <div className="flex">
-          <p className="text-sm text-gray p-2.5 w-1/4">Ship to</p>
-          <p className="text-sm text-gray p-2.5 w-3/4">{addressInfo}</p>
-        </div>
-      </div>
       <label
         htmlFor="free_shipping"
         className={`flex w-full p-5 bg-white rounded-lg cursor-pointer ${
@@ -100,7 +80,7 @@ const ShippingForm = ({formData, onSendShippingData }) => {
         </button>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ShippingForm;
+export default ShippingMethod

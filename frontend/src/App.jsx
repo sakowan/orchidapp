@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation} from 'react-router
 // Components
 import { UserProvider } from './UserContext';
 import Navbar from "./Navbar"
-import Checkout from "./Checkout"
+import Checkout from "./checkout/Checkout"
 import Home from "./Home"
 import Products from "./Products"
 import ProductView from "./ProductView"
@@ -12,13 +12,6 @@ import LoginSignupForm from "./LoginSignupForm"
 import ProtectedRoute from './ProtectedRoute';
 
 function App() {
-    const customTheme = {
-        drawer: {
-            styles: {
-                backgroundColor: "red"
-            }
-        }
-    }
     const location = useLocation();
     return (
         <UserProvider>

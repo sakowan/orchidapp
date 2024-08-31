@@ -35,6 +35,6 @@ urlpatterns = [
     path("token/refresh/", TokenRefreshView.as_view(), name='refresh'),
 
     path('checkout/', CheckoutAPIView.as_view(), name='checkout'),
+    path('test-payment/', test_payment, name='test-payment'),
     # path('csrf-token/', get_csrf_token, name='csrf_token'),
-
 ]
