@@ -52,7 +52,7 @@ input::-webkit-inner-spin-button {
 }
 
 .stripe-input {
-  @apply border border-gray-300 h-[2.75rem] pl-4 rounded-md bg-white
+  @apply border border-gray-300 h-[2.75rem] px-4 py-2.5 rounded-md bg-white items-center
 }
 
 .home-shopnow-btn {
