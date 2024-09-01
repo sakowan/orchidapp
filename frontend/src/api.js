@@ -1,11 +1,6 @@
 import axios from 'axios';
 import { ACCESS_TOKEN } from './constants';
 
-// No need token to access
-// export const api_any = axios.get({
-//     baseURL: import.meta.env.VITE_API_URL 
-// })
-
 // Protected with tokens
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL 
@@ -28,4 +23,11 @@ api.interceptors.request.use(
     }
 )
 
+class ApiService{
+    static saveStripeInfo(data={}){
+        return api.post(`${import.meta.env.VITE_API_URL}/payments/save-stripe-info/`, data)
+    }
+}
+
+export { ApiService };
 export default api;
