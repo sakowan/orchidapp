@@ -3,7 +3,8 @@ import { ACCESS_TOKEN } from './constants';
 
 // Protected with tokens
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL 
+    baseURL: import.meta.env.VITE_API_URL,
+    withCredentials: true,
 })
 
 // Add auth token to all api requests between FE and BE
@@ -23,11 +24,11 @@ api.interceptors.request.use(
     }
 )
 
-class ApiService{
-    static saveStripeInfo(data={}){
-        return api.post(`${import.meta.env.VITE_API_URL}/payments/save-stripe-info/`, data)
-    }
-}
+// class ApiService{
+//     static saveStripeInfo(data={}){
+//         return api.post(`${import.meta.env.VITE_API_URL}save-stripe-info/`, data)
+//     }
+// }
 
-export { ApiService };
+// export { ApiService };
 export default api;

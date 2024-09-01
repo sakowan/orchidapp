@@ -25,6 +25,19 @@ def test_payment(request):
         receipt_email='test@example.com')
     return Response(status=status.HTTP_200_OK, data=test_payment_intent)
 
+def save_stripe_info(request):
+    data = request.data
+    email = data['email']
+    payment_method_id = data['payment_method_id']
+    
+    # creating customer
+    customer = stripe.Customer.create(email=email, payment_method=payment_method_id)
+     
+    return Response(status=status.HTTP_200_OK, data={
+        'message': 'Success', 
+        'data': {'customer_id': customer.id}   
+    }) 
+
 ###### END STRIPE ######
 
 def get_csrf_token(request):

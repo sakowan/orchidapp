@@ -1,13 +1,14 @@
-import { ApiService } from '../api';
+import api from '../api';
+import { CSRF_TOKEN } from '../constants';
+
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft } from 'lucide-react';
-import {useElements, useStripe, CardElement, CardNumberElement, CardExpiryElement, CardCvcElement} from "@stripe/react-stripe-js";
+import {useElements, useStripe, CardNumberElement, CardExpiryElement, CardCvcElement} from "@stripe/react-stripe-js";
 
 const stripeStyles = {
     style: {
       base: {
-        fontSize: '1.25rem', // Equivalent to `text-lg` in Tailwind CSS
-        lineHeight: '3rem',
+        fontSize: '20px', // Equivalent to `text-lg` in Tailwind CSS
         '::placeholder': {
           color: '#9CA3AF', // gray-400
         },
@@ -31,34 +32,43 @@ const PaymentForm = ({ formData }) => {
 
     const handleSubmit = async (e) => {
         console.log('Submit payment.')
+        const email = 'sarah@gmail.com'
+
+        // const csrfToken = localStorage.getItem(CSRF_TOKEN);
+        console.log(api)
         e.preventDefault();
 
-        // Check if Stripe.js has loaded yet
-        if (!stripe || !elements) {
-            return;
-        }
+    //     // Check if Stripe.js has loaded yet
+    //     if (!stripe || !elements) {
+    //         return;
+    //     }
 
-        // Retrieve card
-        const card = elements.getElement(CardNumberElement);
-        if (card == null) {
-            console.log('Card element does not exist.')
-            return;
-        }
+    //     // Retrieve card
+    //     const card = elements.getElement(CardNumberElement);
+    //     if (card == null) {
+    //         console.log('Card element does not exist.')
+    //         return;
+    //     }
         
-        // Create a payment method
-        // When passing card, exp and cvc element info is also passed automatically.
-        const {paymentMethod, error} = await stripe.createPaymentMethod({
-            type: 'card',
-            card,
-        });
+    //     // Create a payment method, comes with an id.
+    //     // When passing card, exp and cvc element info is also passed automatically.
+    //     const {paymentMethod, error} = await stripe.createPaymentMethod({
+    //         type: 'card',
+    //         card,
+    //     });
 
-        ApiService.saveStripeInfo({
-            email, payment_method_id: paymentMethod.id})
-          .then(response => {
-            console.log(response.data);
-          }).catch(error => {
-            console.log(error)
-        });
+    //     const data = {email, payment_method_id: paymentMethod.id}
+
+    //     api.post('/save-stripe-info/', data, {
+    //         headers: {
+    //             'X-CSRFToken': csrfToken,
+    //         }
+    //     })
+    //       .then(response => {
+    //         console.log(response.data);
+    //       }).catch(error => {
+    //         console.log(error)
+    //     });
     };
 
     return (

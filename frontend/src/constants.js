@@ -2,6 +2,7 @@
 // These are keys used to access access&refresh tokens 
 export const ACCESS_TOKEN = "access";
 export const REFRESH_TOKEN = "refresh";
+export const CSRF_TOKEN = "csrftoken";
 
 export const drawerTheme = {
   drawer: {
