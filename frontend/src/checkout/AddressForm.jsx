@@ -71,8 +71,8 @@ const AddressForm = ({onSendAddressData}) => {
   return (
     <>
       <div className="p-4 border border-gray-100">
-        <p className="text-2xl font-bold text-gray">Contact</p>
-        <div className="relative z-0 w-full">
+        <p className="form-header">Contact</p>
+        <div className="relative w-full">
           <label className={`address-form-labels ${dataValid.email ? 'text-colour-7' : 'text-gray'}`}>Email</label>
           <input
             type="email"
@@ -85,7 +85,7 @@ const AddressForm = ({onSendAddressData}) => {
         </div>
       </div>
       <div className="p-4 border border-gray-100">
-        <p className="text-2xl font-bold text-gray">Shipping Address</p>
+        <p className="form-header">Shipping Address</p>
         <div className="flex-centred-spaced">
           <div className="flex-1">
             <label className={`address-form-labels ${dataValid.first_name ? 'text-colour-7' : 'text-gray'}`}>First Name</label>
@@ -185,7 +185,7 @@ const AddressForm = ({onSendAddressData}) => {
         <button 
         disabled={!allDataValid}
         onClick={sendFormData}
-        className={`main-button ${allDataValid ? 'bg-colour-4 main-button-hover' : 'cursor-default bg-gray-300'}`}
+        className={`btn-1 absolute right-0 ${allDataValid ? 'bg-colour-4 btn-1-hover' : 'cursor-default bg-gray-300'}`}
         >Proceed to shipping</button>
       </div>
 

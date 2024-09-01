@@ -6,10 +6,10 @@ import ShippingMethod from './ShippingMethod'
 import PaymentForm from './PaymentForm'
 
 const Checkout = (children) => {
-  const [showAddress, setShowAddress] = useState(true);
+  const [showAddress, setShowAddress] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [showShippingMethod, setShowShippingMethod] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
+  const [showPayment, setShowPayment] = useState(true);
   const [shippingMethod, setShippingMethod] = useState('');
 
   const [formData, setFormData] = useState({});
@@ -42,8 +42,8 @@ const Checkout = (children) => {
   return (
     <div className="flex h-screen">
       {/* Left Side */}
-      <div className="flex-none w-[55%] overflow-auto">
-        <div className="p-4 pt-2 space-y-4">
+      <div className="flex-none w-[55%] overflow-auto h-full">
+        <div className="p-4 pt-2 space-y-4 h-full">
           <CheckoutNavigation/>
           {showAddress && <AddressForm onSendAddressData={handleAddressData}/>}
           {showSummary && <SummaryDetails formData={formData} hasShippingType={shippingMethod}/>}
@@ -55,7 +55,7 @@ const Checkout = (children) => {
       {/* Right Side */}
       <div className="flex-grow w-[45%] bg-gray-100 p-4 fixed right-0 h-full">
         {/* Content here will be static */}
-        <h1 className="text-2xl font-bold text-gray">Order Summary</h1>
+        <h1 className="form-header">Order Summary</h1>
       </div>
     </div>
   )

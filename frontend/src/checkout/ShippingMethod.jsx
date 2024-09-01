@@ -72,8 +72,8 @@ const ShippingMethod = ({onSendShippingData}) => {
       <div className="w-full relative">
         <button
           onClick={sendShippingData}
-          className={`main-button ${
-            shippingType ? 'bg-colour-4 main-button-hover' : 'cursor-default bg-gray-300'
+          className={`btn-1 absolute right-0 ${
+            shippingType ? 'bg-colour-4 btn-1-hover' : 'cursor-default bg-gray-300'
           }`}
         >
           Proceed to shipping
