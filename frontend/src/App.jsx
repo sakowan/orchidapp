@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation} from 'react-router-dom'
 
 // Components
@@ -10,6 +10,13 @@ import Products from "./Products"
 import ProductView from "./ProductView"
 import LoginSignupForm from "./LoginSignupForm"
 import ProtectedRoute from './ProtectedRoute';
+// End Components
+
+// Stripe
+import {Elements, PaymentElement} from '@stripe/react-stripe-js';
+import {loadStripe} from "@stripe/stripe-js";
+const stripe = loadStripe('pk_test_51PjvhiGEkvCddTMkhHMT4uNQPMbbxSSZCX2cog0AgqEFN3V75yGstvBgiO59THwZqifQnZxhhhI4gDqQtHns4n5n00LV8g4A1k');
+// End Stripe
 
 function App() {
     const location = useLocation();
@@ -23,7 +30,9 @@ function App() {
                 <Route path='/products/:url_name' element={<ProductView/>}></Route>
                 <Route path='/checkout' element={
                     <ProtectedRoute>
-                        <Checkout/>
+                        <Elements stripe={stripe}>
+                            <Checkout/>
+                        </Elements>
                     </ProtectedRoute>
                     }></Route>
             </Routes>

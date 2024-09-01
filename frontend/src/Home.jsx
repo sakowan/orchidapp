@@ -31,7 +31,7 @@ const Home = () => {
               Explore our collection for a subtle blend of feminine grace and soft allure.
             </h2>
             <button 
-            className='my-3 w-1/4 h-[3rem] text-center text-white text-lg rounded-lg bg-colour-3 animate-pulse'
+            className='home-shopnow-btn'
             onClick={() => shopNow()}
             >Shop Now</button>
           </div>

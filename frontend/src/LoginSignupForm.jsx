@@ -115,12 +115,12 @@ const LoginSignupForm = ({client}) => {
             
             {isRegister ?
             <>
-              <button className="main-button-hover w-full rounded-lg h-12 bg-colour-4 text-white" type="submit">Register</button>
+              <button className="btn-1-hover w-full rounded-lg h-12 bg-colour-4 text-white" type="submit">Register</button>
               <p className='text-xs px-0'>Already have an account? <span onClick={handleRegisterToggle} className='text-colour-7 cursor-pointer'>Sign in</span>.</p>
             </>
             :
             <>
-              <button className="main-button-hover w-full rounded-lg h-12 bg-colour-4 text-white"type="submit">Sign in</button>
+              <button className="btn-1-hover w-full rounded-lg h-12 bg-colour-4 text-white"type="submit">Sign in</button>
               <p className='text-xs px-0'>Don't have an account? <span onClick={handleRegisterToggle} className='text-colour-7 cursor-pointer'>Register</span> here.</p>
             </>
             }

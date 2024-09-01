@@ -27,7 +27,7 @@ const SummaryDetails = ({formData, hasShippingType }) => {
 
   return (
     <>
-      <div className="p-4 border border-gray-100 h-50">
+      <div className="px-4 border border-gray-100 h-50 flex flex-col justify-center">
         <div className="flex">
           <p className="text-sm text-gray p-2.5 w-1/4">Contact</p>
           <p className="text-sm text-gray p-2.5 w-3/4">{contact}</p>
