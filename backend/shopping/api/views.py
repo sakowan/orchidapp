@@ -1,5 +1,7 @@
 import stripe, json
 from rest_framework.decorators import api_view, permission_classes
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.utils.decorators import method_decorator
 from django.db.models import Avg, Sum
 from django.conf import settings
 from django.middleware.csrf import get_token
@@ -14,8 +16,17 @@ from rest_framework import permissions, status, generics
 from ..models import Country, Product, Category, BamUser, CartProduct, Review
 from .serializers import CountrySerializer, ProductSerializer, CategorySerializer, UserSerializer, CartProductSerializer, ReviewSerializer
 
-######### STRIPE ######
+######### CSRF #########
+@method_decorator(ensure_csrf_cookie, name='dispatch')
+class GetCSRFToken(APIView):
+    permission_classes = ([permissions.AllowAny])
+    
+    def get(self, request, format=None):
+        return Response({'success': 'CSRF cookie set.'})
 
+######### ENDCSRF #########
+
+######### STRIPE #########
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def test_payment(request):
@@ -25,24 +36,23 @@ def test_payment(request):
         receipt_email='test@example.com')
     return Response(status=status.HTTP_200_OK, data=test_payment_intent)
 
+@csrf_protect
+@api_view(['POST'])
 def save_stripe_info(request):
-    data = request.data
-    email = data['email']
-    payment_method_id = data['payment_method_id']
+    return Response({'success': 'accessed csrf protected view: save_stripe_info'})
+
+    # data = request.data
+    # email = data['email']
+    # payment_method_id = data['payment_method_id']
     
-    # creating customer
-    customer = stripe.Customer.create(email=email, payment_method=payment_method_id)
+    # # creating customer
+    # customer = stripe.Customer.create(email=email, payment_method=payment_method_id)
      
-    return Response(status=status.HTTP_200_OK, data={
-        'message': 'Success', 
-        'data': {'customer_id': customer.id}   
-    }) 
-
-###### END STRIPE ######
-
-def get_csrf_token(request):
-    csrf_token = get_token(request)
-    return JsonResponse({'csrfToken': csrf_token})
+    # return Response(status=status.HTTP_200_OK, data={
+    #     'message': 'Success', 
+    #     'data': {'customer_id': customer.id}   
+    # }) 
+######### END STRIPE #########
 
 class CreateUserView(generics.CreateAPIView):
     queryset = BamUser.objects.all()

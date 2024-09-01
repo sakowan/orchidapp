@@ -37,5 +37,5 @@ urlpatterns = [
     path('checkout/', CheckoutAPIView.as_view(), name='checkout'),
     path('test-payment/', test_payment, name='test-payment'),
     path('save-stripe-info/', save_stripe_info, name='save_stripe_info'),
-    path('csrf-token/', get_csrf_token, name='csrf_token'),
+    path('csrf-cookie', GetCSRFToken.as_view()),
 ]
