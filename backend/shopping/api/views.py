@@ -35,22 +35,39 @@ def test_payment(request):
         receipt_email='test@example.com')
     return Response(status=status.HTTP_200_OK, data=test_payment_intent)
 
-@api_view(['POST'])
 @csrf_protect
+@api_view(['POST'])
 def save_stripe_info(request):
-    return Response({'success': 'accessed csrf protected view: save_stripe_info'})
-
-    # data = request.data
-    # email = data['email']
-    # payment_method_id = data['payment_method_id']
+    data = request.data
+    email = data['email']
+    payment_method_id = data['payment_method_id']
+    extra_msg = ''
     
-    # # creating customer
-    # customer = stripe.Customer.create(email=email, payment_method=payment_method_id)
-     
-    # return Response(status=status.HTTP_200_OK, data={
-    #     'message': 'Success', 
-    #     'data': {'customer_id': customer.id}   
-    # }) 
+    # Check if stripe-customer already exists
+    customer_data = stripe.Customer.list(email=email).data  
+
+    if len(customer_data) == 0: # If stripe-customer doesn't exist
+        # Create customer
+        customer = stripe.Customer.create(
+        email=email, payment_method=payment_method_id)
+        extra_msg = 'New customer created.'
+    else: # Get existing customer
+        customer = customer_data[0]
+        extra_msg = "Customer already existed."
+    
+    # Make a payment
+    stripe.PaymentIntent.create(
+        customer=customer, 
+        payment_method=payment_method_id,  
+        currency='jpy',
+        amount=1600,
+        confirm=True,
+        return_url='http://localhost:5173/orders')
+
+    return Response(status=status.HTTP_200_OK, 
+        data={'message': 'Success', 'data': {
+        'customer_id': customer.id, 'extra_msg': extra_msg}
+    })
 ######### END STRIPE #########
 
 class CreateUserView(generics.CreateAPIView):

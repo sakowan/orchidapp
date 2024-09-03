@@ -159,7 +159,38 @@ CORS_ALLOWED_ORIGINS = ['http://localhost:5173',
                         ]
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173',
                         'http://127.0.0.1:5173',
+                        "http://localhost:8000",
+                        "http://127.0.0.1:8000"
                         ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+## CAN IGNORE ALL THE BELOW WHEN NOT WORKING ON CSRF
+
+# # Specifies whether the CSRF cookie is accessible via JavaScript. Setting to False allows access from client-side scripts.
+# CSRF_COOKIE_HTTPONLY = False
+
+# # Allows the browser to include credentials (like cookies and HTTP authentication) in cross-origin requests.
+# CORS_ALLOW_CREDENTIALS = True
+
+# # Specifies that cookies should be sent with cross-site requests and is required for cross-origin requests in some cases.
+# CSRF_COOKIE_SAMESITE = 'None'
+
+# # Specifies whether the CSRF cookie should only be sent over HTTPS. Should be set to True in production.
+# CSRF_COOKIE_SECURE = True
+
+# # Configures cookies used for sessions to be sent with cross-site requests.
+# SESSION_COOKIE_SAMESITE = 'None'
+
+# # Ensures that session cookies are only sent over HTTPS, enhancing security in production.
+# SESSION_COOKIE_SECURE = True
+
+# # Indicates whether to store the CSRF token in the session instead of a cookie.
+# CSRF_USE_SESSIONS = False
+
+# # Specifies the domain to which the CSRF cookie applies. 'None' indicates no specific domain restriction.
+# CSRF_COOKIE_DOMAIN = 'None'
+
+# # Specifies the path to which the CSRF cookie is accessible. '/' makes it accessible across the entire domain.
+# CSRF_COOKIE_PATH = '/'
