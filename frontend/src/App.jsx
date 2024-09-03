@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation} from 'react-router
 
 // Components
 import { UserProvider } from './UserContext';
+import { CartProvider } from './CartContext';
 import Navbar from "./Navbar"
 import Checkout from "./checkout/Checkout"
 import Home from "./Home"
@@ -22,20 +23,22 @@ function App() {
     const location = useLocation();
     return (
         <UserProvider>
-            {(location.pathname != "/login" && location.pathname != "/checkout") && <Navbar/>}
-            <Routes>
-                <Route path='/login' element={<LoginSignupForm/>}></Route>
-                <Route path='/' element={<Home/>}></Route>
-                <Route path='/products' element={<Products/>}></Route>
-                <Route path='/products/:url_name' element={<ProductView/>}></Route>
-                <Route path='/checkout' element={
-                    <ProtectedRoute>
-                        <Elements stripe={stripe}>
-                            <Checkout/>
-                        </Elements>
-                    </ProtectedRoute>
-                    }></Route>
-            </Routes>
+            <CartProvider>
+                {(location.pathname != "/login" && location.pathname != "/checkout") && <Navbar/>}
+                <Routes>
+                    <Route path='/login' element={<LoginSignupForm/>}></Route>
+                    <Route path='/' element={<Home/>}></Route>
+                    <Route path='/products' element={<Products/>}></Route>
+                    <Route path='/products/:url_name' element={<ProductView/>}></Route>
+                    <Route path='/checkout' element={
+                        <ProtectedRoute>
+                            <Elements stripe={stripe}>
+                                <Checkout/>
+                            </Elements>
+                        </ProtectedRoute>
+                        }></Route>
+                </Routes>
+            </CartProvider>
         </UserProvider>
     )
 }

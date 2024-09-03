@@ -1,13 +1,14 @@
 import api from './api'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Heart, ShoppingCart, User } from 'lucide-react';
 
 import DropdownUser from './DropdownUser';
+import { CartContext } from './CartContext';
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const [cartProds, setCartProds] = useState(0);
+  const { cartProds, setCartProds, numCartProds, setNumCartProds } = useContext(CartContext);
   const names = ['💸 FREE SHIPPING ON ORDERS OVER ¥2500 💸', '🚀 DELIVERY TIME 2-3 BUSINESS DAYS 🚀', '💖 SIGN UP NOW FOR ¥500 OFF YOUR FIRST PURCHASE 💖'];
   const [currentName, setCurrentName] = useState(names[0]);
   const [fade, setFade] = useState(false);
@@ -30,8 +31,10 @@ const Navbar = () => {
     const fetchCartProds = async () => {
       try{
         const response = await api.get(import.meta.env.VITE_API_URL + "cart_products")
-        // console.log(response.data.num_items)
-        setCartProds(response.data.num_items)
+
+        // Set these for CartContext
+        setCartProds(response.data.cart_products)
+        setNumCartProds(response.data.num_items)
       } catch (e) {
           console.log('Error fetching cart items:', e)
       }
@@ -82,7 +85,7 @@ const Navbar = () => {
 
             {/* Cart counter */}
             <div className='h-full relative grid place-items-center'>
-              <p className='absolute flex text-sm right-2 top-3'>{cartProds}</p>
+              <p className='absolute flex text-sm right-2 top-3'>{numCartProds}</p>
               <ShoppingCart className="lucide-icon mx-3" />
             </div>
 
