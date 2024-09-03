@@ -23,7 +23,6 @@ class GetCSRFToken(APIView):
     
     def get(self, request, format=None):
         return Response({'success': 'CSRF cookie set.'})
-
 ######### ENDCSRF #########
 
 ######### STRIPE #########
@@ -36,8 +35,8 @@ def test_payment(request):
         receipt_email='test@example.com')
     return Response(status=status.HTTP_200_OK, data=test_payment_intent)
 
-@csrf_protect
 @api_view(['POST'])
+@csrf_protect
 def save_stripe_info(request):
     return Response({'success': 'accessed csrf protected view: save_stripe_info'})
 
@@ -188,24 +187,6 @@ class CheckoutAPIView(APIView):
 
         try:
             return
-            # Create a new dictionary with only the specified keys
-            # address_keys = ['post_code', 'prefecture', 'city', 'street', 'building_name', 'recipient_name', 'recipient_phone']
-            # address_data = {key: data[key] for key in address_keys if key in data}
-            # address = Address.objects.create(**address_data)
-            # address.save()
-            # print(address)
-            # checkout_session = stripe.checkout.Session.create(
-            #     line_items=[
-            #         {
-            #             # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-            #             'price': '{{PRICE_ID}}',
-            #             'quantity': 1,
-            #         },
-            #     ],
-            #     mode='payment',
-            #     success_url=settings.FRONTEND_URL + '?success=true',
-            #     cancel_url=settings.FRONTEND_URL + '?canceled=true',
-            # )
         except Exception as e:
             return HttpResponse(e) 
         return

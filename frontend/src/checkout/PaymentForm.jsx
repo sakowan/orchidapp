@@ -31,12 +31,9 @@ const PaymentForm = ({ formData }) => {
     }
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         console.log('Submit payment.')
         const email = 'sarah@gmail.com'
-
-        // const csrfToken = localStorage.getItem(CSRF_TOKEN);
-        console.log(api)
-        e.preventDefault();
 
     //     // Check if Stripe.js has loaded yet
     //     if (!stripe || !elements) {

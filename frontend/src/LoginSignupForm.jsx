@@ -42,6 +42,12 @@ const LoginSignupForm = ({client}) => {
         "password": data.password
       }).then((token) => {
         if (token.status === 200){
+
+          // Set CSRF token as cookie
+          const csrfresponse = api.get("/csrf-cookie")
+          console.log("login csrfresponse", csrfresponse)
+
+          // Set Access and refresh tokens 
           localStorage.setItem(ACCESS_TOKEN, token.data.access)
           localStorage.setItem(REFRESH_TOKEN, token.data.refresh)
           const a_decoded = jwtDecode(token.data.access)
