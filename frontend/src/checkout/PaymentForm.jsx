@@ -35,37 +35,33 @@ const PaymentForm = ({ formData }) => {
         console.log('Submit payment.')
         const email = 'sarah@gmail.com'
 
-    //     // Check if Stripe.js has loaded yet
-    //     if (!stripe || !elements) {
-    //         return;
-    //     }
+        // Check if Stripe.js has loaded yet
+        if (!stripe || !elements) {
+            return;
+        }
 
-    //     // Retrieve card
-    //     const card = elements.getElement(CardNumberElement);
-    //     if (card == null) {
-    //         console.log('Card element does not exist.')
-    //         return;
-    //     }
+        // Retrieve card
+        const card = elements.getElement(CardNumberElement);
+        if (card == null) {
+            console.log('Card element does not exist.')
+            return;
+        }
         
-    //     // Create a payment method, comes with an id.
-    //     // When passing card, exp and cvc element info is also passed automatically.
-    //     const {paymentMethod, error} = await stripe.createPaymentMethod({
-    //         type: 'card',
-    //         card,
-    //     });
+        // Create a payment method, comes with an id.
+        // When passing card, exp and cvc element info is also passed automatically.
+        const {paymentMethod, error} = await stripe.createPaymentMethod({
+            type: 'card',
+            card,
+        });
 
-    //     const data = {email, payment_method_id: paymentMethod.id}
+        const data = {email, payment_method_id: paymentMethod.id}
 
-    //     api.post('/save-stripe-info/', data, {
-    //         headers: {
-    //             'X-CSRFToken': csrfToken,
-    //         }
-    //     })
-    //       .then(response => {
-    //         console.log(response.data);
-    //       }).catch(error => {
-    //         console.log(error)
-    //     });
+        api.post('/save-stripe-info/', data)
+          .then(response => {
+            console.log(response.data);
+          }).catch(error => {
+            console.log(error)
+        });
     };
 
     return (
