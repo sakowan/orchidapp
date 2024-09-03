@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from './api'
 import axios from 'axios'
+
+// COMPONENT IMPORTS
 import { UserContext } from './UserContext';
 import MainBody from './MainBody'
+import { CartContext } from './CartContext';
+
+// STYLE IMPORTS
 import { Rating } from '@smastrom/react-rating'
 import { drawerTheme, starStyling } from "./constants";
-import { useLocation, useNavigate } from 'react-router-dom';
 import { Collapse, Drawer, ThemeProvider} from "@material-tailwind/react";
 import { ShoppingCart, CirclePlus, CircleMinus, Plus, Minus } from 'lucide-react';
 
 const ProductView = () => {
   const { user } = useContext(UserContext);
-  const [cartProds, setCartProds] = useState([]);
+  const { cartProds, setCartProds, numCartProds, setNumCartProds } = useContext(CartContext);
   const location = useLocation();
   const navigate = useNavigate();
   const [product, setProduct] = useState(location.state?.product || {});
@@ -32,23 +37,29 @@ const ProductView = () => {
   };
 
   const updateQty = (index, qty) => {
+    // Update array of elements
     setCartProds(prev => {
-      // Create a shallow copy of the array
       const updated = [...prev];
       
-      // Update the specific review
+      // Update the specific product
       updated[index] = { ...updated[index], quantity: qty };
       return updated;
     });
   }
   const incrementQty = (index, pid, p_qty) => {
     console.log(index, pid, p_qty, cartProds)
+    // Update qty of card products for Navbar
+    setNumCartProds(numCartProds+1)
+    
     const newQty = p_qty+1;
     updateQty(index, newQty);
     handleProduct(pid, newQty);
   }
   const decrementQty = (index, pid, p_qty) => {
     if((p_qty-1) >= 1){
+      // Update qty of card products for Navbar
+      setNumCartProds(numCartProds-1)
+
       const newQty = p_qty-1;
       updateQty(index, newQty);
       handleProduct(pid, newQty);
@@ -233,7 +244,7 @@ const ProductView = () => {
 
           <button id="atc" className="pv-add-to-cart-btn" 
           onClick={(e) => {
-            incrementQty(pageprodindexco, product.id, qty)
+            incrementQty(pageprodindex, product.id, qty)
             openDrawer();
           }}>
             <ShoppingCart className="lucide-icon mr-2"/>
