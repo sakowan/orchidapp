@@ -39,7 +39,8 @@ def test_payment(request):
 @api_view(['POST'])
 def save_stripe_info(request):
     data = request.data
-    email = data['email']
+    formData = data['formData']
+    email = formData['email']
     payment_method_id = data['payment_method_id']
     extra_msg = ''
     
