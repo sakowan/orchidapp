@@ -10,7 +10,7 @@ const DropdownUser = () => {
     function submitLogout(e) {
         console.log('logging out')
         localStorage.clear();
-        navigate(0);
+        navigate('/login');
       }
     
     function goLogin(e) {
