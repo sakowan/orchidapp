@@ -22,6 +22,7 @@ const PaymentForm = ({ formData }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(formData)
         const email = 'sarah3@gmail.com'
 
         // Check if Stripe.js has loaded yet
@@ -38,17 +39,17 @@ const PaymentForm = ({ formData }) => {
         }
         
         // Create a payment method, comes with an id.
-        // When passing card, exp and cvc element info is also passed automatically.
+        // Exp and cvc element info is also passed automatically.
         const {paymentMethod, error} = await stripe.createPaymentMethod({
             type: 'card',
             card,
         });
 
-        const data = {email, payment_method_id: paymentMethod.id}
+        const data = {payment_method_id: paymentMethod.id, formData: formData}
 
         api.post('/save-stripe-info/', data)
           .then(response => {
-            console.log('Hit Api, successful maybe.')
+            console.log('Hit Api, successful.')
             console.log(response.data);
           }).catch(error => {
             console.log(error)
@@ -56,10 +57,10 @@ const PaymentForm = ({ formData }) => {
     };
 
     return (
-        <>
+        <div className='py-6'>
             <p className="form-header">Payment</p>
             <p>All transactions are secure and encrypted.</p>
-            <div className="flex flex-col justify-between p-8 relative border border-gray-400 w-4/5 rounded-md bg-gray-100">
+            <div className="flex flex-col justify-between mt-4 p-8 relative border border-gray-400 rounded-md bg-gray-100">
                 <form onSubmit={handleSubmit}>
                     <div className="flex justify-between">
                         <label htmlFor='card-num'>Card Number</label>
@@ -102,7 +103,7 @@ const PaymentForm = ({ formData }) => {
                     <button onClick={(e) => handleSubmit(e)} className='btn-1 btn-1-hover'>Pay now</button>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

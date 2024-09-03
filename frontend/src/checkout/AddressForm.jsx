@@ -70,7 +70,7 @@ const AddressForm = ({onSendAddressData}) => {
 
   return (
     <>
-      <div className="p-4 border border-gray-100">
+      <div className="p-6 border border-gray-300 rounded-lg bg-gray-50">
         <p className="form-header">Contact</p>
         <div className="relative w-full">
           <label className={`address-form-labels ${dataValid.email ? 'text-colour-7' : 'text-gray'}`}>Email</label>
@@ -84,7 +84,7 @@ const AddressForm = ({onSendAddressData}) => {
           />
         </div>
       </div>
-      <div className="p-4 border border-gray-100">
+      <div className="p-8 border border-gray-300 rounded-lg bg-gray-50">
         <p className="form-header">Shipping Address</p>
         <div className="flex-centred-spaced">
           <div className="flex-1">

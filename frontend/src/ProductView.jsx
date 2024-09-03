@@ -20,6 +20,8 @@ const ProductView = () => {
   const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
   const [open, setOpen] = useState(false);
   const [qty, setQty] = useState(1);
+  const [pageprodindex, setpageprodindex] = useState();
+
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
   const toggleCollapse = (section) => {
@@ -40,7 +42,7 @@ const ProductView = () => {
     });
   }
   const incrementQty = (index, pid, p_qty) => {
-    console.log(pid, p_qty, cartProds)
+    console.log(index, pid, p_qty, cartProds)
     const newQty = p_qty+1;
     updateQty(index, newQty);
     handleProduct(pid, newQty);
@@ -107,6 +109,7 @@ const ProductView = () => {
 
         // Initialise the quantity for the product of the current page
         if(product.id == user.cart_products[i]['product']){
+          setpageprodindex(i)
           setQty(user.cart_products[i]['quantity'])
           return;
         }
@@ -230,7 +233,7 @@ const ProductView = () => {
 
           <button id="atc" className="pv-add-to-cart-btn" 
           onClick={(e) => {
-            incrementQty(e)
+            incrementQty(pageprodindexco, product.id, qty)
             openDrawer();
           }}>
             <ShoppingCart className="lucide-icon mr-2"/>
