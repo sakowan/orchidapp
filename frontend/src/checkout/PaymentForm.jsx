@@ -19,24 +19,14 @@ const stripeStyles = {
 const PaymentForm = ({ formData }) => {
     const stripe = useStripe();
     const elements = useElements();
-    const [error, setError] = useState(null);
-    const [response, setResponse] = useState(null);
-
-    const handleChange = (event) => {
-        if (event.error) {
-          setError(event.error.message);
-        } else {
-          setError(null);
-        }
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submit payment.')
-        const email = 'sarah@gmail.com'
+        const email = 'sarah3@gmail.com'
 
         // Check if Stripe.js has loaded yet
         if (!stripe || !elements) {
+            console.log('Strip has not loaded.')
             return;
         }
 
@@ -58,6 +48,7 @@ const PaymentForm = ({ formData }) => {
 
         api.post('/save-stripe-info/', data)
           .then(response => {
+            console.log('Hit Api, successful maybe.')
             console.log(response.data);
           }).catch(error => {
             console.log(error)
