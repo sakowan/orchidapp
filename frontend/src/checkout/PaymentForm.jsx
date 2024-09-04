@@ -49,7 +49,6 @@ const PaymentForm = ({ formData }) => {
 
         api.post('/save-stripe-info/', data)
           .then(response => {
-            console.log('Hit Api, successful.')
             console.log(response.data);
           }).catch(error => {
             console.log(error)
