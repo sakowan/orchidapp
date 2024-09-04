@@ -24,7 +24,7 @@ const ProductView = () => {
   const [avgRating, setAvgRating] = useState(0);
   const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
   const [open, setOpen] = useState(false);
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] = useState(0);
   const [pageprodindex, setpageprodindex] = useState();
 
   const openDrawer = () => setOpen(true);
@@ -40,6 +40,7 @@ const ProductView = () => {
     console.log('Function: updateCartProds')
     // Update array of elements
     setCartProds(prev => {
+      console.log('prev:', prev)
       const updated = [...prev];
       
       
@@ -93,6 +94,11 @@ const ProductView = () => {
 
       // Update NumCartProds for Navbar
       setNumCartProds(fetchCartProducts.data.num_items)
+
+      // If deleted CartProduct was the current page product
+      if(product.id == cart_product.product){
+        setQty(0)
+      }
 
       console.log('Successfully deleted cart product:', deleteCartProduct)
     } catch (error) {

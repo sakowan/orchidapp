@@ -104,7 +104,7 @@ class CartProductViewSet(ModelViewSet):
             return Response('CartProduct created', status=status.HTTP_201_CREATED)
 
     def list(self, request):
-        queryset = request.user.cart_products.all()
+        queryset = request.user.cart_products.all().order_by('created_at')
         if not queryset:
             return Response()
         
