@@ -91,7 +91,7 @@ class Product(models.Model):
         
         super().save(*args, **kwargs)
 
-class CartProduct(models.Model):
+class CartProduct(TimeStampedModel):
     #JOINS table
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name="cart_products")
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_products")
