@@ -36,37 +36,61 @@ const ProductView = () => {
     }));
   };
 
-  const updateQty = (index, qty) => {
+  const updateCartProds = (index, newQty) => {
     // Update array of elements
     setCartProds(prev => {
       const updated = [...prev];
       
       // Update the specific product
-      updated[index] = { ...updated[index], quantity: qty };
+      updated[index] = { ...updated[index], quantity: newQty };
       return updated;
     });
   }
-  const incrementQty = (index, pid, p_qty) => {
+  const adjustQty = (index, pid, p_qty, increment) => {
     console.log(index, pid, p_qty, cartProds)
-    // Update qty of card products for Navbar
-    setNumCartProds(numCartProds+1)
-    
-    const newQty = p_qty+1;
-    updateQty(index, newQty);
-    handleProduct(pid, newQty);
-  }
-  const decrementQty = (index, pid, p_qty) => {
-    if((p_qty-1) >= 1){
-      // Update qty of card products for Navbar
-      setNumCartProds(numCartProds-1)
 
-      const newQty = p_qty-1;
-      updateQty(index, newQty);
-      handleProduct(pid, newQty);
+    let newQty = p_qty;
+    if(increment == true){
+      newQty+=1;
+      setNumCartProds(numCartProds+1)
+    } else {
+      newQty-=1;
+
+      // Disallow negative inputs when decrementing
+      if(newQty < 1){
+        return
+      }
+      setNumCartProds(numCartProds-1)
+    }
+
+    // Update quantity of current page product 
+    if(pid == product.id){
+      setQty(newQty)
+    }
+
+    // Update qty of card products for Navbar
+    updateCartProds(index, newQty);
+    updateProductBackend(pid, newQty);
+  }
+
+  const removeCartProduct = async (index, cart_product) => {
+    const cart_product_id = cart_product.id
+    try {
+
+      // Delete CartProduct in backend
+      const deleteCartProduct =  await api.delete(`cart_products/${cart_product_id}`)
+
+      // Update CartProducts for local array
+      const fetchCartProducts =  await api.get('cart_products')
+      // setCartProds(fetchCartProducts.data)
+
+      console.log('Successfully deleted cart product:', deleteCartProduct)
+    } catch (error) {
+      console.log('Error removing cart product', error)
     }
   }
 
-  const getProduct = async () => {
+  const getCurrentPageProduct = async () => {
     try{
       const response =  await axios.get(import.meta.env.VITE_API_URL + location.pathname.substring(1))
       if (response.data.id != null) {
@@ -78,7 +102,7 @@ const ProductView = () => {
     }
   };
 
-  const handleProduct = async (pid, newQty) => {
+  const updateProductBackend = async (pid, newQty) => {
     const data = {
       cart_id: user.cart_id,
       product_id: pid,
@@ -86,7 +110,7 @@ const ProductView = () => {
     }
     try{
       const response = await api.post(`/cart_products/`, data);
-      console.log('Cart product updated:', response.data);
+      console.log('Cart product updated');
     } catch (error) {
       console.log(error)
     }
@@ -102,24 +126,25 @@ const ProductView = () => {
         })
         setReviews(response.data)
         setAvgRating(response.data.avg_rating)
-      } catch (e) {
-          console.log('Error fetching reviews:', e)
+      } catch (error) {
+          console.log('Error fetching reviews:', error)
       }
     };
     fetchReviews();
-    getProduct();
+    getCurrentPageProduct();
   }, [])
 
   useEffect(() => { //User & cart
     if (user) {
       setCartProds(user.cart_products)
-      console.log(user.cart_products)
 
       //Set intial quantity if current product already exists in the user cart
       for (var i=0; i<user.cart_products.length; i++) {
 
         // Initialise the quantity for the product of the current page
         if(product.id == user.cart_products[i]['product']){
+          console.log(user.cart_products, i, product)
+
           setpageprodindex(i)
           setQty(user.cart_products[i]['quantity'])
           return;
@@ -148,7 +173,7 @@ const ProductView = () => {
 
                     <div className="flex justify-between">
                       <div className="flex max-w-[10rem]">
-                        <button onClick={() => decrementQty(index, p.product, p.quantity)} type="button" className="rounded-s-lg pv-qty-btn">
+                        <button onClick={() => adjustQty(index, p.product, p.quantity, false)} type="button" className="rounded-s-lg pv-qty-btn">
                           <Minus className='lucide-icon'/>
                         </button>
                         <input
@@ -158,15 +183,17 @@ const ProductView = () => {
                           className="bg-gray-50 border-x-0 border-gray-300 h-10 text-center text-gray-900 text-sm block w-full py-2.5"
                           placeholder="1"
                           value={p.quantity}
-                          onChange={handleProduct}
+                          onChange={updateProductBackend}
                           required
                         />
-                        <button onClick={() => incrementQty(index, p.product, p.quantity)}type="button" className="rounded-e-lg pv-qty-btn">
+                        <button onClick={() => adjustQty(index, p.product, p.quantity, true)}type="button" className="rounded-e-lg pv-qty-btn">
                           <Plus className='lucide-icon'/>
                         </button>
                       </div>
                       <div className="flex text-left">
-                        <button className='pv-rm-btn'>Remove</button>
+                        <button
+                        onClick={() => removeCartProduct(index, p)}  
+                        className='pv-rm-btn'>Remove</button>
                       </div>
                     </div>
                   </div>
@@ -244,7 +271,7 @@ const ProductView = () => {
 
           <button id="atc" className="pv-add-to-cart-btn" 
           onClick={(e) => {
-            incrementQty(pageprodindex, product.id, qty)
+            adjustQty(pageprodindex, product.id, qty, true)
             openDrawer();
           }}>
             <ShoppingCart className="lucide-icon mr-2"/>
