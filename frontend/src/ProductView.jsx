@@ -17,14 +17,13 @@ import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
 
 const ProductView = () => {
   const { user } = useContext(UserContext);
-  const { cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer } = useContext(CartContext);
+  const { cartProds, setCartProds, numCartProds, setNumCartProds, setOpenDrawer, localProductQty, setLocalProductQty } = useContext(CartContext);
   const location = useLocation();
   const navigate = useNavigate();
   const [product, setProduct] = useState(location.state?.product || {});
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
-  const [qty, setQty] = useState(0);
   const [pageprodindex, setpageprodindex] = useState();
 
   const pvOpenDrawer = () => setOpenDrawer(true);
@@ -71,7 +70,7 @@ const ProductView = () => {
 
     // Update quantity of current page product 
     if(pid == product.id){
-      setQty(newQty)
+      setLocalProductQty(newQty)
     }
 
     // Update qty of card products for Navbar
@@ -101,7 +100,7 @@ const ProductView = () => {
   
       // Reset current product quantity if it was removed
       if (product.id === cart_product.product) {
-        setQty(0);
+        setLocalProductQty(0);
       }
     } catch (error) {
       console.log('Error removing cart product', error);
@@ -175,7 +174,7 @@ const ProductView = () => {
           // Initialise the quantity for the product of the current page
           if(product.id == user.cart_products[i]['product']){
             setpageprodindex(i)
-            setQty(user.cart_products[i]['quantity'])
+            setLocalProductQty(user.cart_products[i]['quantity'])
             return;
           }
         }
@@ -255,7 +254,7 @@ const ProductView = () => {
 
           <button id="atc" className="pv-btn-1 hover:btn-1-hover" 
           onClick={(e) => {
-            adjustQty(pageprodindex, product.id, qty, true)
+            adjustQty(pageprodindex, product.id, localProductQty, true)
             pvOpenDrawer();
           }}>
             <ShoppingCart className="lucide-icon mr-2"/>

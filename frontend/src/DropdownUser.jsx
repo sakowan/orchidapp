@@ -17,18 +17,18 @@ const DropdownUser = () => {
         navigate("/login");
     }
     return (
-        <div className='absolute mt-8 w-[14rem] bg-white border border-gray-200 rounded-sm text-base text-gray-600 ibm-plex-mono-light'>
+        <div className='dropdown-main'>
             <ul>
                 {user ? 
                 <>
-                    <li className="flex items-center px-2 h-8 text-xs ibm-plex-mono-semibold">{user.email}</li>
-                    <li className="flex items-center px-2 h-10 hover:bg-gray-100">Account</li>
-                    <li className="flex items-center px-2 h-10 hover:bg-gray-100">Orders</li>
+                    <li className="flex items-center px-2 h-8 text-xs font-bold">{user.email}</li>
+                    <li className="dropdown-li">Account</li>
+                    <li className="dropdown-li">Orders</li>
                     <hr/>
-                    <li className="flex items-center px-2 h-10 hover:bg-gray-100"><button className= "w-full text-left" onClick={submitLogout}>Logout</button></li>
+                    <li className="dropdown-li"><button className= "w-full text-left" onClick={submitLogout}>Logout</button></li>
                 </>
                 :
-                    <li className="flex items-center px-2 h-10 hover:bg-gray-100"><button className= "w-full text-left" onClick={goLogin}>Sign in</button></li>}
+                    <li className="dropdown-li"><button className= "w-full text-left" onClick={goLogin}>Sign in</button></li>}
             </ul>
         </div>
     )
