@@ -167,8 +167,6 @@ const ProductView = () => {
 
   useEffect(() => { //User & cart
     console.log('Function: useEffect')
-    const pathRegex = /^\/products\/.*/
-    console.log('location', pathRegex.test(location.pathname), document.getElementById('navbar-cart'))
     if (user) {
       if(user.cart_products.length > 0) {
         setCartProds(user.cart_products)
@@ -195,7 +193,7 @@ const ProductView = () => {
       <CartDrawer adjustQty={adjustQty} removeCartProduct={removeCartProduct}/>
 
       {/* First Row */}
-      <div className="flex w-full p-5">
+      <div className="flex w-full p-5 mt-[0.85rem]">
         {/* Left Side */}
         <div className="w-1/2 mr-5">
           <img 
@@ -257,7 +255,7 @@ const ProductView = () => {
             </Collapse>
           </div>
 
-          <button id="atc" className="pv-btn-1" 
+          <button id="atc" className="pv-btn-1 hover:btn-1-hover" 
           onClick={(e) => {
             adjustQty(pageprodindex, product.id, qty, true)
             pvOpenDrawer();

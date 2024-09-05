@@ -7,24 +7,23 @@ import { drawerTheme } from "./constants";
 
 const CartDrawer = ({ adjustQty, removeCartProduct }) => {
   const navigate = useNavigate();
-  const { cartProds, openDrawer, setOpenDrawer} = useContext(CartContext);
-  const [subtotal, setsubtotal] = useState(0);
+  const { cartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal} = useContext(CartContext);
 
   const cdCloseDrawer = () => setOpenDrawer(false);
 
   const calculateSubtotal = () => {
-    let st = 0;
-    cartProds.map((cp) => {
-      st += parseFloat((cp.product_info.price * cp.quantity).toFixed(2));
-    });
+    let st = 0.00;
+    if(cartProds){
+      cartProds.map((cp) => {
+        st += parseFloat((cp.product_info.price * cp.quantity).toFixed(2));
+      });
+    }
     return st;
   };  
 
   useEffect(() => {
-    if(cartProds){
-      const st = calculateSubtotal().toFixed(2)
-      setsubtotal(st)
-    }
+    const st = calculateSubtotal().toFixed(2)
+    setSubTotal(st)
   }, [cartProds])
 
   return (
@@ -90,7 +89,10 @@ const CartDrawer = ({ adjustQty, removeCartProduct }) => {
               <h2>¥{subtotal}</h2>
             </div>
             <p className='text-xs text-gray-600'>*Shipping, taxes, and discounts calculated at checkout.</p>
-            <button onClick={() => navigate("/checkout")} className="pv-btn-1">CHECKOUT</button>
+            <button 
+            onClick={() => navigate("/checkout")} 
+            disabled={!cartProds}
+            className={`pv-btn-1 ${!cartProds ? "btn-disabled" : "hover:btn-1-hover"}`}>CHECKOUT</button>
           </div>
         </div>
       </Drawer>
