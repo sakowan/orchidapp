@@ -34,7 +34,12 @@ const Navbar = () => {
 
         // Set these for CartContext
         setCartProds(response.data.cart_products)
-        setNumCartProds(response.data.num_items)
+
+        if(response.data.num_items){
+          setNumCartProds(response.data.num_items);
+        } else {
+          setNumCartProds(0);
+        }
       } catch (e) {
           console.log('Error fetching cart items:', e)
       }
