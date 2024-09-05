@@ -33,13 +33,13 @@ export const ProductCard = ({ product }) => {
       <img className="h-5/6 w-full object-cover object-center" src={`/src/assets/images/${product.main_img}`} alt="product" />
       <div className='p-1'>
         <div className='flex justify-between items-center'>
-          <p className="my-4 pl-4 ibm-plex-mono-medium text-black-800">{product.name}</p>
+          <p className="my-4 pl-4 ibm-medium text-black-800">{product.name}</p>
           <div className='flex justify-end mr-4'>
             <Rating className="w-[6rem] pr-[0.25rem]" readOnly value={avgRating} itemStyles={starStyling}/>
-            <p className='text-sm ibm-plex-mono-light text-black-400'>{avgRating}</p>
+            <p className='text-sm ibm-light text-black-400'>{avgRating}</p>
           </div>
         </div>
-        <p className="mb-4 ml-4 ibm-plex-mono-light text-black-400">¥{product.price}</p>
+        <p className="mb-4 ml-4 ibm-light text-black-400">¥{product.price}</p>
       </div>
     </div>
   )

@@ -69,18 +69,15 @@ const Navbar = () => {
   }, [lastScrollTop]);
 
   return (
-    <div id="full nav" className={`relative z-[9999] transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'
+    <div id="full nav" className={`relative transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'
     }`}>
-      <nav
-        className={`flex items-center justify-center z-20 ibm-plex-mono-extralight h-[4.5rem] text-2xl fixed top-0 left-0 right-0 bg-my-muted`}
-      >
+      <nav className="flex items-center justify-center z-[9999] ibm-extralight h-[4.5rem] text-2xl fixed top-0 left-0 right-0 bg-my-muted">
         <div className="relative h-full w-full container my-auto flex items-center">
           <div className="flex w-1/5 items-center space-x-6">
             <a className='nav-link' href="/products">All</a>
             <a className='nav-link' href="/">Skin</a>
             <a className='nav-link' href="/">Makeup</a>
             <a className='nav-link' href="/">Hair</a>
-
           </div>
 
           <div className="flex-1 w-3/5 flex justify-center">
@@ -88,7 +85,6 @@ const Navbar = () => {
           </div>
 
           <div className="flex w-1/5 h-full justify-end space-x-4">
-
             {/* Cart counter */}
             <div id="navbar-cart" className='h-full relative grid place-items-center' onClick={() => navOpenDrawer()}>
               <p className='absolute flex text-sm right-2 top-3'>{numCartProds}</p>
@@ -105,8 +101,8 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <div
-      className='flex justify-center items-center ibm-plex-mono-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
+
+      <div className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
         <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
           {currentName}
         </span>
