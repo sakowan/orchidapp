@@ -17,7 +17,7 @@ const DropdownUser = () => {
         navigate("/login");
     }
     return (
-        <div className='absolute mt-8 z-20 w-[14rem] right-[5rem] bg-white border border-gray-200 rounded-sm text-base text-gray-600 ibm-plex-mono-light'>
+        <div className='absolute mt-8 w-[14rem] bg-white border border-gray-200 rounded-sm text-base text-gray-600 ibm-plex-mono-light'>
             <ul>
                 {user ? 
                 <>

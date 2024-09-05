@@ -11,9 +11,9 @@ import CartDrawer from './CartDrawer';
 
 // STYLE IMPORTS
 import { Rating } from '@smastrom/react-rating'
-import { drawerTheme, starStyling } from "./constants";
-import { Collapse, Drawer, ThemeProvider} from "@material-tailwind/react";
-import { ShoppingCart, CirclePlus, CircleMinus, Plus, Minus } from 'lucide-react';
+import { starStyling } from "./constants";
+import { Collapse } from "@material-tailwind/react";
+import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
 
 const ProductView = () => {
   const { user } = useContext(UserContext);
@@ -48,8 +48,6 @@ const ProductView = () => {
         updated[index] = { ...updated[index], quantity: newQty };
         return updated;
       } else {
-        // const latestItem = updatedCartProducts[updatedCartProducts.length - 1];
-        // updated.push(latestItem)
         return updated;
       }
     });
