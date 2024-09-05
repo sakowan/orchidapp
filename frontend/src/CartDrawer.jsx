@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, ThemeProvider } from "@material-tailwind/react";
 import { CartContext } from './CartContext';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, Frown } from 'lucide-react';
 import { drawerTheme } from "./constants";
 
 const CartDrawer = ({ adjustQty, removeCartProduct }) => {
@@ -28,18 +28,18 @@ const CartDrawer = ({ adjustQty, removeCartProduct }) => {
   }, [cartProds])
 
   return (
-    cartProds && (
-      <ThemeProvider value={drawerTheme}>
-        <Drawer
-          placement="right"
-          open={openDrawer}
-          onClose={cdCloseDrawer}
-          className={openDrawer ? '!w-2/5 !max-w-none' : ''}
-        >
-          <div className='p-6'>
-            <h1 className='pv-h1 text-center pb-6'>ITEMS</h1>
-            <hr className='pv-hr' />
-            {cartProds.map((p, index) => (
+    <ThemeProvider value={drawerTheme}>
+      <Drawer
+        placement="right"
+        open={openDrawer}
+        onClose={cdCloseDrawer}
+        className={openDrawer ? '!w-2/5 !max-w-none' : ''}
+      >
+        <div className='p-6'>
+          <h1 className='pv-h1 text-center pb-6'>ITEMS</h1>
+          <hr className='pv-hr' />
+          <div id="cartDrawerBody" className={!cartProds ? "h-screen flex justify-center items-center" : ""}>
+            {cartProds && cartProds.map((p, index) => (
               <div key={p.id} className="my-2">
                 <div className='flex py-2'>
                   <img src={`/src/assets/images/${p.product_info.main_img}`} className="w-[6rem] h-[6rem] mr-4 border border-gray-100 rounded-sm" alt={p.product_info.name} />
@@ -74,20 +74,27 @@ const CartDrawer = ({ adjustQty, removeCartProduct }) => {
                 <hr className='pv-hr' />
               </div>
             ))}
-
-            <div id="subtotal" className='absolute bottom-6 w-full pr-12'>
-              <hr className='pv-hr' />
-              <div className="flex justify-between pt-6">
-                <h2 className='pv-h2 ibm-plex-mono-bold'>SUBTOTAL</h2>
-                <h2 className='pv-h2 ibm-plex-mono-bold'>¥{subtotal}</h2>
+            {!cartProds && 
+            <div className="flex flex-col w-full text-center items-center relative -top-28">
+              <div className="absolute -top-12">
+                <Frown className="text-gray-400 w-16 h-16" />
               </div>
-              <p className='text-xs text-gray-600'>*Shipping, taxes, and discounts calculated at checkout.</p>
-              <button onClick={() => navigate("/checkout")} className="pv-btn-1">CHECKOUT</button>
-            </div>
+              <h1 className="text-2xl text-gray-400 mt-12">Your cart is empty</h1>
+            </div>}
           </div>
-        </Drawer>
-      </ThemeProvider>
-    )
+
+          <div id="subtotal" className='absolute bottom-6 w-full pr-12'>
+            <hr className='pv-hr' />
+            <div className="flex justify-between pt-6 pv-h2 font-bold">
+              <h2>SUBTOTAL</h2>
+              <h2>¥{subtotal}</h2>
+            </div>
+            <p className='text-xs text-gray-600'>*Shipping, taxes, and discounts calculated at checkout.</p>
+            <button onClick={() => navigate("/checkout")} className="pv-btn-1">CHECKOUT</button>
+          </div>
+        </div>
+      </Drawer>
+    </ThemeProvider>
   );
 };
 

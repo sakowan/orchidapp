@@ -65,7 +65,6 @@ const ProductView = () => {
       newQty-=1;
       // Disallow negative inputs when decrementing
       if(newQty < 1){
-        console.log('hi')
         return
       }
 
