@@ -17,10 +17,10 @@ import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
 
 const ProductView = () => {
   const { user } = useContext(UserContext);
-  const { cartProds, setCartProds, numCartProds, setNumCartProds, setOpenDrawer, localProductQty, setLocalProductQty } = useContext(CartContext);
+  const { cartProds, setCartProds, numCartProds, setNumCartProds, setOpenDrawer, localProductQty, setLocalProductQty, updateCartProds, updateProductBackend } = useContext(CartContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const [product, setProduct] = useState(location.state?.product || {});
+  const [localProduct, setLocalProduct] = useState(location.state?.product || {});
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
@@ -35,22 +35,6 @@ const ProductView = () => {
     }));
   };
 
-  const updateCartProds = (index, newQty, updatedCartProducts) => {
-    console.log('Function: updateCartProds')
-    // Update array of elements
-    setCartProds(prev => {
-      
-      const updated = [...prev];
-      
-      if(index < updated.length){ // Current page product exists in cart already
-        // Update the specific product
-        updated[index] = { ...updated[index], quantity: newQty };
-        return updated;
-      } else {
-        return updated;
-      }
-    });
-  }
   const adjustQty = (index, pid, p_qty, increment) => {
     console.log('Function: adjustQty')
     let newQty = p_qty;
@@ -64,12 +48,11 @@ const ProductView = () => {
       if(newQty < 1){
         return
       }
-
       setNumCartProds(numCartProds-1)
     }
 
     // Update quantity of current page product 
-    if(pid == product.id){
+    if(pid == localProduct.id){
       setLocalProductQty(newQty)
     }
 
@@ -99,7 +82,7 @@ const ProductView = () => {
       }
   
       // Reset current product quantity if it was removed
-      if (product.id === cart_product.product) {
+      if (localProduct.id === cart_product.product) {
         setLocalProductQty(0);
       }
     } catch (error) {
@@ -113,7 +96,7 @@ const ProductView = () => {
     try{
       const response =  await axios.get(import.meta.env.VITE_API_URL + location.pathname.substring(1))
       if (response.data.id != null) {
-        setProduct(response.data)
+        setLocalProduct(response.data)
       }
     } catch (e) {
       console.log('Error fetching product view:', e)
@@ -121,35 +104,13 @@ const ProductView = () => {
     }
   };
 
-  const updateProductBackend = async (pid, newQty, index) => {
-    console.log('Function: updateProductBackend')
-
-    const data = {
-      cart_id: user.cart_id,
-      product_id: pid,
-      quantity: newQty
-    }
-    try{
-      const response = await api.post(`/cart_products/`, data).then(async (response) => {
-        // Fetch and set updated Cart Products
-        const fetchCartProducts = await api.get('cart_products')
-        const updatedCartProducts = fetchCartProducts.data.cart_products
-        setCartProds(updatedCartProducts)
-        
-        console.log('Function: updateProductBackend; Cart product updated:', updatedCartProducts);
-        updateCartProds(index, newQty, updatedCartProducts);
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   useEffect(() => { //Reviews & products
+    console.log('fdsadsafdfadsf', localProduct)
     const fetchReviews = async () => {
       try{
         const response = await axios.get(import.meta.env.VITE_API_URL + "reviews", {
           params: {
-            product_id: product.id
+            product_id: localProduct.id
           }
         })
         setReviews(response.data)
@@ -172,7 +133,7 @@ const ProductView = () => {
         for (var i=0; i<user.cart_products.length; i++) {
   
           // Initialise the quantity for the product of the current page
-          if(product.id == user.cart_products[i]['product']){
+          if(localProduct.id == user.cart_products[i]['product']){
             setpageprodindex(i)
             setLocalProductQty(user.cart_products[i]['quantity'])
             return;
@@ -195,20 +156,20 @@ const ProductView = () => {
         <div className="w-1/2 mr-5">
           <img 
           className="rounded-lg w-full h-screen border border-gray-100"
-          src={`/src/assets/images/${product.main_img}`} alt="product"/>
+          src={`/src/assets/images/${localProduct.main_img}`} alt="product"/>
         </div>
 
         {/* Right Side */}
         <div className="grid w-1/2 p-12 bg-gray-100 rounded-lg text-gray-500">
-          <h1 className="pv-h1">{product.name}</h1>
+          <h1 className="pv-h1">{localProduct.name}</h1>
           
           {/* Review indicator */}
           <div className="flex items-center">
-            <span className="w-4/5">{product.desc_brief}</span>
+            <span className="w-4/5">{localProduct.desc_brief}</span>
             <Rating className="pv-rating" readOnly value={avgRating} itemStyles={starStyling}/>
             <span className="">{avgRating}</span>
           </div>
-          <div className="my-10">{product.desc_long}</div>
+          <div className="my-10">{localProduct.desc_long}</div>
 
           <hr className='pv-hr'/>
 
@@ -219,7 +180,7 @@ const ProductView = () => {
             </button>
             <Collapse open={collapseStates.benefits}>
               <p className="pt-4">
-                {product.benefits}
+                {localProduct.benefits}
               </p>
             </Collapse>
           </div>
@@ -233,7 +194,7 @@ const ProductView = () => {
             </button>
             <Collapse open={collapseStates.application}>
               <p className="pt-4">
-                {product.application}
+                {localProduct.application}
               </p>
             </Collapse>
           </div>
@@ -247,19 +208,19 @@ const ProductView = () => {
             </button>
             <Collapse open={collapseStates.ingredients}>
               <p className="pt-4">
-                {product.ingredients}
+                {localProduct.ingredients}
               </p>
             </Collapse>
           </div>
 
           <button id="atc" className="pv-btn-1 hover:btn-1-hover" 
           onClick={(e) => {
-            adjustQty(pageprodindex, product.id, localProductQty, true)
+            adjustQty(pageprodindex, localProduct.id, localProductQty, true)
             pvOpenDrawer();
           }}>
             <ShoppingCart className="lucide-icon mr-2"/>
             <span>ADD TO CART</span>
-            <span className="ml-2">- ¥{product.price}</span>
+            <span className="ml-2">- ¥{localProduct.price}</span>
           </button>
         </div>
       </div>
