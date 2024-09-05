@@ -185,7 +185,7 @@ const AddressForm = ({onSendAddressData}) => {
         <button 
         disabled={!allDataValid}
         onClick={sendFormData}
-        className={`btn-1 absolute right-0 ${allDataValid ? 'bg-colour-4 btn-1-hover' : 'cursor-default bg-gray-300'}`}
+        className={`btn-1 absolute right-0 ${allDataValid ? 'bg-colour-4 btn-1-hover' : 'btn-disabled'}`}
         >Proceed to shipping</button>
       </div>
 

@@ -48,7 +48,7 @@ input::-webkit-inner-spin-button {
 }
 
 .pv-btn-1 {
-  @apply btn-1 btn-1-hover relative text-lg w-full rounded-3xl mx-auto my-5 flex justify-center
+  @apply btn-1 relative text-lg w-full rounded-3xl mx-auto my-5 flex justify-center
 }
 
 .stripe-input {
@@ -57,6 +57,10 @@ input::-webkit-inner-spin-button {
 
 .home-shopnow-btn {
   @apply my-3 w-1/4 h-[3rem] text-center text-white text-lg rounded-lg bg-colour-3 animate-pulse
+}
+
+.btn-disabled {
+  @apply cursor-default bg-gray-300
 }
 
 @layer components {
