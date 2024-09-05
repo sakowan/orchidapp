@@ -36,37 +36,39 @@ const ProductView = () => {
     }));
   };
 
-  const updateCartProds = (index, newQty) => {
+  const updateCartProds = (index, newQty, updatedCartProducts) => {
     console.log('Function: updateCartProds')
     // Update array of elements
     setCartProds(prev => {
-      console.log('prev:', prev)
-      const updated = [...prev];
       
+      const updated = [...prev];
       
       if(index < updated.length){ // Current page product exists in cart already
         // Update the specific product
         updated[index] = { ...updated[index], quantity: newQty };
         return updated;
-      } else { // First time adding current page product to cart
-        console.log('fdas')
-
+      } else {
+        // const latestItem = updatedCartProducts[updatedCartProducts.length - 1];
+        // updated.push(latestItem)
+        return updated;
       }
     });
   }
   const adjustQty = (index, pid, p_qty, increment) => {
     console.log('Function: adjustQty')
     let newQty = p_qty;
+    
     if(increment == true){
       newQty+=1;
       setNumCartProds(numCartProds+1)
     } else {
       newQty-=1;
-
       // Disallow negative inputs when decrementing
       if(newQty < 1){
+        console.log('hi')
         return
       }
+
       setNumCartProds(numCartProds-1)
     }
 
@@ -76,35 +78,38 @@ const ProductView = () => {
     }
 
     // Update qty of card products for Navbar
-    updateProductBackend(pid, newQty);
-    updateCartProds(index, newQty);
+    updateProductBackend(pid, newQty, index);
   }
 
   const removeCartProduct = async (index, cart_product) => {
-    console.log('Function: removeCartProduct')
-    const cart_product_id = cart_product.id
     try {
-
+      const cart_product_id = cart_product.id;
+  
       // Delete CartProduct in backend
-      const deleteCartProduct =  await api.delete(`cart_products/${cart_product_id}`)
-
-      // Update CartProducts for local array
-      const fetchCartProducts =  await api.get('cart_products')
-      setCartProds(fetchCartProducts.data.cart_products)
-
-      // Update NumCartProds for Navbar
-      setNumCartProds(fetchCartProducts.data.num_items)
-
-      // If deleted CartProduct was the current page product
-      if(product.id == cart_product.product){
-        setQty(0)
+      await api.delete(`cart_products/${cart_product_id}`);
+  
+      // Fetch updated cart products
+      const { data } = await api.get('cart_products');
+  
+      // Update CartProducts state
+      setCartProds(data.cart_products);
+  
+      // Update NumCartProds state for Navbar
+      console.log('Update NumCartProds state for Navbar', data.num_items)
+      if(data.num_items){
+        setNumCartProds(data.num_items);
+      } else {
+        setNumCartProds(0);
       }
-
-      console.log('Successfully deleted cart product:', deleteCartProduct)
+  
+      // Reset current product quantity if it was removed
+      if (product.id === cart_product.product) {
+        setQty(0);
+      }
     } catch (error) {
-      console.log('Error removing cart product', error)
+      console.log('Error removing cart product', error);
     }
-  }
+  };
 
   const getCurrentPageProduct = async () => {
     console.log('Function: getCurrentPageProduct')
@@ -120,7 +125,7 @@ const ProductView = () => {
     }
   };
 
-  const updateProductBackend = async (pid, newQty) => {
+  const updateProductBackend = async (pid, newQty, index) => {
     console.log('Function: updateProductBackend')
 
     const data = {
@@ -132,8 +137,11 @@ const ProductView = () => {
       const response = await api.post(`/cart_products/`, data).then(async (response) => {
         // Fetch and set updated Cart Products
         const fetchCartProducts = await api.get('cart_products')
-        setCartProds(fetchCartProducts.data.cart_products)
-        console.log('Cart product updated');
+        const updatedCartProducts = fetchCartProducts.data.cart_products
+        setCartProds(updatedCartProducts)
+        
+        console.log('Function: updateProductBackend; Cart product updated:', updatedCartProducts);
+        updateCartProds(index, newQty, updatedCartProducts);
       })
     } catch (error) {
       console.log(error)
@@ -174,6 +182,8 @@ const ProductView = () => {
             return;
           }
         }
+      } else {
+        setNumCartProds(0)
       }
     }
   }, [user]);
