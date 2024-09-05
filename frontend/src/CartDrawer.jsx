@@ -1,20 +1,40 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Drawer, ThemeProvider } from "@material-tailwind/react";
 import { CartContext } from './CartContext';
 import { Minus, Plus } from 'lucide-react';
 import { drawerTheme } from "./constants";
 
-const CartDrawer = ({ open, closeDrawer, adjustQty, removeCartProduct }) => {
-  const { cartProds } = useContext(CartContext);
+const CartDrawer = ({ adjustQty, removeCartProduct }) => {
+  const navigate = useNavigate();
+  const { cartProds, openDrawer, setOpenDrawer} = useContext(CartContext);
+  const [subtotal, setsubtotal] = useState(0);
+
+  const cdCloseDrawer = () => setOpenDrawer(false);
+
+  const calculateSubtotal = () => {
+    let st = 0;
+    cartProds.map((cp) => {
+      st += parseFloat((cp.product_info.price * cp.quantity).toFixed(2));
+    });
+    return st;
+  };  
+
+  useEffect(() => {
+    if(cartProds){
+      const st = calculateSubtotal().toFixed(2)
+      setsubtotal(st)
+    }
+  }, [cartProds])
 
   return (
     cartProds && (
       <ThemeProvider value={drawerTheme}>
         <Drawer
           placement="right"
-          open={open}
-          onClose={closeDrawer}
-          className={open ? '!w-2/5 !max-w-none' : ''}
+          open={openDrawer}
+          onClose={cdCloseDrawer}
+          className={openDrawer ? '!w-2/5 !max-w-none' : ''}
         >
           <div className='p-6'>
             <h1 className='pv-h1 text-center pb-6'>ITEMS</h1>
@@ -54,6 +74,16 @@ const CartDrawer = ({ open, closeDrawer, adjustQty, removeCartProduct }) => {
                 <hr className='pv-hr' />
               </div>
             ))}
+
+            <div id="subtotal" className='absolute bottom-6 w-full pr-12'>
+              <hr className='pv-hr' />
+              <div className="flex justify-between pt-6">
+                <h2 className='pv-h2 ibm-plex-mono-bold'>SUBTOTAL</h2>
+                <h2 className='pv-h2 ibm-plex-mono-bold'>¥{subtotal}</h2>
+              </div>
+              <p className='text-xs text-gray-600'>*Shipping, taxes, and discounts calculated at checkout.</p>
+              <button onClick={() => navigate("/checkout")} className="pv-btn-1">CHECKOUT</button>
+            </div>
           </div>
         </Drawer>
       </ThemeProvider>
