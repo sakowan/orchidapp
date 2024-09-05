@@ -30,7 +30,7 @@ const Products = () => {
 
   return (
     <MainBody>
-      <ul className='flex flex-wrap items-center justify-center -mx-4'>
+      <ul className='flex flex-wrap items-center justify-center -mx-6 mt-[2.1rem]'>
         {products.map(product => (
           <li onClick={() => goProductView(product)} className="w-1/3" key={product.id}>
             <ProductCard product={product}/>

@@ -8,11 +8,12 @@ import { CartContext } from './CartContext';
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const { cartProds, setCartProds, numCartProds, setNumCartProds } = useContext(CartContext);
+  const { cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer} = useContext(CartContext);
   const names = ['💸 FREE SHIPPING ON ORDERS OVER ¥2500 💸', '🚀 DELIVERY TIME 2-3 BUSINESS DAYS 🚀', '💖 SIGN UP NOW FOR ¥500 OFF YOUR FIRST PURCHASE 💖'];
   const [currentName, setCurrentName] = useState(names[0]);
   const [fade, setFade] = useState(false);
   let index = 0;
+  const navOpenDrawer = () => setOpenDrawer(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -89,7 +90,7 @@ const Navbar = () => {
           <div className="flex w-1/5 h-full justify-end space-x-4">
 
             {/* Cart counter */}
-            <div className='h-full relative grid place-items-center'>
+            <div id="navbar-cart" className='h-full relative grid place-items-center' onClick={() => navOpenDrawer()}>
               <p className='absolute flex text-sm right-2 top-3'>{numCartProds}</p>
               <ShoppingCart className="lucide-icon mx-3" />
             </div>

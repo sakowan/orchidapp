@@ -17,19 +17,18 @@ import { ShoppingCart, CirclePlus, CircleMinus, Plus, Minus } from 'lucide-react
 
 const ProductView = () => {
   const { user } = useContext(UserContext);
-  const { cartProds, setCartProds, numCartProds, setNumCartProds } = useContext(CartContext);
+  const { cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer } = useContext(CartContext);
   const location = useLocation();
   const navigate = useNavigate();
   const [product, setProduct] = useState(location.state?.product || {});
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
-  const [open, setOpen] = useState(false);
   const [qty, setQty] = useState(0);
   const [pageprodindex, setpageprodindex] = useState();
 
-  const openDrawer = () => setOpen(true);
-  const closeDrawer = () => setOpen(false);
+  const pvOpenDrawer = () => setOpenDrawer(true);
+
   const toggleCollapse = (section) => {
     setCollapseStates((prevStates) => ({
       ...prevStates,
@@ -170,7 +169,7 @@ const ProductView = () => {
   useEffect(() => { //User & cart
     console.log('Function: useEffect')
     const pathRegex = /^\/products\/.*/
-    console.log('location', pathRegex.test(location.pathname))
+    console.log('location', pathRegex.test(location.pathname), document.getElementById('navbar-cart'))
     if (user) {
       if(user.cart_products.length > 0) {
         setCartProds(user.cart_products)
@@ -194,12 +193,7 @@ const ProductView = () => {
   return (
     <MainBody>
       {/* Drawer */}
-      <CartDrawer
-        open={open}
-        closeDrawer={closeDrawer}
-        adjustQty={adjustQty}
-        removeCartProduct={removeCartProduct}
-      />
+      <CartDrawer adjustQty={adjustQty} removeCartProduct={removeCartProduct}/>
 
       {/* First Row */}
       <div className="flex w-full p-5">
@@ -264,10 +258,10 @@ const ProductView = () => {
             </Collapse>
           </div>
 
-          <button id="atc" className="pv-add-to-cart-btn" 
+          <button id="atc" className="pv-btn-1" 
           onClick={(e) => {
             adjustQty(pageprodindex, product.id, qty, true)
-            openDrawer();
+            pvOpenDrawer();
           }}>
             <ShoppingCart className="lucide-icon mr-2"/>
             <span>ADD TO CART</span>

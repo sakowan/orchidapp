@@ -47,7 +47,7 @@ input::-webkit-inner-spin-button {
   @apply w-full text-left flex justify-between
 }
 
-.pv-add-to-cart-btn {
+.pv-btn-1 {
   @apply btn-1 btn-1-hover relative text-lg w-full rounded-3xl mx-auto my-5 flex justify-center
 }
 
