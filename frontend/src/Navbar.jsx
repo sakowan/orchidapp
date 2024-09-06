@@ -69,7 +69,7 @@ const Navbar = () => {
   }, [lastScrollTop]);
 
   return (
-    <div id="full nav" className={`relative transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'
+    <div id="full nav" className={`relative z-[9999] transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'
     }`}>
       <nav className="flex items-center justify-center z-[9999] ibm-extralight h-[4.5rem] text-2xl fixed top-0 left-0 right-0 bg-my-muted">
         <div className="relative h-full w-full container my-auto flex items-center">

@@ -16,15 +16,17 @@ import { Collapse } from "@material-tailwind/react";
 import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
 
 const ProductView = () => {
+  const { setCartProds, numCartProds, setNumCartProds, setOpenDrawer, updateProductBackend } = useContext(CartContext);
   const { user } = useContext(UserContext);
-  const { cartProds, setCartProds, numCartProds, setNumCartProds, setOpenDrawer, localProductQty, setLocalProductQty, updateCartProds, updateProductBackend } = useContext(CartContext);
   const location = useLocation();
   const navigate = useNavigate();
   const [localProduct, setLocalProduct] = useState(location.state?.product || {});
+  const [localProductQty, setLocalProductQty] = useState(0);
+  
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
-  const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
   const [pageprodindex, setpageprodindex] = useState();
+  const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
 
   const pvOpenDrawer = () => setOpenDrawer(true);
 
@@ -37,6 +39,7 @@ const ProductView = () => {
 
   const adjustQty = (index, pid, p_qty, increment) => {
     console.log('Function: adjustQty')
+    console.log('pid',pid)
     let newQty = p_qty;
     
     if(increment == true){
@@ -60,7 +63,7 @@ const ProductView = () => {
     updateProductBackend(pid, newQty, index);
   }
 
-  const removeCartProduct = async (index, cart_product) => {
+  const removeCartProduct = async (cart_product) => {
     try {
       const cart_product_id = cart_product.id;
   
@@ -125,6 +128,7 @@ const ProductView = () => {
 
   useEffect(() => { //User & cart
     console.log('Function: useEffect')
+    setLocalProductQty(0)
     if (user) {
       if(user.cart_products.length > 0) {
         setCartProds(user.cart_products)

@@ -42,9 +42,6 @@ export const CartProvider = ({ children }) => {
         const fetchCartProducts = await api.get('cart_products')
         const updatedCartProducts = fetchCartProducts.data.cart_products
         setCartProds(updatedCartProducts)
-        
-        console.log('Function: updateProductBackend; Cart product updated:', updatedCartProducts);
-        updateCartProds(index, newQty);
       })
     } catch (error) {
       console.log(error)
@@ -52,7 +49,7 @@ export const CartProvider = ({ children }) => {
   }
 
   return (
-    <CartContext.Provider value={{ cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, localProductQty, setLocalProductQty, updateCartProds, updateProductBackend}}>
+    <CartContext.Provider value={{ cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, updateProductBackend}}>
       {children}
     </CartContext.Provider>
   );
