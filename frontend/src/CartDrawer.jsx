@@ -1,13 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { Drawer, ThemeProvider } from "@material-tailwind/react";
 import { CartContext } from './CartContext';
 import { Minus, Plus, Frown } from 'lucide-react';
 import { drawerTheme } from "./constants";
 
-const CartDrawer = ({ adjustQty, removeCartProduct }) => {
+const CartDrawer = ({ removeCartProduct }) => {
   const navigate = useNavigate();
-  const { cartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal} = useContext(CartContext);
+  const { cartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, adjustQty} = useContext(CartContext);
 
   const cdCloseDrawer = () => setOpenDrawer(false);
 
@@ -26,6 +27,10 @@ const CartDrawer = ({ adjustQty, removeCartProduct }) => {
     setSubTotal(st)
   }, [cartProds])
 
+  useEffect(() => {
+  console.log("Updated cart products in UI:", cartProds);
+}, [cartProds]);
+
   return (
     <ThemeProvider value={drawerTheme}>
       <Drawer
@@ -38,7 +43,7 @@ const CartDrawer = ({ adjustQty, removeCartProduct }) => {
           <h1 className='pv-h1 text-center pb-6'>ITEMS</h1>
           <hr className='pv-hr' />
           <div id="cartDrawerBody" className={!cartProds ? "h-screen flex justify-center items-center" : ""}>
-            {cartProds && cartProds.map((cp, index) => (
+            {cartProds && cartProds.map((cp) => (
               <div key={cp.id} className="my-2">
                 <div className='flex py-2'>
                   <img src={`/src/assets/images/${cp.product_info.main_img}`} className="w-[6rem] h-[6rem] mr-4 border border-gray-100 rounded-sm" alt={cp.product_info.name} />
@@ -50,7 +55,7 @@ const CartDrawer = ({ adjustQty, removeCartProduct }) => {
 
                     <div className="flex justify-between">
                       <div className="flex max-w-[10rem]">
-                        <button onClick={() => adjustQty(index, cp.product, cp.quantity, false)} type="button" className="rounded-s-lg pv-qty-btn">
+                        <button onClick={() => adjustQty(cp.product, false)} type="button" className="rounded-s-lg pv-qty-btn">
                           <Minus className='lucide-icon' />
                         </button>
                         <input
@@ -60,7 +65,7 @@ const CartDrawer = ({ adjustQty, removeCartProduct }) => {
                           value={cp.quantity}
                           readOnly
                         />
-                        <button onClick={() => adjustQty(index, cp.product, cp.quantity, true)} type="button" className="rounded-e-lg pv-qty-btn">
+                        <button onClick={() => adjustQty(cp.product, true)} type="button" className="rounded-e-lg pv-qty-btn">
                           <Plus className='lucide-icon' />
                         </button>
                       </div>

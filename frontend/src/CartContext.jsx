@@ -6,50 +6,60 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const { user } = useContext(UserContext);
-  const [localProductQty, setLocalProductQty] = useState(0);
   const [subtotal, setSubTotal] = useState(0.00);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [cartProds, setCartProds] = useState([]);
   const [numCartProds, setNumCartProds] = useState(0);
 
-  const updateCartProds = (index, newQty) => {
-    console.log('Function: updateCartProds')
-    // Update array of elements
-    setCartProds(prev => {
-      const updated = [...prev];
-      
-      if(index < updated.length){ // Current page product exists in cart already
-        // Update the specific product
-        updated[index] = { ...updated[index], quantity: newQty };
-        return updated;
-      } else {
-        return updated;
+  const adjustQty = async (pid, increment) => {
+    // When adding to cart, check if user exists otherwise redirect them to login
+    if(!user){
+      navigate('/login')
+    }
+
+    console.log('Function: adjustQty')
+    // Check if current product already exists in users Cart
+    api.get(`cart_products/${pid}`).then((res1) => {
+      if(res1.status === 200){
+        console.log("Cart product adjustQty status:", res1.data.cart_product.quantity)
+
+        // Product exists in cart, get quantity
+        let quantity = res1.data.cart_product.quantity;
+        
+        increment ?  quantity+=1 : quantity-=1
+
+        // Disallow negative inputs when decrementing
+        if(quantity < 1){
+          return
+        }
+
+        // Update quantity and update in backend
+        api.patch(`cart_products/${res1.data.cart_product.id}/`, {quantity: quantity}).then(res2 => {
+          console.log('Product updated successfully, quantity:', res2.data.quantity);
+          
+          // Update All Cart products
+          api.get("cart_products/").then((res3) => {
+            console.log('Call all cart products:', res3.data.cart_products)
+            setCartProds(res3.data.cart_products);
+        });
+        })
+        .catch(error => {
+          console.error('Error updating product:', error.res2);
+        });
+
       }
-    });
-  }
-
-  const updateProductBackend = async (pid, newQty, index) => {
-    console.log('Function: updateProductBackend')
-
-    const data = {
-      cart_id: user.cart_id,
-      product_id: pid,
-      quantity: newQty
-    }
-    try{
-      const response = await api.post(`/cart_products/`, data).then(async (response) => {
-        // Fetch and set updated Cart Products
-        const fetchCartProducts = await api.get('cart_products')
-        const updatedCartProducts = fetchCartProducts.data.cart_products
-        setCartProds(updatedCartProducts)
+    }).catch(error => {
+      // Current product does not yet exist in user's cart
+      api.post("cart_products/", {cart_id: user.cart_id, product_id: pid, quantity:1}).then((res1) => {
+        console.log('Function: adjustQty. First time adding THIS product to cart', res1)
+        setCartProds(res1.data.cart_products)
       })
-    } catch (error) {
       console.log(error)
-    }
+    })
   }
 
   return (
-    <CartContext.Provider value={{ cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, updateProductBackend}}>
+    <CartContext.Provider value={{ cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, adjustQty}}>
       {children}
     </CartContext.Provider>
   );

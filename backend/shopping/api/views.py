@@ -6,6 +6,7 @@ from django.db.models import Avg, Sum
 from django.conf import settings
 from django.middleware.csrf import get_token
 from django.http import HttpResponse, JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 from rest_framework.views import APIView
@@ -90,18 +91,19 @@ class CartProductViewSet(ModelViewSet):
         product_id = request.data.get('product_id')
         quantity = request.data.get('quantity')
         cp = CartProduct.objects.filter(cart_id=cart_id, product_id=product_id).first()
+        queryset = request.user.cart_products
 
         # If cp already exists
         if (cp):
             cp.quantity = quantity
             cp.save()
-            return Response('CartProduct updated', status=status.HTTP_200_OK)
+            return Response({'message': 'CartProduct updated', "cart_products": CartProductSerializer(queryset, many=True).data}, status=status.HTTP_200_OK)
 
         else:
             cp = CartProduct(cart_id=cart_id, product_id=product_id, quantity=quantity)
             cp.user = request.user
             cp.save()
-            return Response('CartProduct created', status=status.HTTP_201_CREATED)
+            return Response({'message': 'CartProduct created', "cart_products": CartProductSerializer(queryset, many=True).data}, status=status.HTTP_201_CREATED)
 
     def list(self, request):
         queryset = request.user.cart_products.all().order_by('created_at')
@@ -115,6 +117,13 @@ class CartProductViewSet(ModelViewSet):
             'num_items': num_items
         }
         return Response(data)
+    
+    def retrieve(self, request, pk):
+        try:
+            cart_product = request.user.cart_products.get(product_id=pk)
+            return Response({'cart_product' : CartProductSerializer(cart_product).data})
+        except ObjectDoesNotExist:
+            return Response({"error": "Product doesn't exist in user cart"}, status=status.HTTP_404_NOT_FOUND)
 
 class GetProductView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
