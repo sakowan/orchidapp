@@ -16,7 +16,7 @@ import { Collapse } from "@material-tailwind/react";
 import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
 
 const ProductView = () => {
-  const { setCartProds, numCartProds, setNumCartProds, setOpenDrawer, adjustQty } = useContext(CartContext);
+  const { setCartProds, setOpenDrawer, adjustQty } = useContext(CartContext);
   const { user } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();

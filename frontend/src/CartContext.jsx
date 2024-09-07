@@ -41,6 +41,7 @@ export const CartProvider = ({ children }) => {
           api.get("cart_products/").then((res3) => {
             console.log('Call all cart products:', res3.data.cart_products)
             setCartProds(res3.data.cart_products);
+            setNumCartProds(res3.data.num_items);
         });
         })
         .catch(error => {
@@ -53,6 +54,7 @@ export const CartProvider = ({ children }) => {
       api.post("cart_products/", {cart_id: user.cart_id, product_id: pid, quantity:1}).then((res1) => {
         console.log('Function: adjustQty. First time adding THIS product to cart', res1)
         setCartProds(res1.data.cart_products)
+        setNumCartProds(res1.data.num_items);
       })
       console.log(error)
     })
