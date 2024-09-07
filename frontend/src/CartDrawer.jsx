@@ -6,9 +6,9 @@ import { CartContext } from './CartContext';
 import { Minus, Plus, Frown } from 'lucide-react';
 import { drawerTheme } from "./constants";
 
-const CartDrawer = ({ removeCartProduct }) => {
+const CartDrawer = () => {
   const navigate = useNavigate();
-  const { cartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, adjustQty} = useContext(CartContext);
+  const { cartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, adjustQty, removeCartProduct} = useContext(CartContext);
 
   const cdCloseDrawer = () => setOpenDrawer(false);
 
@@ -28,8 +28,8 @@ const CartDrawer = ({ removeCartProduct }) => {
   }, [cartProds])
 
   useEffect(() => {
-  console.log("Updated cart products in UI:", cartProds);
-}, [cartProds]);
+    console.log("Updated cart products in UI:", cartProds);
+  }, [cartProds]);
 
   return (
     <ThemeProvider value={drawerTheme}>
