@@ -35,35 +35,6 @@ const ProductView = () => {
     }));
   };
 
-  const removeCartProduct = async (cart_product) => {
-    try {
-      const cart_product_id = cart_product.id;
-  
-      // Delete CartProduct in backend
-      await api.delete(`cart_products/${cart_product_id}`);
-  
-      // Fetch updated cart products
-      const { data } = await api.get('cart_products');
-  
-      // Update CartProducts state
-      setCartProds(data.cart_products);
-  
-      // Update NumCartProds state for Navbar
-      console.log('Update NumCartProds state for Navbar', data.num_items)
-      if(data.num_items){
-        setNumCartProds(data.num_items);
-      } else {
-        setNumCartProds(0);
-      }
-  
-      // Reset current product quantity if it was removed
-      if (localProduct.id === cart_product.product) {
-      }
-    } catch (error) {
-      console.log('Error removing cart product', error);
-    }
-  };
-
   const getCurrentPageProduct = async () => {
     console.log('Function: getCurrentPageProduct')
 
@@ -108,7 +79,7 @@ const ProductView = () => {
   return (
     <MainBody>
       {/* Drawer */}
-      <CartDrawer removeCartProduct={removeCartProduct}/>
+      <CartDrawer/>
 
       {/* First Row */}
       <div className="flex w-full p-5 mt-[0.85rem]">
