@@ -16,16 +16,14 @@ import { Collapse } from "@material-tailwind/react";
 import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
 
 const ProductView = () => {
-  const { setCartProds, numCartProds, setNumCartProds, setOpenDrawer, updateProductBackend } = useContext(CartContext);
+  const { setCartProds, numCartProds, setNumCartProds, setOpenDrawer, adjustQty } = useContext(CartContext);
   const { user } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
   const [localProduct, setLocalProduct] = useState(location.state?.product || {});
-  const [localProductQty, setLocalProductQty] = useState(0);
   
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
-  const [pageprodindex, setpageprodindex] = useState();
   const [collapseStates, setCollapseStates] = useState({benefits: false,application: false,ingredients: false});
 
   const pvOpenDrawer = () => setOpenDrawer(true);
@@ -36,32 +34,6 @@ const ProductView = () => {
       [section]: !prevStates[section]
     }));
   };
-
-  const adjustQty = (index, pid, p_qty, increment) => {
-    console.log('Function: adjustQty')
-    console.log('pid',pid)
-    let newQty = p_qty;
-    
-    if(increment == true){
-      newQty+=1;
-      setNumCartProds(numCartProds+1)
-    } else {
-      newQty-=1;
-      // Disallow negative inputs when decrementing
-      if(newQty < 1){
-        return
-      }
-      setNumCartProds(numCartProds-1)
-    }
-
-    // Update quantity of current page product 
-    if(pid == localProduct.id){
-      setLocalProductQty(newQty)
-    }
-
-    // Update qty of card products for Navbar
-    updateProductBackend(pid, newQty, index);
-  }
 
   const removeCartProduct = async (cart_product) => {
     try {
@@ -86,7 +58,6 @@ const ProductView = () => {
   
       // Reset current product quantity if it was removed
       if (localProduct.id === cart_product.product) {
-        setLocalProductQty(0);
       }
     } catch (error) {
       console.log('Error removing cart product', error);
@@ -108,7 +79,6 @@ const ProductView = () => {
   };
 
   useEffect(() => { //Reviews & products
-    console.log('fdsadsafdfadsf', localProduct)
     const fetchReviews = async () => {
       try{
         const response = await axios.get(import.meta.env.VITE_API_URL + "reviews", {
@@ -126,33 +96,19 @@ const ProductView = () => {
     getCurrentPageProduct();
   }, [])
 
-  useEffect(() => { //User & cart
-    console.log('Function: useEffect')
-    setLocalProductQty(0)
+  useEffect(() => {
+    console.log('Function: useEffect. On load, set user CartProducts')
     if (user) {
-      if(user.cart_products.length > 0) {
-        setCartProds(user.cart_products)
-  
-        // Set intial quantity if current product already exists in the user cart
-        for (var i=0; i<user.cart_products.length; i++) {
-  
-          // Initialise the quantity for the product of the current page
-          if(localProduct.id == user.cart_products[i]['product']){
-            setpageprodindex(i)
-            setLocalProductQty(user.cart_products[i]['quantity'])
-            return;
-          }
-        }
-      } else {
-        setNumCartProds(0)
-      }
+      api.get(`cart_products/`).then((res) => {
+        setCartProds(res.data.cart_products);
+      });
     }
   }, [user]);
   
   return (
     <MainBody>
       {/* Drawer */}
-      <CartDrawer adjustQty={adjustQty} removeCartProduct={removeCartProduct}/>
+      <CartDrawer removeCartProduct={removeCartProduct}/>
 
       {/* First Row */}
       <div className="flex w-full p-5 mt-[0.85rem]">
@@ -219,7 +175,7 @@ const ProductView = () => {
 
           <button id="atc" className="pv-btn-1 hover:btn-1-hover" 
           onClick={(e) => {
-            adjustQty(pageprodindex, localProduct.id, localProductQty, true)
+            adjustQty(localProduct.id, true)
             pvOpenDrawer();
           }}>
             <ShoppingCart className="lucide-icon mr-2"/>
