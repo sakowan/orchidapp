@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CartContext } from './CartContext';
 import { Minus, Plus, Frown } from 'lucide-react';
@@ -7,13 +7,14 @@ import { Minus, Plus, Frown } from 'lucide-react';
 const CartProdsMainList = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartProds, subtotal, setSubTotal, adjustQty, removeCartProduct} = useContext(CartContext);
+  const { cartProds, numCartProds, subtotal, shippingCost, setSubTotal, adjustQty, removeCartProduct} = useContext(CartContext);
+  const [total, setTotal] = useState(0.00)
 
   const calculateSubtotal = () => {
     let st = 0.00;
     if(cartProds){
       cartProds.map((cp) => {
-        st += parseFloat((cp.product_info.price * cp.quantity).toFixed(2));
+        st += parseFloat((cp.product_info.price * cp.quantity));
       });
     }
     return st;
@@ -21,9 +22,15 @@ const CartProdsMainList = () => {
 
   useEffect(() => {
     console.log("Updated cart products in UI:", cartProds);
-    const st = calculateSubtotal().toFixed(2)
+    const st = calculateSubtotal()
     setSubTotal(st)
+    setTotal(st + shippingCost)
   }, [cartProds])
+
+  useEffect(() => {
+    const t = parseFloat((subtotal + shippingCost))
+    setTotal(t)
+  }, [shippingCost])
 
   return (
     <div className='p-6'>
@@ -87,15 +94,32 @@ const CartProdsMainList = () => {
 
       <div id="subtotal" className={`absolute bottom-6 w-full pr-12 ${location.pathname === "/checkout" && 'pr-20'}`}>
         <hr className='pv-hr' />
-        <div className="flex justify-between pt-6 pv-h2 font-bold">
-          <h2>SUBTOTAL</h2>
-          <h2>¥{subtotal}</h2>
-        </div>
-        <p className='text-xs text-gray-600'>*Shipping, taxes, and discounts calculated at checkout.</p>
-        <button 
-        onClick={() => navigate("/checkout")} 
-        disabled={!cartProds}
-        className={`pv-btn-1 ${!cartProds ? "btn-disabled" : "hover:btn-1-hover"}`}>CHECKOUT</button>
+        {location.pathname !== '/checkout' ?
+          <>
+            <div className="flex justify-between pt-6 pv-h2 font-bold">
+              <h2>SUBTOTAL ({numCartProds} items)</h2>
+              <h2>¥{subtotal.toFixed(2)}</h2>
+            </div>
+            <p className='text-xs text-gray-600'>*Shipping, taxes, and discounts calculated at checkout.</p>
+            <button 
+            onClick={() => navigate("/checkout")} 
+            disabled={!cartProds}
+            className={`pv-btn-1 ${!cartProds ? "btn-disabled" : "hover:btn-1-hover"}`}>CHECKOUT</button>
+          </>
+          :
+          <div className="flex justify-between pt-6 w-full">
+            <div className="flex-col text-gray-500">
+              <p>Subtotal</p>
+              <p>Shipping</p>
+              <h2 className='pv-h2 font-bold'>TOTAL</h2>
+            </div>
+            <div className="flex-col text-gray-500 text-right">
+              <p>¥{subtotal.toFixed(2)}</p>
+              <p>{shippingCost > 0 ? `¥ ${shippingCost}` : "Free"}</p>
+              <h2 className='pv-h2 font-bold'>¥{total.toFixed(2)}</h2>
+            </div>
+          </div>
+        }
       </div>
     </div>
   )

@@ -9,6 +9,7 @@ export const CartProvider = ({ children }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [subtotal, setSubTotal] = useState(0.00);
+  const [shippingCost, setShippingCost] = useState(0.00);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [cartProds, setCartProds] = useState([]);
   const [numCartProds, setNumCartProds] = useState(0);
@@ -89,7 +90,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, adjustQty, removeCartProduct}}>
+    <CartContext.Provider value={{ cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, adjustQty, removeCartProduct, shippingCost, setShippingCost}}>
       {children}
     </CartContext.Provider>
   );

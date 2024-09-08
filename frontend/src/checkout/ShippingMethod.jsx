@@ -1,17 +1,22 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useContext} from 'react'
+import { CartContext } from '../CartContext'
 
 const ShippingMethod = ({onSendShippingData}) => {
   const [isFreeChecked, setIsFreeChecked] = useState(false);
   const [isExpChecked, setIsExpChecked] = useState(false);
   const [shippingType, setShippingType] = useState('');
+  const { setShippingCost} = useContext(CartContext);
+
   
   const handleChange = (e) => {
     if (e.target.id === 'free_shipping') {
       setIsFreeChecked(true);
       setIsExpChecked(false);
+      setShippingCost(0)
     } else {
       setIsExpChecked(true);
       setIsFreeChecked(false);
+      setShippingCost(300)
     }
     setShippingType(e.target.id);
   };
@@ -76,7 +81,7 @@ const ShippingMethod = ({onSendShippingData}) => {
             shippingType ? 'bg-colour-4 btn-1-hover' : 'cursor-default bg-gray-300'
           }`}
         >
-          Proceed to shipping
+          Proceed to Payment
         </button>
       </div>
     </>
