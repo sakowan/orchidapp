@@ -34,6 +34,7 @@ class CartProductSerializer(ModelSerializer):
             'name': product.name,
             'price': product.price,
             'main_img': product.main_img,
+            'url_name': product.url_name
         }
 
 class ReviewSerializer(ModelSerializer):
