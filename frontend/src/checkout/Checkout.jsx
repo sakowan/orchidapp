@@ -4,6 +4,7 @@ import AddressForm from './AddressForm'
 import SummaryDetails from './SummaryDetails'
 import ShippingMethod from './ShippingMethod'
 import PaymentForm from './PaymentForm'
+import CartView from '../CartView'
 
 const Checkout = (children) => {
   const [showAddress, setShowAddress] = useState(true);
@@ -55,7 +56,7 @@ const Checkout = (children) => {
       {/* Right Side */}
       <div className="flex-grow w-[45%] bg-gray-100 p-4 fixed right-0 h-full">
         {/* Content here will be static */}
-        <h1 className="form-header">Order Summary</h1>
+        <CartView/>
       </div>
     </div>
   )

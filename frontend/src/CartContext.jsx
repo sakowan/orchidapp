@@ -1,10 +1,12 @@
 import api from './api'
 import React, { createContext, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [subtotal, setSubTotal] = useState(0.00);
   const [openDrawer, setOpenDrawer] = useState(false);
