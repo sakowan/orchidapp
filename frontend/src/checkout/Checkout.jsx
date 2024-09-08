@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import CheckoutNavigation from './CheckoutNavigation'
 import AddressForm from './AddressForm'
 import SummaryDetails from './SummaryDetails'
@@ -51,15 +51,16 @@ const Checkout = (children) => {
       setShowPayment(false)
     }
   }
+
   return (
     <div className="flex h-screen">
       {/* Left Side */}
       <div className="flex-none w-[55%] overflow-auto h-full">
         <div className="p-12 pt-2 space-y-4 h-full">
           <CheckoutNavigation/>
-          {showAddress && <AddressForm onSendAddressData={handleAddressData}/>}
+          {showAddress && <AddressForm existingFormData={formData} onSendAddressData={handleAddressData}/>}
           {showSummary && <SummaryDetails formData={formData} hasShippingType={shippingMethod}/>}
-          {showShippingMethod && <ShippingMethod onSendShippingData={handleShippingData} onEditAddressData={handleBack}/>}
+          {showShippingMethod && <ShippingMethod formData={formData} onSendShippingData={handleShippingData} onEditAddressData={handleBack}/>}
           {showPayment && <PaymentForm formData={formData} onEditShippingData={handleBack}/>}
         </div>
       </div>

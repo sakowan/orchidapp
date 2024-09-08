@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const AddressForm = ({onSendAddressData}) => {
+const AddressForm = ({existingFormData, onSendAddressData}) => {
   const [formData, setFormData] = useState({email: '',first_name: '',last_name: '',country: '',post_code: '',prefecture: '',city: '',street: '',building: ''});
   const [dataValid, setDataValid] = useState({email: false, first_name: false, last_name: false, country: false, post_code: false, prefecture: false, city: false, street: false, building: false});
   const defaultData = {country: useRef(null),prefecture: useRef(null),city: useRef(null)};
@@ -64,7 +64,21 @@ const AddressForm = ({onSendAddressData}) => {
   }
 
   useEffect(() => {
-  }, [dataValid]);
+    if(Object.keys(existingFormData).length !== 0){
+      console.log('AddressForm.jsx reloaded', existingFormData)
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        ...existingFormData
+      }));
+
+      Object.entries(existingFormData).forEach(([key, value]) => {
+        setDataValid(prevState => ({
+          ...prevState,
+          [key]: true
+        }));
+      })
+    }
+  }, [existingFormData, setDataValid])
 
   const allFieldsValid = Object.values(dataValid).every(Boolean);
 

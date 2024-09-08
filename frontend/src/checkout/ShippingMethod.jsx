@@ -1,12 +1,12 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import { CartContext } from '../CartContext'
 import { ChevronLeft } from 'lucide-react'
 
-const ShippingMethod = ({onSendShippingData, onEditAddressData}) => {
+const ShippingMethod = ({formData, onSendShippingData, onEditAddressData}) => {
   const [isFreeChecked, setIsFreeChecked] = useState(false);
   const [isExpChecked, setIsExpChecked] = useState(false);
   const [shippingType, setShippingType] = useState('');
-  const { setShippingCost} = useContext(CartContext);
+  const { setShippingCost } = useContext(CartContext);
 
   
   const handleChange = (e) => {
@@ -24,7 +24,6 @@ const ShippingMethod = ({onSendShippingData, onEditAddressData}) => {
 
   const sendShippingData = () => {
     if (shippingType) {
-      console.log('shipping type', shippingType)
       onSendShippingData(shippingType);
     }
   };
@@ -33,6 +32,9 @@ const ShippingMethod = ({onSendShippingData, onEditAddressData}) => {
     console.log('editAddressData')
     onEditAddressData()
   }
+  // useEffect(() => {
+  //   console.log('Shipping.jsx reloaded', formData)
+  // })
   return (
     <>
       <label
@@ -43,7 +45,7 @@ const ShippingMethod = ({onSendShippingData, onEditAddressData}) => {
       >
         <div className="w-5/6">
           <div>Free Shipping</div>
-          <div className="text-sm">Arrives within 2-3 business days.</div>
+          <div className="text-sm">Arrives within 5-7 business days.</div>
         </div>
         <div className="w-1/6 flex justify-end">
           <input
@@ -65,7 +67,7 @@ const ShippingMethod = ({onSendShippingData, onEditAddressData}) => {
         }`}
       >
         <div className="w-5/6">
-          <div>Express Shipping</div>
+          <div>Express Shipping - ¥300</div>
           <div className="text-sm">Arrives within 2-3 business days.</div>
         </div>
         <div className="w-1/6 flex justify-end">
