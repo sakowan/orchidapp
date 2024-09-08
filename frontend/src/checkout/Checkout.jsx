@@ -37,7 +37,18 @@ const Checkout = (children) => {
     } else if (showShippingMethod) {
       setShowShippingMethod(false)
       setShowPayment(true)
-      console.log('Checkout.jsx shipping type', shippingMethod)
+    }
+  }
+
+  const handleBack = () => {
+    console.log('Handle back')
+    if (showShippingMethod){
+      setShowSummary(false)
+      setShowShippingMethod(false);
+      setShowAddress(true)
+    } else if (showPayment) {
+      setShowShippingMethod(true)
+      setShowPayment(false)
     }
   }
   return (
@@ -48,8 +59,8 @@ const Checkout = (children) => {
           <CheckoutNavigation/>
           {showAddress && <AddressForm onSendAddressData={handleAddressData}/>}
           {showSummary && <SummaryDetails formData={formData} hasShippingType={shippingMethod}/>}
-          {showShippingMethod && <ShippingMethod onSendShippingData={handleShippingData}/>}
-          {showPayment && <PaymentForm formData={formData}/>}
+          {showShippingMethod && <ShippingMethod onSendShippingData={handleShippingData} onEditAddressData={handleBack}/>}
+          {showPayment && <PaymentForm formData={formData} onEditShippingData={handleBack}/>}
         </div>
       </div>
       

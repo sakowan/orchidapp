@@ -1,7 +1,8 @@
 import React, {useState, useContext} from 'react'
 import { CartContext } from '../CartContext'
+import { ChevronLeft } from 'lucide-react'
 
-const ShippingMethod = ({onSendShippingData}) => {
+const ShippingMethod = ({onSendShippingData, onEditAddressData}) => {
   const [isFreeChecked, setIsFreeChecked] = useState(false);
   const [isExpChecked, setIsExpChecked] = useState(false);
   const [shippingType, setShippingType] = useState('');
@@ -27,6 +28,11 @@ const ShippingMethod = ({onSendShippingData}) => {
       onSendShippingData(shippingType);
     }
   };
+
+  const editAddressData = () => {
+    console.log('editAddressData')
+    onEditAddressData()
+  }
   return (
     <>
       <label
@@ -74,7 +80,11 @@ const ShippingMethod = ({onSendShippingData}) => {
           />
         </div>
       </label>
-      <div className="w-full relative">
+      <div className="w-full relative flex justify-between items-center pt-4">
+        <div className='flex cursor-pointer text-colour-6 '>
+          <ChevronLeft strokeWidth={1}/>
+          <a onClick={() => editAddressData()} className="underline">Return to address details</a>
+        </div>
         <button
           onClick={sendShippingData}
           className={`btn-1 absolute right-0 ${
