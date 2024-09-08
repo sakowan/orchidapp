@@ -48,7 +48,7 @@ const CartProdsMainList = () => {
                   </h3>
                   {location.pathname == '/checkout' ?
                     <div className="flex flex-col justify-between items-center text-gray-500">
-                      <h3 className='italic text-right'>{cp.quantity} × ¥{cp.product_info.price}<br/>=</h3>
+                      <h3 className='italic text-right'>{cp.quantity} × ¥{cp.product_info.price}</h3>
                       <h3 className="pv-h3 font-bold text-right w-1/5">¥{(cp.product_info.price * cp.quantity).toFixed(2)}</h3>
                     </div>
                     :

@@ -16,9 +16,13 @@ const stripeStyles = {
     }
   };
 
-const PaymentForm = ({ formData }) => {
+const PaymentForm = ({ formData, onEditShippingData}) => {
     const stripe = useStripe();
     const elements = useElements();
+
+    const editShippingData = () => {
+        onEditShippingData();
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -94,13 +98,13 @@ const PaymentForm = ({ formData }) => {
                         </div>
                     </div>
                 </form>
-                <div className="flex items-center justify-between mt-8">
-                    <div className='flex cursor-pointer'>
-                        <ChevronLeft strokeWidth={1}/>
-                        <a className="underline">Return to shipping</a>
-                    </div>
-                    <button onClick={(e) => handleSubmit(e)} className='btn-1 btn-1-hover'>Pay now</button>
+            </div>
+            <div className="flex justify-between items-center mt-8">
+                <div className='flex cursor-pointer text-colour-6 '>
+                    <ChevronLeft strokeWidth={1}/>
+                    <a onClick={() => editShippingData()} className="underline">Return to Shipping</a>
                 </div>
+                <button onClick={(e) => handleSubmit(e)} className='btn-1 btn-1-hover'>Pay now</button>
             </div>
         </div>
     );
