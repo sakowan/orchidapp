@@ -35,8 +35,13 @@ const Home = () => {
             onClick={() => shopNow()}
             >Shop Now</button>
           </div>
-          <div className='w-1/2 h-full flex justify-center'>
-            <img className="opacity-70 h-full" src="/src/assets/images/stock/girl3.jpg" alt="Girl" />
+          <div className='w-1/2 h-full flex justify-center relative'>
+            <img className="absolute w-[42rem] z-1 rotate-[25deg]" src="/src/assets/images/stock/pinkcircle.png"/>
+            <img className="opacity-95 h-full z-10" src="/src/assets/images/stock/girl5.png" alt="Girl" />
+
+            <img className="absolute w-[15rem] right-[20%] rotate-[-45deg] z-10" src="/src/assets/images/stock/flower1.png"/>
+            <img className="absolute w-[17rem] bottom-0 left-[15%] rotate-[-30deg] z-10" src="/src/assets/images/stock/moon.png"/>
+
           </div>
         </div>
       </div>
