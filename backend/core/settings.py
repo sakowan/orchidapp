@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+#Stripe
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51PjvhiGEkvCddTMkhHMT4uNQPMbbxSSZCX2cog0AgqEFN3V75yGstvBgiO59THwZqifQnZxhhhI4gDqQtHns4n5n00LV8g4A1k'
+STRIPE_SECRET_KEY = 'sk_test_51PjvhiGEkvCddTMkI7McdSlvyjvBLRepuwJbtxXvyed473U7WQ9JWuUvEcQ1NNgJhIlxgWzLnKl6mkf8Exqeiys100zjMrprUJ'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +33,20 @@ SECRET_KEY = 'django-insecure-mjpeg*@2(oj+^wvlc0&26x49kgpv+l)r*&ncg2d%!akve!%jbx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
+}
 
 INSTALLED_APPS = [
     'shopping.apps.ShoppingConfig', #added
@@ -41,12 +62,12 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+FRONTEND_URL = 'http://localhost:5173'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -89,6 +110,8 @@ DATABASES = {
     }
 }
 
+# Application definition
+AUTH_USER_MODEL = 'shopping.BamUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -131,5 +154,43 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Application definition
-AUTH_USER_MODEL = 'shopping.BamUser'
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173',
+                        'http://127.0.0.1:5173',
+                        ]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173',
+                        'http://127.0.0.1:5173',
+                        "http://localhost:8000",
+                        "http://127.0.0.1:8000"
+                        ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+## CAN IGNORE ALL THE BELOW WHEN NOT WORKING ON CSRF
+
+# # Specifies whether the CSRF cookie is accessible via JavaScript. Setting to False allows access from client-side scripts.
+# CSRF_COOKIE_HTTPONLY = False
+
+# # Allows the browser to include credentials (like cookies and HTTP authentication) in cross-origin requests.
+# CORS_ALLOW_CREDENTIALS = True
+
+# # Specifies that cookies should be sent with cross-site requests and is required for cross-origin requests in some cases.
+# CSRF_COOKIE_SAMESITE = 'None'
+
+# # Specifies whether the CSRF cookie should only be sent over HTTPS. Should be set to True in production.
+# CSRF_COOKIE_SECURE = True
+
+# # Configures cookies used for sessions to be sent with cross-site requests.
+# SESSION_COOKIE_SAMESITE = 'None'
+
+# # Ensures that session cookies are only sent over HTTPS, enhancing security in production.
+# SESSION_COOKIE_SECURE = True
+
+# # Indicates whether to store the CSRF token in the session instead of a cookie.
+# CSRF_USE_SESSIONS = False
+
+# # Specifies the domain to which the CSRF cookie applies. 'None' indicates no specific domain restriction.
+# CSRF_COOKIE_DOMAIN = 'None'
+
+# # Specifies the path to which the CSRF cookie is accessible. '/' makes it accessible across the entire domain.
+# CSRF_COOKIE_PATH = '/'
