@@ -87,11 +87,11 @@ const AddressForm = ({existingFormData, onSendAddressData}) => {
       <div className="p-6 border border-gray-300 rounded-lg bg-gray-50">
         <p className="form-header">Contact</p>
         <div className="relative w-full">
-          <label className={`address-form-labels ${dataValid.email ? 'text-colour-7' : 'text-gray'}`}>Email</label>
+          <label className={`addr-form-labels ${dataValid.email ? 'text-colour-7' : 'text-gray'}`}>Email</label>
           <input
             type="email"
             name="email"
-            className={`address-form-inputs ${dataValid.email ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+            className={`addr-form-inputs ${dataValid.email && 'valid-autofill-colour addr-form-inputs-valid'}`}
             value={formData.email}
             placeholder="contact@gmail.com"
             onChange={collectFormData}
@@ -102,20 +102,20 @@ const AddressForm = ({existingFormData, onSendAddressData}) => {
         <p className="form-header">Shipping Address</p>
         <div className="flex-centred-spaced">
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.first_name ? 'text-colour-7' : 'text-gray'}`}>First Name</label>
+            <label className={`addr-form-labels ${dataValid.first_name ? 'text-colour-7' : 'text-gray'}`}>First Name</label>
             <input
               name="first_name"
-              className={`address-form-inputs ${dataValid.first_name ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+              className={`addr-form-inputs ${dataValid.first_name && 'valid-autofill-colour addr-form-inputs-valid'}`}
               placeholder="Hanako"
               value={formData.first_name}
               onChange={collectFormData}
             />
           </div>
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.last_name ? 'text-colour-7' : 'text-gray'}`}>Last Name</label>
+            <label className={`addr-form-labels ${dataValid.last_name ? 'text-colour-7' : 'text-gray'}`}>Last Name</label>
             <input
               name="last_name"
-              className={`address-form-inputs ${dataValid.last_name ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+              className={`addr-form-inputs ${dataValid.last_name && 'valid-autofill-colour addr-form-inputs-valid'}`}
               placeholder="Yamada"
               value={formData.last_name}
               onChange={collectFormData}
@@ -123,11 +123,11 @@ const AddressForm = ({existingFormData, onSendAddressData}) => {
           </div>
         </div>
         <div className="relative w-full">
-          <label className={`address-form-labels ${dataValid.country ? 'text-colour-7' : 'text-gray'}`}>Country</label>
+          <label className={`addr-form-labels ${dataValid.country ? 'text-colour-7' : 'text-gray'}`}>Country</label>
           <select
             ref={defaultData.country}
             name="country"
-            className={`address-form-inputs ${dataValid.country ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+            className={`addr-form-inputs ${dataValid.country && 'valid-autofill-colour addr-form-inputs-valid'}`}
             value={formData.country}
             onChange={collectFormData}
           >
@@ -137,10 +137,10 @@ const AddressForm = ({existingFormData, onSendAddressData}) => {
         </div>
         <div className="flex-centred-spaced">
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.post_code ? 'text-colour-7' : 'text-gray'}`}>Post code</label>
+            <label className={`addr-form-labels ${dataValid.post_code ? 'text-colour-7' : 'text-gray'}`}>Post code</label>
             <input
               name="post_code"
-              className={`address-form-inputs ${dataValid.post_code ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+              className={`addr-form-inputs ${dataValid.post_code && 'valid-autofill-colour addr-form-inputs-valid'}`}
               value={formData.post_code}
               placeholder="1234567"
               pattern="/^\d{7}$/"
@@ -148,11 +148,11 @@ const AddressForm = ({existingFormData, onSendAddressData}) => {
             />
           </div>
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.prefecture ? 'text-colour-7' : 'text-gray'}`}>Prefecture</label>
+            <label className={`addr-form-labels ${dataValid.prefecture ? 'text-colour-7' : 'text-gray'}`}>Prefecture</label>
             <select
               ref={defaultData.prefecture}
               name="prefecture"
-              className={`address-form-inputs ${dataValid.prefecture ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+              className={`addr-form-inputs ${dataValid.prefecture && 'valid-autofill-colour addr-form-inputs-valid'}`}
               value={formData.prefecture}
               onChange={collectFormData}
             >
@@ -161,11 +161,11 @@ const AddressForm = ({existingFormData, onSendAddressData}) => {
             </select>
           </div>
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.city ? 'text-colour-7' : 'text-gray'}`}>City</label>
+            <label className={`addr-form-labels ${dataValid.city ? 'text-colour-7' : 'text-gray'}`}>City</label>
             <select
               ref={defaultData.city}
               name="city"
-              className={`address-form-inputs ${dataValid.city ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+              className={`addr-form-inputs ${dataValid.city && 'valid-autofill-colour addr-form-inputs-valid'}`}
               value={formData.city}
               onChange={collectFormData}
             >
@@ -176,19 +176,19 @@ const AddressForm = ({existingFormData, onSendAddressData}) => {
         </div>
         <div className="flex-centred-spaced">
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.street ? 'text-colour-7' : 'text-gray'}`}>Street</label>
+            <label className={`addr-form-labels ${dataValid.street ? 'text-colour-7' : 'text-gray'}`}>Street</label>
             <input
               name="street"
-              className={`address-form-inputs ${dataValid.street ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+              className={`addr-form-inputs ${dataValid.street && 'valid-autofill-colour addr-form-inputs-valid'}`}
               value={formData.street}
               onChange={collectFormData}
             />
           </div>
           <div className="flex-1">
-            <label className={`address-form-labels ${dataValid.building ? 'text-colour-7' : 'text-gray'}`}>Building</label>
+            <label className={`addr-form-labels ${dataValid.building ? 'text-colour-7' : 'text-gray'}`}>Building</label>
             <input
               name="building"
-              className={`address-form-inputs ${dataValid.building ? 'valid-autofill-colour address-form-inputs-valid' : ''}`}
+              className={`addr-form-inputs ${dataValid.building && 'valid-autofill-colour addr-form-inputs-valid'}`}
               value={formData.building}
               onChange={collectFormData}
             />

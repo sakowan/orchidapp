@@ -7,11 +7,21 @@ import PaymentForm from './PaymentForm'
 import CartView from '../CartView'
 
 const Checkout = (children) => {
-  const [showAddress, setShowAddress] = useState(true);
-  const [showSummary, setShowSummary] = useState(false);
-  const [showShippingMethod, setShowShippingMethod] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
-  const [shippingMethod, setShippingMethod] = useState('');
+  const [showSections, setShowSections] = useState({
+    address: true,
+    shippingMethod: false,
+    payment: false,
+    summary: false,
+  });
+
+  const updateSection = (section, value) => {
+    setShowSections((prevState) => ({
+      ...prevState,
+      [section]: value,
+    }));
+  };
+
+  const [shippingType, setShippingType] = useState('');
 
   const [formData, setFormData] = useState({});
   
@@ -25,30 +35,30 @@ const Checkout = (children) => {
       ...prevData,
       'shipping_type': shippingType
     }));
-    setShippingMethod(shippingType);
+    setShippingType(shippingType);
     handleNext();
   };
 
   const handleNext = () => {
-    if (showAddress){
-      setShowSummary(true)
-      setShowShippingMethod(true);
-      setShowAddress(false)
-    } else if (showShippingMethod) {
-      setShowShippingMethod(false)
-      setShowPayment(true)
+    if (showSections.address){
+      updateSection('summary', true);
+      updateSection('shipping', true);
+      updateSection('address', false);
+    } else if (showSections.shipping) {
+      updateSection('shipping', false);
+      updateSection('payment', true);
     }
   }
 
   const handleBack = () => {
     console.log('Handle back')
-    if (showShippingMethod){
-      setShowSummary(false)
-      setShowShippingMethod(false);
-      setShowAddress(true)
-    } else if (showPayment) {
-      setShowShippingMethod(true)
-      setShowPayment(false)
+    if (showSections.shipping){
+      updateSection('summary', false);
+      updateSection('shipping', false);
+      updateSection('address', true);
+    } else if (showSections.payment) {
+      updateSection('shipping', true);
+      updateSection('payment', false);
     }
   }
 
@@ -58,10 +68,10 @@ const Checkout = (children) => {
       <div className="flex-none w-[55%] overflow-auto h-full">
         <div className="p-12 pt-2 space-y-4 h-full">
           <CheckoutNavigation/>
-          {showAddress && <AddressForm existingFormData={formData} onSendAddressData={handleAddressData}/>}
-          {showSummary && <SummaryDetails formData={formData} hasShippingType={shippingMethod}/>}
-          {showShippingMethod && <ShippingMethod formData={formData} onSendShippingData={handleShippingData} onEditAddressData={handleBack}/>}
-          {showPayment && <PaymentForm formData={formData} onEditShippingData={handleBack}/>}
+          {showSections.address && <AddressForm existingFormData={formData} onSendAddressData={handleAddressData}/>}
+          {showSections.summary && <SummaryDetails formData={formData} hasShippingType={shippingType}/>}
+          {showSections.shipping && <ShippingMethod formData={formData} onSendShippingData={handleShippingData} onEditAddressData={handleBack}/>}
+          {showSections.payment && <PaymentForm formData={formData} onEditShippingData={handleBack}/>}
         </div>
       </div>
       
