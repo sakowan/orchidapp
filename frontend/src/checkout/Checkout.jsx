@@ -7,6 +7,9 @@ import PaymentForm from './PaymentForm'
 import CartView from '../CartView'
 
 const Checkout = (children) => {
+  const [formData, setFormData] = useState({});
+  const [shippingType, setShippingType] = useState('');
+
   const [showSections, setShowSections] = useState({
     address: true,
     shippingMethod: false,
@@ -21,9 +24,6 @@ const Checkout = (children) => {
     }));
   };
 
-  const [shippingType, setShippingType] = useState('');
-
-  const [formData, setFormData] = useState({});
   
   const handleAddressData = (formData) => {
     setFormData(formData);
@@ -67,7 +67,7 @@ const Checkout = (children) => {
       {/* Left Side */}
       <div className="flex-none w-[55%] overflow-auto h-full">
         <div className="p-12 pt-2 space-y-4 h-full">
-          <CheckoutNavigation/>
+          <CheckoutNavigation showSections={showSections}/>
           {showSections.address && <AddressForm existingFormData={formData} onSendAddressData={handleAddressData}/>}
           {showSections.summary && <SummaryDetails formData={formData} hasShippingType={shippingType}/>}
           {showSections.shipping && <ShippingMethod formData={formData} onSendShippingData={handleShippingData} onEditAddressData={handleBack}/>}
