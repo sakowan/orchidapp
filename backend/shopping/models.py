@@ -1,8 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.forms import ValidationError
 from datetime import datetime, date, timedelta
+
+# Signals
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 class TimeStampedModel(models.Model):
@@ -26,6 +30,12 @@ class Country(models.Model):
         return self.name #can add more desc later
 
 class BamUser(AbstractUser):
+    #Set email unique
+    email = models.EmailField(unique=True)
+    username = models.CharField(default=email, unique=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     phone = models.CharField(
         validators=[RegexValidator(
@@ -35,7 +45,7 @@ class BamUser(AbstractUser):
         )])
 
 class Cart(models.Model):
-    user = models.OneToOneField(BamUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(BamUser, on_delete=models.CASCADE, related_name='cart')
     item_count = models.PositiveIntegerField(default=0)
 
 class Category(models.Model):
@@ -55,23 +65,41 @@ class Category(models.Model):
                 return name
         return 'Blank'  # If no matching type is found
 
-class ProductListing(models.Model):
+class Product(models.Model):
     seller = models.ForeignKey(BamUser, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=500)
+    url_name = models.CharField(max_length=150, blank=True, editable=False, unique=True)
+    desc_brief = models.CharField(max_length=100)
+    desc_long = models.CharField()
     price = models.DecimalField(max_digits=8, decimal_places=2, default = 0.00)
     stock = models.PositiveIntegerField()
-    img_url = models.CharField(max_length=100)
+    main_img = models.CharField(max_length=100)
+    img_urls = models.JSONField(default=list)
 
-class CartProductListing(models.Model):
+    benefits = models.CharField(max_length=400)
+    application = models.CharField(max_length=300)
+    ingredients = models.CharField()
+
+    def save(self, *args, **kwargs):
+        # Set url_name based on name
+        self.url_name = self.name.lower().replace(' ', '-')
+        
+        # Can only store <= 5 img urls
+        if len(self.img_urls) > 5:
+            raise ValueError("You can only store up to 5 image URLs.")
+        
+        super().save(*args, **kwargs)
+
+class CartProduct(TimeStampedModel):
     #JOINS table
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE)
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name="cart_products")
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_products")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_products")
     quantity = models.PositiveIntegerField()
 
     class Meta:
-        unique_together = ('listing', 'cart')
+        unique_together = ('product', 'cart')
 
 
 class ProductItemManager(models.Manager):
@@ -85,7 +113,7 @@ class ProductItemManager(models.Manager):
         return super().create(*args, **kwargs)
 
 class ProductItem(models.Model):
-    listing = models.ForeignKey(ProductListing, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Product, on_delete=models.CASCADE)
     serial_number = models.CharField(max_length=100)
     expiry_date = models.DateField()
 
@@ -155,3 +183,27 @@ class Complaint(TimeStampedModel):
     type = models.PositiveIntegerField(choices = TYPES)
     resolved = models.BooleanField(default=False)
     # status = models.PositiveIntegerField(choices = STATUSES)
+
+class Review(TimeStampedModel):
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='reviews')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveIntegerField(validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ])
+    title = models.CharField(blank=True, null=True)
+    body = models.CharField(blank=True, null=True)
+
+    def clean(self):
+        super().clean()
+        if (self.title and not self.body) or (not self.title and self.body):
+            raise ValidationError(f'Both title and body must be provided together.')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # Calls the clean method and validates the title & body field must be present tgt
+        super().save(*args, **kwargs)
+
+@receiver(post_save, sender=BamUser)
+def create_cart_for_user(sender, instance, created, **kwargs):
+    if created:
+        Cart.objects.create(user=instance)
