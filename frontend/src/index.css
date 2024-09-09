@@ -31,11 +31,11 @@ input::-webkit-inner-spin-button {
   @apply flex w-2/5 bg-gray-100 bg-opacity-60 p-12 fixed right-0 h-full
 }
 
-.address-form-labels {
+.addr-form-labels {
   @apply bg-white text-[11px] relative px-1 top-2.5 left-3 w-auto;
 }; 
 
-.address-form-inputs-valid {
+.addr-form-inputs-valid {
   @apply border-colour-4 text-colour-7 focus:ring-colour-4;
 }
 
@@ -72,7 +72,7 @@ input::-webkit-inner-spin-button {
 }
 
 @layer components {
-  .address-form-inputs {
+  .addr-form-inputs {
     @apply bg-white h-12 text-[10px] border border-gray-300 text-sm rounded-lg block w-full p-2.5 focus:outline-none focus:border-none focus:ring-2 focus:ring-gray-300 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)];
   }
 }

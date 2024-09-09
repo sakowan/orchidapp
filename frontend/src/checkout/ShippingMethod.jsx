@@ -32,9 +32,7 @@ const ShippingMethod = ({formData, onSendShippingData, onEditAddressData}) => {
     console.log('editAddressData')
     onEditAddressData()
   }
-  // useEffect(() => {
-  //   console.log('Shipping.jsx reloaded', formData)
-  // })
+  
   return (
     <>
       <label
