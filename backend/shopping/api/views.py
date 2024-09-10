@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, status, generics
 
-from ..models import Country, Product, Category, BamUser, CartProduct, Review
+from ..models import Country, Product, Category, BamUser, CartProduct, Review, Order, Address
 from .serializers import CountrySerializer, ProductSerializer, CategorySerializer, UserSerializer, CartProductSerializer, ReviewSerializer
 
 ######### CSRF #########
@@ -39,9 +39,10 @@ def test_payment(request):
 @csrf_protect
 @api_view(['POST'])
 def save_stripe_info(request):
+    user = request.user
     data = request.data
-    formData = data['formData']
-    email = formData['email']
+    email = data['email']
+    cart_prods = data['cart_prods']
     payment_method_id = data['payment_method_id']
     extra_msg = ''
     
@@ -56,15 +57,46 @@ def save_stripe_info(request):
     else: # Get existing customer
         customer = customer_data[0]
         extra_msg = "Customer already existed."
-    
+
     # Make a payment
     stripe.PaymentIntent.create(
         customer=customer, 
         payment_method=payment_method_id,  
         currency='jpy',
-        amount=1600,
+        amount=(data['subtotal'] + data['shipping_fee']),
         confirm=True,
         return_url='http://localhost:5173/orders')
+
+    ########## CREATE NEW ORDER ##########
+    # Save address for one-to-one relationship with order
+    address = Address(
+        user = user,
+        first_name = data['first_name'],
+        last_name = data['last_name'],
+        country = data['country'],
+        post_code = data['post_code'],
+        prefecture = data['prefecture'],
+        city = data['city'],
+        street = data['street'],
+        building = data['building'],
+        contact = email
+    )
+    address.save()
+
+    order = Order(
+        user = user,
+        email = email,
+        address = address,
+        num_products = data['num_cart_prods'],
+        payment_method_id = data['payment_method_id'],
+        shipping_type = data['shipping_type'],
+        shipping_fee = data['shipping_fee'],
+        subtotal = data['subtotal'],
+        total = data['subtotal'] + data['shipping_fee'],
+        status = 1 # Paid
+    )
+    order.save()
+    ########## END CREATE NEW ORDER ##########
 
     return Response(status=status.HTTP_200_OK, 
         data={'message': 'Success', 'data': {

@@ -7,11 +7,11 @@ import { Minus, Plus, Frown } from 'lucide-react';
 const CartProdsMainList = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartProds, numCartProds, subtotal, shippingCost, setSubTotal, adjustQty, removeCartProduct} = useContext(CartContext);
-  const [total, setTotal] = useState(0.00)
+  const { cartProds, numCartProds, subtotal, shippingFee, setSubTotal, adjustQty, removeCartProduct} = useContext(CartContext);
+  const [total, setTotal] = useState(0)
 
   const calculateSubtotal = () => {
-    let st = 0.00;
+    let st = 0;
     if(cartProds){
       cartProds.map((cp) => {
         st += parseFloat((cp.product_info.price * cp.quantity));
@@ -24,13 +24,13 @@ const CartProdsMainList = () => {
     console.log("Updated cart products in UI:", cartProds);
     const st = calculateSubtotal()
     setSubTotal(st)
-    setTotal(st + shippingCost)
+    setTotal(st + shippingFee)
   }, [cartProds])
 
   useEffect(() => {
-    const t = parseFloat((subtotal + shippingCost))
+    const t = parseFloat((subtotal + shippingFee))
     setTotal(t)
-  }, [shippingCost])
+  }, [shippingFee])
 
   return (
     <div className='p-6'>
@@ -49,10 +49,10 @@ const CartProdsMainList = () => {
                   {location.pathname == '/checkout' ?
                     <div className="flex flex-col justify-between items-center text-gray-500">
                       <h3 className='italic text-right'>{cp.quantity} × ¥{cp.product_info.price}</h3>
-                      <h3 className="pv-h3 font-bold text-right w-1/5">¥{(cp.product_info.price * cp.quantity).toFixed(2)}</h3>
+                      <h3 className="pv-h3 font-bold text-right w-1/5">¥{(cp.product_info.price * cp.quantity)}</h3>
                     </div>
                     :
-                    <h3 className="pv-h3 text-right w-1/5">¥{(cp.product_info.price * cp.quantity).toFixed(2)}</h3>
+                    <h3 className="pv-h3 text-right w-1/5">¥{(cp.product_info.price * cp.quantity)}</h3>
                   }
                 </div>
 
@@ -98,7 +98,7 @@ const CartProdsMainList = () => {
           <>
             <div className="flex justify-between pt-6 pv-h2 font-bold">
               <h2>SUBTOTAL ({numCartProds} items)</h2>
-              <h2>¥{subtotal.toFixed(2)}</h2>
+              <h2>¥{subtotal}</h2>
             </div>
             <p className='text-xs text-gray-600'>*Shipping, taxes, and discounts calculated at checkout.</p>
             <button 
@@ -114,9 +114,9 @@ const CartProdsMainList = () => {
               <h2 className='pv-h2 font-bold'>TOTAL</h2>
             </div>
             <div className="flex-col text-gray-500 text-right">
-              <p>¥{subtotal.toFixed(2)}</p>
-              <p>{shippingCost > 0 ? `¥ ${shippingCost}` : "Free"}</p>
-              <h2 className='pv-h2 font-bold'>¥{total.toFixed(2)}</h2>
+              <p>¥{subtotal}</p>
+              <p>{shippingFee > 0 ? `¥ ${shippingFee}` : "Free"}</p>
+              <h2 className='pv-h2 font-bold'>¥{total}</h2>
             </div>
           </div>
         }

@@ -166,6 +166,9 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:5173',
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
+HUBSPOT_API_KEY = "pat-na1-5f7ce832-8cf6-4d3e-a1fb-5ed5010587ec"
+HUBSPOT_API_URL = 'https://api.hubapi.com'
+
 ## CAN IGNORE ALL THE BELOW WHEN NOT WORKING ON CSRF
 
 # # Specifies whether the CSRF cookie is accessible via JavaScript. Setting to False allows access from client-side scripts.

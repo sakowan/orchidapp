@@ -30,13 +30,17 @@ const Checkout = (children) => {
     handleNext();
   };
 
-  const handleShippingData = (shippingType) => {
+  const handleShippingData = (shippingType, edittingForm) => {
+    console.log('handleShippingData', edittingForm)
     setFormData(prevData => ({
       ...prevData,
       'shipping_type': shippingType
     }));
     setShippingType(shippingType);
-    handleNext();
+    if(edittingForm == true){
+      return
+    }
+      handleNext();
   };
 
   const handleNext = () => {
@@ -71,7 +75,7 @@ const Checkout = (children) => {
           {showSections.address && <AddressForm existingFormData={formData} onSendAddressData={handleAddressData}/>}
           {showSections.summary && <SummaryDetails formData={formData} hasShippingType={shippingType}/>}
           {showSections.shipping && <ShippingMethod formData={formData} onSendShippingData={handleShippingData} onEditAddressData={handleBack}/>}
-          {showSections.payment && <PaymentForm formData={formData} onEditShippingData={handleBack}/>}
+          {showSections.payment && <PaymentForm formData={formData} setFormData={setFormData} onEditShippingData={handleBack}/>}
         </div>
       </div>
       

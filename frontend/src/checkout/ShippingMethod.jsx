@@ -6,32 +6,47 @@ const ShippingMethod = ({formData, onSendShippingData, onEditAddressData}) => {
   const [isFreeChecked, setIsFreeChecked] = useState(false);
   const [isExpChecked, setIsExpChecked] = useState(false);
   const [shippingType, setShippingType] = useState('');
-  const { setShippingCost } = useContext(CartContext);
+  const { setShippingFee } = useContext(CartContext);
 
   
   const handleChange = (e) => {
     if (e.target.id === 'free_shipping') {
       setIsFreeChecked(true);
       setIsExpChecked(false);
-      setShippingCost(0)
+      setShippingFee(0)
     } else {
       setIsExpChecked(true);
       setIsFreeChecked(false);
-      setShippingCost(300)
+      setShippingFee(300)
     }
     setShippingType(e.target.id);
   };
 
-  const sendShippingData = () => {
+  const sendShippingData = (edittingForm=false) => {
     if (shippingType) {
-      onSendShippingData(shippingType);
+      onSendShippingData(shippingType, edittingForm);
     }
   };
 
   const editAddressData = () => {
     console.log('editAddressData')
+    sendShippingData(true)
     onEditAddressData()
   }
+
+  useEffect(() => {
+    console.log('ShippingMethod.jsx reloaded', formData.shipping_type)
+    if(formData.shipping_type=='free_shipping'){
+      setIsFreeChecked(true)
+      setIsExpChecked(false)
+      setShippingType('free_shipping')
+
+    } else if (formData.shipping_type=='express_shipping'){
+      setIsExpChecked(true)
+      setIsFreeChecked(false)
+      setShippingType('express_shipping')
+    }
+  }, [])
   
   return (
     <>
@@ -52,6 +67,7 @@ const ShippingMethod = ({formData, onSendShippingData, onEditAddressData}) => {
             name="shipping"
             value="free_shipping"
             className="peer"
+            checked={isFreeChecked}
             onChange={handleChange}
             required
           />
@@ -75,6 +91,7 @@ const ShippingMethod = ({formData, onSendShippingData, onEditAddressData}) => {
             name="shipping"
             value="express_shipping"
             className="peer"
+            checked={isExpChecked}
             onChange={handleChange}
             required
           />
