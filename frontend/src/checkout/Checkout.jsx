@@ -4,7 +4,7 @@ import AddressForm from './AddressForm'
 import SummaryDetails from './SummaryDetails'
 import ShippingMethod from './ShippingMethod'
 import PaymentForm from './PaymentForm'
-import CartView from '../CartView'
+import CartView from '../cart/CartView'
 
 const Checkout = (children) => {
   const [formData, setFormData] = useState({});

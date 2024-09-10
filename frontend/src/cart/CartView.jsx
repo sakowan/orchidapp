@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import api from './api';
+import api from '../api';
 import { CartContext } from './CartContext';
 import CartProdsMainList from './CartProdsMainList';
 

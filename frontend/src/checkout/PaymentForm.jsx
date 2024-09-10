@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { CartContext } from '../CartContext'
+import { CartContext } from '../cart/CartContext'
 import api from '../api';
 import { ChevronLeft } from 'lucide-react';
 import {useElements, useStripe, CardNumberElement, CardExpiryElement, CardCvcElement} from "@stripe/react-stripe-js";

@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react'
-import { CartContext } from '../CartContext'
+import { CartContext } from '../cart/CartContext'
 import { ChevronLeft } from 'lucide-react'
 
 const ShippingMethod = ({formData, onSendShippingData, onEditAddressData}) => {
