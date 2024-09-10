@@ -96,6 +96,14 @@ def save_stripe_info(request):
         status = 1 # Paid
     )
     order.save()
+
+    # Delete cart products that were just ordered
+    for cp in cart_prods:
+        try:
+            instance = CartProduct.objects.get(id=cp['id'])
+            instance.delete()
+        except CartProduct.DoesNotExist:
+            print(f"Cart product {cp['id']} not found.")
     ########## END CREATE NEW ORDER ##########
 
     return Response(status=status.HTTP_200_OK, 
