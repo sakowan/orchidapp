@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import MainBody from './MainBody'
+import MainBody from '../MainBody'
 import ProductCard from './ProductCard'
 
 const Products = () => {

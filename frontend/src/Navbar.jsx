@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Heart, ShoppingCart, User } from 'lucide-react';
 
 import DropdownUser from './DropdownUser';
-import { CartContext } from './CartContext';
+import { CartContext } from './cart/CartContext';
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);

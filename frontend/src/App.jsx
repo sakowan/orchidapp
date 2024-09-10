@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes, Route, useLocation} from 'react-router
 
 // Components
 import { UserProvider } from './UserContext';
-import { CartProvider } from './CartContext';
+import { CartProvider } from './cart/CartContext';
 import Navbar from "./Navbar"
 import Checkout from "./checkout/Checkout"
 import Home from "./Home"
-import Products from "./Products"
-import ProductView from "./ProductView"
+import Products from "./products/Products"
+import ProductView from "./products/ProductView"
 import LoginSignupForm from "./LoginSignupForm"
 import ProtectedRoute from './ProtectedRoute';
 // End Components

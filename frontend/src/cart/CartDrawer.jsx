@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import CartProdsMainList from './CartProdsMainList';
 import { Drawer, ThemeProvider } from "@material-tailwind/react";
 import { CartContext } from './CartContext';
-import { drawerTheme } from "./constants";
+import { drawerTheme } from "../constants";
 
 const CartDrawer = () => {
   const { openDrawer, setOpenDrawer} = useContext(CartContext);

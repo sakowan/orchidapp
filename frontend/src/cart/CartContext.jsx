@@ -1,7 +1,7 @@
-import api from './api'
+import api from '../api'
 import React, { createContext, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from './UserContext';
+import { UserContext } from '../UserContext';
 
 export const CartContext = createContext();
 
