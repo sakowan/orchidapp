@@ -8,11 +8,11 @@ const CheckoutNavigation = ({showSections}) => {
         <img className="w-1/3" src="/src/assets/images/princess1.webp"></img>
         </div>
         <div className="text-gray flex justify-center space-x-3 ibm-extralight">
-          <p className={showSections.address && 'text-colour-6 ibm-regular'}>Information</p>
+          <p className={showSections.address ? 'text-colour-6 ibm-regular' : ''}>Information</p>
           <ChevronRight strokeWidth={1}/>
-          <p className={showSections.shipping && 'text-colour-6 ibm-regular'}>Shipping</p>
+          <p className={showSections.shipping ? 'text-colour-6 ibm-regular' : ''}>Shipping</p>
           <ChevronRight strokeWidth={1}/>
-          <p className={showSections.payment && 'text-colour-6 ibm-regular'}>Payment</p>
+          <p className={showSections.payment ? 'text-colour-6 ibm-regular' : ''}>Payment</p>
         </div>
     </>
   )

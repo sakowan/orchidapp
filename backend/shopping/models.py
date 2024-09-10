@@ -72,7 +72,7 @@ class Product(models.Model):
     url_name = models.CharField(max_length=150, blank=True, editable=False, unique=True)
     desc_brief = models.CharField(max_length=100)
     desc_long = models.CharField()
-    price = models.DecimalField(max_digits=8, decimal_places=2, default = 0.00)
+    price = models.PositiveIntegerField(default = 0)
     stock = models.PositiveIntegerField()
     main_img = models.CharField(max_length=100)
     img_urls = models.JSONField(default=list)
@@ -122,24 +122,36 @@ class ProductItem(models.Model):
 
 class Address(models.Model):
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE)
-    post_code = models.CharField()
-    prefecture = models.CharField()
-    city = models.CharField()
-    street = models.CharField()
-    building_name = models.CharField()
-    recipient_name = models.CharField()
-    recipient_phone = models.CharField()
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    country = models.CharField(max_length=50)
+    post_code = models.CharField(max_length=20)
+    prefecture = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    street = models.CharField(max_length=100)
+    building = models.CharField(max_length=50, null=True, blank=True)
+    contact = models.CharField(max_length=20)
 
 class Order(TimeStampedModel):
     STATUS_CHOICES = [
-        (1, 'Placed'),
+        (0, 'Unpaid'),
+        (1, 'Paid'),
         (2, 'Shipped'),
         (3, 'Out for delivery'),
         (4, 'Delivered'),
         (5, 'Cancelled'),
     ]
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE)
+
+    email = models.EmailField()
     address = models.OneToOneField('Address', on_delete=models.CASCADE)
+    num_products = models.PositiveIntegerField()
+    payment_method_id = models.CharField(max_length=100)
+    shipping_type = models.CharField(max_length=100)
+    shipping_fee = models.PositiveIntegerField()
+    subtotal = models.PositiveIntegerField()
+    total = models.PositiveIntegerField()
+    
     user_coupon = models.OneToOneField('BamUserCoupon',on_delete=models.CASCADE, null=True, blank=True)
     status = models.PositiveIntegerField(choices=STATUS_CHOICES)
 
