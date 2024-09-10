@@ -34,8 +34,6 @@ urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name='get-token'),
     path("token/refresh/", TokenRefreshView.as_view(), name='refresh'),
 
-    path('checkout/', CheckoutAPIView.as_view(), name='checkout'),
-    path('test-payment/', test_payment, name='test-payment'),
     path('save-stripe-info/', save_stripe_info, name='save_stripe_info'),
     path('csrf-cookie', GetCSRFToken.as_view()),
     path('cart_products/<int:pid>/', CartProductViewSet.as_view({'get': 'retrieve'})),
