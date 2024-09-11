@@ -3,11 +3,14 @@ from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY
+from rest_framework import permissions
+from rest_framework.viewsets import ModelViewSet
+from ..serializers import OrderSerializer
 
 from rest_framework.response import Response
 from rest_framework import status
 
-from ...models import CartProduct, Order, Address
+from ...models import CartProduct, Order, Address, OrderProduct
 
 @csrf_protect
 @api_view(['POST'])
@@ -70,16 +73,28 @@ def save_stripe_info(request):
     )
     order.save()
 
-    # Delete cart products that were just ordered
-    for cp in cart_prods:
+    # Transfer cart_products to order_products then delete the cart_products that were just ordered.
+    for obj in cart_prods:
         try:
-            instance = CartProduct.objects.get(id=cp['id'])
-            instance.delete()
+            cart_product = CartProduct.objects.get(id=obj['id'])
+            order_product = OrderProduct(
+                order = order,
+                user = user,
+                quantity = cart_product.quantity,
+                product = cart_product.product,
+            )
+            order_product.save()
+            cart_product.delete()
         except CartProduct.DoesNotExist:
-            print(f"Cart product {cp['id']} not found.")
+            print(f"Cart product {obj['id']} not found.")
     ########## END CREATE NEW ORDER ##########
 
     return Response(status=status.HTTP_200_OK, 
         data={'message': 'Success', 'data': {
         'customer_id': customer.id, 'extra_msg': extra_msg}
     })
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
