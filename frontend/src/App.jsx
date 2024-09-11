@@ -9,6 +9,7 @@ import Checkout from "./checkout/Checkout"
 import Home from "./Home"
 import Products from "./products/Products"
 import Orders from "./orders/Orders"
+import ReturnOrder from './orders/ReturnOrder';
 import ProductView from "./products/ProductView"
 import LoginSignupForm from "./LoginSignupForm"
 import ProtectedRoute from './ProtectedRoute';
@@ -37,6 +38,11 @@ function App() {
                             <Orders/>
                         </ProtectedRoute>
                         }></Route>
+                    <Route path="/orders/:id" element={
+                        <ProtectedRoute>
+                            <ReturnOrder />
+                        </ProtectedRoute>
+                        } />
 
                     <Route path='/checkout' element={
                         <ProtectedRoute>

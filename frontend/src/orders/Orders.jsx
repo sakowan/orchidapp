@@ -39,7 +39,7 @@ const Orders = () => {
                     <div>{op.product_info.name}</div>
                     <div className="flex flex-col justify-between h-full text-right ">
 
-                      <p className="!italic ibm-light">{op.quantity} × ¥{op.product_info.price}</p>
+                      <p className="ibm-light !italic">{op.quantity} × ¥{op.product_info.price}</p>
 
                       <p className="font-bold">¥{op.quantity * op.product_info.price}</p>
                     </div>
@@ -54,7 +54,7 @@ const Orders = () => {
               <p className='italic'>SHIPPING: ¥{order.shipping_fee}</p>
             </div>
             <div className="flex items-center justify-between space-x-4">
-              <button onClick={() => goReturnOrderPage(order)}className='btn-1 w-1/6 rounded-3xl bg-colour-4'>RETURN ITEM(S)</button>
+              <button onClick={() => goReturnOrderPage(order)}className='btn-1 w-1/6 rounded-3xl bg-colour-4 hover:btn-1-hover'>RETURN ITEM(S)</button>
               <h2 className="text-xl font-bold text-colour-5">TOTAL: ¥{order.total}</h2>
             </div>
           </div>
