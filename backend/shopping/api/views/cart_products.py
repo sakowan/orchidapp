@@ -8,7 +8,6 @@ from rest_framework import permissions, status
 from ...models import BamUser, CartProduct
 from ..serializers import CartProductSerializer
 
-
 class CartProductViewSet(ModelViewSet):
   queryset = CartProduct.objects.all()
   serializer_class = CartProductSerializer
@@ -21,7 +20,6 @@ class CartProductViewSet(ModelViewSet):
     cp = CartProduct.objects.filter(cart_id=cart_id, product_id=product_id).first()
     user = BamUser.objects.get(email=request.user)
     
-
     # If cp already exists
     if (cp):
       cp.quantity = quantity

@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter
-from .views import CountryViewSet, ProductViewSet, CategoryViewSet, CartProductViewSet, ReviewViewSet
+from .views import CountryViewSet, ProductViewSet, CategoryViewSet, CartProductViewSet, ReviewViewSet, OrderViewSet
 
 country_router =  DefaultRouter() # Generates URL patterns for my viewset, REST API endpoints
 country_router.register(r'countries', CountryViewSet ) # All will start with 'countries/', and the ViewSet that will handle requests to these URLs
@@ -15,3 +15,6 @@ cart_product_router.register(r'cart_products', CartProductViewSet )
 
 review_router = DefaultRouter()
 review_router.register(r'reviews', ReviewViewSet)
+
+order_router = DefaultRouter()
+order_router.register(r'orders', OrderViewSet)

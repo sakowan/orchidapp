@@ -155,13 +155,15 @@ class Order(TimeStampedModel):
     user_coupon = models.OneToOneField('BamUserCoupon',on_delete=models.CASCADE, null=True, blank=True)
     status = models.PositiveIntegerField(choices=STATUS_CHOICES)
 
-class OrderProductItem(models.Model):
+class OrderProduct(TimeStampedModel):
     #JOINS table
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product_item = models.ForeignKey(ProductItem, on_delete=models.CASCADE) #not on cascade
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name="order_products")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_products")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="order_products") #To number of units sold on product view page
+    quantity = models.PositiveIntegerField()
     
     class Meta:
-        unique_together = ('order', 'product_item')
+        unique_together = ('order', 'product')
 
 class Coupon(TimeStampedModel):
     TYPES = [

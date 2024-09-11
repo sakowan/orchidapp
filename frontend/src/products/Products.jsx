@@ -24,7 +24,6 @@ const Products = () => {
   }, []);
 
   const goProductView = (product) => {
-    console.log(product.name);
     navigate(`/products/${product.url_name}`, { state: { product } });
   };
 
