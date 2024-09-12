@@ -7,7 +7,7 @@ import MainBody from '../MainBody';
 
 // Styling
 import { Collapse } from "@material-tailwind/react";
-import { CloudUpload } from 'lucide-react';
+import { CloudUpload, CircleX } from 'lucide-react';
 
 const ReturnOrder = () => {
   const location = useLocation();
@@ -45,10 +45,11 @@ const ReturnOrder = () => {
         var reader = new FileReader();
         var url = reader.readAsDataURL(file);
         reader.onloadend = function (e) {
-          var id = `${op}_upload_${i}`;
-          var img = document.getElementById(id);
-          console.log("img", img)
+          var id = `${op}_upload_div_${i}`;
+          var imgdiv = document.getElementById(id);
+          var img = imgdiv.querySelector('img')
           img.src = reader.result
+          imgdiv.classList.remove('hidden');
         }
       })
     })
@@ -56,9 +57,9 @@ const ReturnOrder = () => {
 
   return (
     <MainBody>
-      <div className='flex flex-col justify-center items-center mt-10 w-full space-y-6'>
+      <div className='ord_main_div'>
         <h1 className="pv-h1 mt-2">Return</h1>
-        <div id="column-headers" className='w-[70%] flex font-bold text-gray-600 bg-gray-100 text-center p-2 rounded-tl-lg rounded-tr-lg'>
+        <div className='ro_column_headers'>
           <p className="w-2/4">ITEMS</p>
           <p className="w-1/4">QTY</p>
           <p className="w-1/4">REFUNDABLE AMOUNT</p>
@@ -72,7 +73,7 @@ const ReturnOrder = () => {
                   <div className="flex items-center me-4">
                     <input onChange={() => toggleCollapse(op.id)} type="checkbox" id={op.id} value={op.id} className="w-4 h-4 bg-colour-4"/>
                   </div>
-                  <img src={`/src/assets/images/${op.product_info.main_img}`} className="w-[4rem] h-[4rem] mr-4 border border-gray-100 rounded-sm flex-shrink-0" alt={op.product_info.name}/>
+                  <img src={`/src/assets/images/${op.product_info.main_img}`} className="ord_img" alt={op.product_info.name}/>
                   <p className="text-gray-600">{op.product_info.name}</p>
                 </div>
 
@@ -92,15 +93,15 @@ const ReturnOrder = () => {
               <Collapse open={collapseStates[op.id] || false}>
                 <div className="flex w-full p-4 mt-2 bg-gray-50">
                   <div className='flex flex-col w-3/5 '>
-                    <h2 className="text-md text-gray-600 font-bold">Order Return Request</h2>
-                    <input type='text' className="w-[95%] rounded-md border-[1.5px] border-gray-300 h-10 p-2 focus:border-2 focus:border-colour-4 focus:outline-none"/>
-                    <h2 className="text-md text-gray-600 font-bold mt-4">Reason for Return</h2>
-                    <textarea className="w-[95%] rounded-md border-[1.5px] border-gray-300 h-[10rem] p-2 focus:border-2 focus:border-colour-4 focus:outline-none"></textarea>
+                    <h2 className="ro_text_h2">Order Return Request</h2>
+                    <input type='text' className="h-10 ro_text_input"/>
+                    <h2 className="ro_text_h2 mt-4">Reason for Return</h2>
+                    <textarea className="h-40 ro_text_input"></textarea>
                   </div>
 
                   <div className='flex flex-col w-2/5 justify-end'>
                     <div className="flex w-full h-full">
-                      <label htmlFor={`dropzone-file${op.id}`} className="flex flex-col items-center justify-center w-full h-5/6 border-2 border-colour-3 border-dashed rounded-lg cursor-pointer bg-gray-50">
+                      <label htmlFor={`dropzone-file${op.id}`} className="ro_dropzone_label">
                           <div className="flex flex-col items-center py-">
                               <CloudUpload className="w-10 h-10 text-colour-5"/>
                               <p className="mb-2 text-sm text-colour-5"><span className="font-semibold">Click to upload</span> or drag and drop</p>
@@ -116,16 +117,17 @@ const ReturnOrder = () => {
                       </label>
                     </div> 
                     <div className="flex w-full space-x-4">
-                      <div className="w-1/4 aspect-square bg-colour-7">
-                        <img id={`${op.id}_upload_0`}/>
+                      <div id={`${op.id}_upload_div_0`} className="relative hidden">
+                        <CircleX id={`${op.id}_upload_circle_0`} className="ro_circlex"/>
+                        <img id={`${op.id}_upload_img_0`} className="ro_img"/>
                       </div>
-                      <div className="w-1/4 aspect-square bg-colour-7">
-                        <img id={`${op.id}_upload_1`}/>
-
+                      <div id={`${op.id}_upload_div_1`} className="relative hidden">
+                        <CircleX id={`${op.id}_upload_circle_1`} className="ro_circlex"/>
+                        <img id={`${op.id}_upload_img_1`} className="ro_img"/>
                       </div>
-                      <div className="w-1/4 aspect-square bg-colour-7">
-                        <img id={`${op.id}_upload_2`}/>
-
+                      <div id={`${op.id}_upload_div_2`} className="relative hidden">
+                        <CircleX id={`${op.id}_upload_circle_2`} className="ro_circlex"/>
+                        <img id={`${op.id}_upload_img_2`} className="ro_img"/>
                       </div>
                     </div>
                   </div>

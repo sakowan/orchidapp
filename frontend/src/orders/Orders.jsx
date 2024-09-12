@@ -27,14 +27,14 @@ const Orders = () => {
   }, []);
   return (
     <MainBody>
-      <div className='flex flex-col justify-center items-center mt-10 w-full space-y-6'>
+      <div className='ord_main_div'>
         <h1 className="pv-h1 mt-2">Orders</h1>
         {orders && orders.map((order) => (
           <div key={order.id} className="w-[70%] bg-gray-100 border rounded-lg p-4">
             {order.order_products.map((op) => (
               <>
                 <div key={op.id} className="flex py-2">
-                  <img src={`/src/assets/images/${op.product_info.main_img}`} className="w-[4rem] h-[4rem] mr-4 border border-gray-100 rounded-sm flex-shrink-0" alt={op.product_info.name}/>
+                  <img src={`/src/assets/images/${op.product_info.main_img}`} className="ord_img" alt={op.product_info.name}/>
                   <div className="flex justify-between items-center w-full text-gray-500">
                     <div>{op.product_info.name}</div>
                     <div className="flex flex-col justify-between h-full text-right ">
