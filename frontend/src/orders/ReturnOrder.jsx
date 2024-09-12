@@ -13,21 +13,41 @@ const ReturnOrder = () => {
   const location = useLocation();
   const { order } = location.state || {};
   const [collapseStates, setCollapseStates] = useState({});
+  const [imgFiles, setImgFiles] = useState({});
 
   const toggleCollapse = (op) => {
+    console.log(op)
     setCollapseStates((prevStates) => ({
       ...prevStates,
       [op]: !prevStates[op]
     }));
   };
 
-  // const checkboxChange = (e) => {
-  //   console.log(e.target.id)
-  // }
+  const indexImage = (op, file) => {
+    setImgFiles((prev) => ({
+      ...prev,
+      [op]: {
+        ...prev[op],  // Preserve the existing images for this op
+        [Object.keys(prev[op] || {}).length]: file  // Add the new image at the next index
+      }
+    }));
+  };
+  
+
+  const uploadImg = (e) => {
+    const op_id = e.target.id.match(/\d{1,2}/)[0];
+    for(var i = 0; i < e.target.files.length; i++){
+      indexImage(op_id, e.target.files[i])
+    }
+  }
 
   useEffect(() => {
     console.log(order)
   }, [])
+
+  useEffect(() => {
+    console.log(imgFiles)
+  }, [imgFiles])
 
   return (
     <MainBody>
@@ -76,13 +96,19 @@ const ReturnOrder = () => {
 
                   <div className='flex w-2/5'>
                     <div className="flex items-center justify-center w-full">
-                      <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-colour-3 border-dashed rounded-lg cursor-pointer bg-gray-50">
+                      <label htmlFor={`dropzone-file${op.id}`} className="flex flex-col items-center justify-center w-full h-64 border-2 border-colour-3 border-dashed rounded-lg cursor-pointer bg-gray-50">
                           <div className="flex flex-col items-center justify-center pt-5 pb-6">
                               <CloudUpload className="w-12 h-12 text-colour-5"/>
                               <p className="mb-2 text-sm text-colour-5"><span className="font-semibold">Click to upload</span> or drag and drop</p>
                               <p className="text-xs text-colour-5">SVG, PNG, JPG (MAX. 800x400px)</p>
                           </div>
-                          <input id="dropzone-file" type="file" className="hidden" />
+                          <input 
+                            id={`dropzone-file${op.id}`}
+                            type="file"
+                            accept=".png, .jpeg, .jpg"
+                            multiple
+                            onChange={uploadImg}
+                            className="hidden" />
                       </label>
                     </div> 
 
