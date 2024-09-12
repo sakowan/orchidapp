@@ -16,7 +16,6 @@ const ReturnOrder = () => {
   const [imgFiles, setImgFiles] = useState({});
 
   const toggleCollapse = (op) => {
-    console.log(op)
     setCollapseStates((prevStates) => ({
       ...prevStates,
       [op]: !prevStates[op]
@@ -33,7 +32,6 @@ const ReturnOrder = () => {
     }));
   };
   
-
   const uploadImg = (e) => {
     const op_id = e.target.id.match(/\d{1,2}/)[0];
     for(var i = 0; i < e.target.files.length; i++){
@@ -42,11 +40,18 @@ const ReturnOrder = () => {
   }
 
   useEffect(() => {
-    console.log(order)
-  }, [])
-
-  useEffect(() => {
-    console.log(imgFiles)
+    Object.keys(imgFiles).forEach((op) => {
+      Object.values(imgFiles[op]).forEach((file, i) => {
+        var reader = new FileReader();
+        var url = reader.readAsDataURL(file);
+        reader.onloadend = function (e) {
+          var id = `${op}_upload_${i}`;
+          var img = document.getElementById(id);
+          console.log("img", img)
+          img.src = reader.result
+        }
+      })
+    })
   }, [imgFiles])
 
   return (
@@ -85,20 +90,19 @@ const ReturnOrder = () => {
 
               </div>
               <Collapse open={collapseStates[op.id] || false}>
-                <div className="flex p-4 mt-2 bg-gray-50 w-full">
-                  
-                  <div className='flex-col w-3/5'>
+                <div className="flex w-full p-4 mt-2 bg-gray-50">
+                  <div className='flex flex-col w-3/5 '>
                     <h2 className="text-md text-gray-600 font-bold">Order Return Request</h2>
                     <input type='text' className="w-[95%] rounded-md border-[1.5px] border-gray-300 h-10 p-2 focus:border-2 focus:border-colour-4 focus:outline-none"/>
                     <h2 className="text-md text-gray-600 font-bold mt-4">Reason for Return</h2>
                     <textarea className="w-[95%] rounded-md border-[1.5px] border-gray-300 h-[10rem] p-2 focus:border-2 focus:border-colour-4 focus:outline-none"></textarea>
                   </div>
 
-                  <div className='flex w-2/5'>
-                    <div className="flex items-center justify-center w-full">
-                      <label htmlFor={`dropzone-file${op.id}`} className="flex flex-col items-center justify-center w-full h-64 border-2 border-colour-3 border-dashed rounded-lg cursor-pointer bg-gray-50">
-                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                              <CloudUpload className="w-12 h-12 text-colour-5"/>
+                  <div className='flex flex-col w-2/5 justify-end'>
+                    <div className="flex w-full h-full">
+                      <label htmlFor={`dropzone-file${op.id}`} className="flex flex-col items-center justify-center w-full h-5/6 border-2 border-colour-3 border-dashed rounded-lg cursor-pointer bg-gray-50">
+                          <div className="flex flex-col items-center py-">
+                              <CloudUpload className="w-10 h-10 text-colour-5"/>
                               <p className="mb-2 text-sm text-colour-5"><span className="font-semibold">Click to upload</span> or drag and drop</p>
                               <p className="text-xs text-colour-5">SVG, PNG, JPG (MAX. 800x400px)</p>
                           </div>
@@ -111,11 +115,20 @@ const ReturnOrder = () => {
                             className="hidden" />
                       </label>
                     </div> 
+                    <div className="flex w-full space-x-4">
+                      <div className="w-1/4 aspect-square bg-colour-7">
+                        <img id={`${op.id}_upload_0`}/>
+                      </div>
+                      <div className="w-1/4 aspect-square bg-colour-7">
+                        <img id={`${op.id}_upload_1`}/>
 
+                      </div>
+                      <div className="w-1/4 aspect-square bg-colour-7">
+                        <img id={`${op.id}_upload_2`}/>
 
+                      </div>
+                    </div>
                   </div>
-
-
                 </div>
               </Collapse>
               <hr className='border-gray-300'/>
