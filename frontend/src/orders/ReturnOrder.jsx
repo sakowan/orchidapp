@@ -14,6 +14,8 @@ const ReturnOrder = () => {
   const { order } = location.state || {};
   const [collapseStates, setCollapseStates] = useState({});
   const [imgFiles, setImgFiles] = useState({});
+  const [uploadDivs, setUploadDivs] = useState({});
+  const maxHolders = 3;
 
   const toggleCollapse = (op) => {
     setCollapseStates((prevStates) => ({
@@ -22,38 +24,79 @@ const ReturnOrder = () => {
     }));
   };
 
-  const indexImage = (op, file) => {
-    setImgFiles((prev) => ({
-      ...prev,
-      [op]: {
-        ...prev[op],  // Preserve the existing images for this op
-        [Object.keys(prev[op] || {}).length]: file  // Add the new image at the next index
-      }
-    }));
-  };
-  
-  const uploadImg = (e) => {
-    const op_id = e.target.id.match(/\d{1,2}/)[0];
+  const rmUpload = (op, i) => {
+    console.log('rmUpload', op,i)
+    var updatedImgFiles = imgFiles
+    delete updatedImgFiles[op][i]
+    console.log("old", updatedImgFiles)
+    const newFileValues = Object.assign({}, Object.values(updatedImgFiles[op]));
+    updatedImgFiles[op] = newFileValues
+    console.log("new", updatedImgFiles)
+    setImgFiles(newFileValues)    
+  }
+
+  const uploadImg = (e, op_id) => {
+    console.log("Function: uploadImg")
     for(var i = 0; i < e.target.files.length; i++){
       indexImage(op_id, e.target.files[i])
     }
   }
 
+  const indexImage = (op_id, file) => {
+    console.log("Function: indexImage")
+    setImgFiles((prev) => ({
+      ...prev,
+      [op_id]: {
+        ...prev[op_id],  // Preserve the existing images for this op_id
+        [Object.keys(prev[op_id] || {}).length]: file  // Add the new image at the next index
+      }
+    }));
+    readImgFile(op_id, file)
+  };
+
+  const readImgFile = (op_id, file) => {
+    console.log("Function: readImgFile", file)
+    var reader = new FileReader();
+    var url = reader.readAsDataURL(file);
+    reader.onloadend = function (e) {
+      // CREATE NEW DIV ELEM WITH IMG INSIDE
+      var src = reader.result
+      addImgDiv(src, op_id)
+    }
+  }
+
+  const addImgDiv = (src, op_id) => {
+    const newDiv = (
+      <div className="relative" key={Date.now()}>
+        <CircleX onClick={() => rmUpload(op_id)} className="ro_circlex" />
+        <img src={src} className="ro_img" alt="Uploaded preview" />
+      </div>
+    );
+  
+    setUploadDivs((prevUploadDivs) => ({
+      ...prevUploadDivs,
+      [op_id]: [...(prevUploadDivs[op_id] || []), newDiv]
+    }));
+  };
+
+  
+  const initUploadDivs = () => {
+    console.log('Function: initUploadDivs')
+    var temporary = {}
+    order.order_products.forEach(elem => {
+      temporary[elem.id] = []
+    });
+    console.log('uploadDivs', temporary)
+    setUploadDivs(temporary)
+  }
+
   useEffect(() => {
-    Object.keys(imgFiles).forEach((op) => {
-      Object.values(imgFiles[op]).forEach((file, i) => {
-        var reader = new FileReader();
-        var url = reader.readAsDataURL(file);
-        reader.onloadend = function (e) {
-          var id = `${op}_upload_div_${i}`;
-          var imgdiv = document.getElementById(id);
-          var img = imgdiv.querySelector('img')
-          img.src = reader.result
-          imgdiv.classList.remove('hidden');
-        }
-      })
-    })
-  }, [imgFiles])
+    // Initiate uploadDivs, object of empty arrays based on number of order_products. OpID as keys.
+    initUploadDivs()
+    
+
+  }, [])
+
 
   return (
     <MainBody>
@@ -77,7 +120,7 @@ const ReturnOrder = () => {
                   <p className="text-gray-600">{op.product_info.name}</p>
                 </div>
 
-                <div className="flex w-1/4 justify-center items-center">
+                <div className="flex w-1/4 justify-center items-center ibm-light">
                   <select className="w-1/5 h-3/5 p-2 border border-gray-300 rounded-md">
                     {Array.from({ length: op.quantity }, (_, i) => (
                       <option key={i} value={i + 1}>{i + 1}</option>
@@ -112,23 +155,12 @@ const ReturnOrder = () => {
                             type="file"
                             accept=".png, .jpeg, .jpg"
                             multiple
-                            onChange={uploadImg}
+                            onChange={(e) => uploadImg(e, op.id)}
                             className="hidden" />
                       </label>
                     </div> 
                     <div className="flex w-full space-x-4">
-                      <div id={`${op.id}_upload_div_0`} className="relative hidden">
-                        <CircleX id={`${op.id}_upload_circle_0`} className="ro_circlex"/>
-                        <img id={`${op.id}_upload_img_0`} className="ro_img"/>
-                      </div>
-                      <div id={`${op.id}_upload_div_1`} className="relative hidden">
-                        <CircleX id={`${op.id}_upload_circle_1`} className="ro_circlex"/>
-                        <img id={`${op.id}_upload_img_1`} className="ro_img"/>
-                      </div>
-                      <div id={`${op.id}_upload_div_2`} className="relative hidden">
-                        <CircleX id={`${op.id}_upload_circle_2`} className="ro_circlex"/>
-                        <img id={`${op.id}_upload_img_2`} className="ro_img"/>
-                      </div>
+                      {uploadDivs[op.id]}
                     </div>
                   </div>
                 </div>
