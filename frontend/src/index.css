@@ -165,7 +165,7 @@ body {
   @apply flex flex-col items-center justify-center w-full h-36 border-2 border-colour-3 border-dashed rounded-lg cursor-pointer bg-gray-50
 }
 .ro_circlex {
-  @apply absolute right-[-0.7rem] top-[-0.7rem] text-gray-700
+  @apply absolute right-[-0.7rem] top-[-0.7rem] text-gray-700 hover:cursor-pointer
 }
 
 .ro_img {
