@@ -15,7 +15,19 @@ const ReturnOrder = () => {
   const [collapseStates, setCollapseStates] = useState({});
   const [imgFiles, setImgFiles] = useState({});
   const [uploadDivs, setUploadDivs] = useState({});
+
+  const [rmUploadArgs, setRmUploadArgs] = useState(null);
+  const [runRemoveUpload, setRunRemoveUpload] = useState(false);
+
   const maxHolders = 3;
+
+  const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  };
 
   const toggleCollapse = (op) => {
     setCollapseStates((prevStates) => ({
@@ -24,77 +36,103 @@ const ReturnOrder = () => {
     }));
   };
 
-  const rmUpload = (op, i) => {
-    console.log('rmUpload', op,i)
-    var updatedImgFiles = imgFiles
-    delete updatedImgFiles[op][i]
-    console.log("old", updatedImgFiles)
-    const newFileValues = Object.assign({}, Object.values(updatedImgFiles[op]));
-    updatedImgFiles[op] = newFileValues
-    console.log("new", updatedImgFiles)
-    setImgFiles(newFileValues)    
+  const clickRemoveUploads = (op_id, uniqueID, index) => {
+    setRmUploadArgs({op_id, uniqueID, index})
+    setRunRemoveUpload(true); // Set flag to true on click
+  }
+
+  useEffect(() => {
+    if (runRemoveUpload && rmUploadArgs) {
+      const { op_id, uniqueID, index } = rmUploadArgs; 
+      rmUpload(op_id, uniqueID, index); // Call abc with the latest state
+      setRunRemoveUpload(false); // Reset the flag
+    }
+  }, [runRemoveUpload, rmUploadArgs, imgFiles, uploadDivs]);
+
+  const rmUpload = (op_id, uniqueID, index) => {
+    console.log('Function: rmUpload')
+
+    // Remove img from imgFiles which will be sent to backend
+    const updatedFiles = [...imgFiles[op_id]]
+    console.log('old img files:', [...imgFiles[op_id]][index])
+    updatedFiles.splice(index, 1)
+    console.log('updatedFiles:', updatedFiles)
   }
 
   const uploadImg = (e, op_id) => {
-    console.log("Function: uploadImg")
-    for(var i = 0; i < e.target.files.length; i++){
-      indexImage(op_id, e.target.files[i])
-    }
-  }
-
-  const indexImage = (op_id, file) => {
-    console.log("Function: indexImage")
-    setImgFiles((prev) => ({
-      ...prev,
-      [op_id]: {
-        ...prev[op_id],  // Preserve the existing images for this op_id
-        [Object.keys(prev[op_id] || {}).length]: file  // Add the new image at the next index
-      }
-    }));
-    readImgFile(op_id, file)
+    console.log("Function: uploadImg");
+    const files = e.target.files;
+    
+    // Iterate through files and pass their index explicitly
+    Array.from(files).forEach((file, index) => {
+      readImgFile(op_id, file, index);
+    });
   };
-
-  const readImgFile = (op_id, file) => {
-    console.log("Function: readImgFile", file)
+  
+  const readImgFile = (op_id, file, index) => {
+    console.log("Function: readImgFile");
+  
     var reader = new FileReader();
-    var url = reader.readAsDataURL(file);
-    reader.onloadend = function (e) {
-      // CREATE NEW DIV ELEM WITH IMG INSIDE
-      var src = reader.result
-      addImgDiv(src, op_id)
-    }
-  }
-
-  const addImgDiv = (src, op_id) => {
+    
+    // Store the current index so that it is retained in the callback
+    reader.onloadend = function () {
+      var src = reader.result;
+      addImgDiv(src, op_id, index, file);
+    };
+  
+    reader.readAsDataURL(file);
+  };
+  
+  const addImgDiv = (src, op_id, index, file) => {
+    const uniqueID = generateUUID();
+  
+    // Create new image div with proper index tracking
     const newDiv = (
-      <div className="relative" key={Date.now()}>
-        <CircleX onClick={() => rmUpload(op_id)} className="ro_circlex" />
+      <div id={uniqueID} key={uniqueID} className="relative" index={index}>
+        <CircleX onClick={() => clickRemoveUploads(op_id, uniqueID, index)} className="ro_circlex" />
         <img src={src} className="ro_img" alt="Uploaded preview" />
       </div>
     );
   
-    setUploadDivs((prevUploadDivs) => ({
-      ...prevUploadDivs,
-      [op_id]: [...(prevUploadDivs[op_id] || []), newDiv]
-    }));
-  };
-
-  
-  const initUploadDivs = () => {
-    console.log('Function: initUploadDivs')
-    var temporary = {}
-    order.order_products.forEach(elem => {
-      temporary[elem.id] = []
+    // Update imgFiles array at the correct index
+    setImgFiles((prevFiles) => {
+      const updatedFiles = [...(prevFiles[op_id] || [])];
+      updatedFiles[index] = file; // Ensure that file is set at the correct index
+      return {
+        ...prevFiles,
+        [op_id]: updatedFiles
+      };
     });
-    console.log('uploadDivs', temporary)
-    setUploadDivs(temporary)
+  
+    // Update uploadDivs array at the correct index
+    setUploadDivs((prevDivs) => {
+      const updatedDivs = [...(prevDivs[op_id] || [])];
+      updatedDivs[index] = newDiv; // Ensure that div is set at the correct index
+      return {
+        ...prevDivs,
+        [op_id]: updatedDivs
+      };
+    });
+  };
+  
+  const initUploadDivsAndImgFiles = () => {
+    console.log('Function: initUploadDivsAndImgFiles')
+    var tempDivs = {}
+    var tempImgFiles = {}
+    order.order_products.forEach(elem => {
+      tempDivs[elem.id] = []
+      tempImgFiles[elem.id] = []
+    });
+    console.log('uploadDivs:', tempDivs, 'imgFiles:', tempImgFiles)
+    setUploadDivs(tempDivs)
+    setImgFiles(tempImgFiles)
   }
 
   useEffect(() => {
-    // Initiate uploadDivs, object of empty arrays based on number of order_products. OpID as keys.
-    initUploadDivs()
+    console.log("useEffect")
+    // Initiate uploadDivs and imgFiles, object of empty arrays based on number of order_products. OpID as keys.
+    initUploadDivsAndImgFiles()
     
-
   }, [])
 
 
