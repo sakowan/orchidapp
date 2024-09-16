@@ -57,6 +57,25 @@ const ReturnOrder = () => {
     console.log('old img files:', [...imgFiles[op_id]][index])
     updatedFiles.splice(index, 1)
     console.log('updatedFiles:', updatedFiles)
+
+    // setImgFiles((prevFiles) => {
+    //   const updatedFiles = [...(prevFiles[op_id] || [])];
+    //   updatedFiles.splice(index, 1)
+    //   return {
+    //     ...prevFiles,
+    //     [op_id]: updatedFiles
+    //   };
+    // });
+    
+    // setUploadDivs((prevDivs) => {
+    //   const updatedDivs = [...(prevDivs[op_id] || [])];
+    //   updatedDivs.splice(index,1)
+    //   return {
+    //     ...prevDivs,
+    //     [op_id]: updatedDivs
+    //   };
+    });
+
   }
 
   const uploadImg = (e, op_id) => {
