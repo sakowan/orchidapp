@@ -49,31 +49,26 @@ const ReturnOrder = () => {
     }
   }, [runRemoveUpload, rmUploadArgs, imgFiles, uploadDivs]);
 
-  const rmUpload = (op_id, uniqueID, index) => {
-    console.log('Function: rmUpload')
-
-    // Remove img from imgFiles which will be sent to backend
-    const updatedFiles = [...imgFiles[op_id]]
-    console.log('old img files:', [...imgFiles[op_id]][index])
-    updatedFiles.splice(index, 1)
-    console.log('updatedFiles:', updatedFiles)
-
-    // setImgFiles((prevFiles) => {
-    //   const updatedFiles = [...(prevFiles[op_id] || [])];
-    //   updatedFiles.splice(index, 1)
-    //   return {
-    //     ...prevFiles,
-    //     [op_id]: updatedFiles
-    //   };
-    // });
+  const rmUpload = (op_id, uniqueID, file) => {
+    console.log('Function: rmUpload', file)
     
-    // setUploadDivs((prevDivs) => {
-    //   const updatedDivs = [...(prevDivs[op_id] || [])];
-    //   updatedDivs.splice(index,1)
-    //   return {
-    //     ...prevDivs,
-    //     [op_id]: updatedDivs
-    //   };
+    // Remove img from imgFiles which will be sent to backend
+    setImgFiles((prevFiles) => {
+      let updatedFiles = [...imgFiles[op_id]]
+      updatedFiles = updatedFiles.filter((f) => f !== file);
+      return {
+        ...prevFiles,
+        [op_id]: updatedFiles
+      };
+    });
+    
+    setUploadDivs((prevDivs) => {
+      let updatedDivs = [...(prevDivs[op_id] || [])];
+      updatedDivs = updatedDivs.filter((div) => div.props.id !== uniqueID);
+      return {
+        ...prevDivs,
+        [op_id]: updatedDivs
+      };
     });
 
   }
@@ -81,11 +76,25 @@ const ReturnOrder = () => {
   const uploadImg = (e, op_id) => {
     console.log("Function: uploadImg");
     const files = e.target.files;
+    // Cut files array if adding eg. one by one, so index shouldn't start from 0.
+
     
     // Iterate through files and pass their index explicitly
-    Array.from(files).forEach((file, index) => {
-      readImgFile(op_id, file, index);
-    });
+    const temp = [...imgFiles[op_id]]
+    if(temp.length == 0){
+      Array.from(files).forEach((file, index) => {
+        console.log('upload index', index)
+        readImgFile(op_id, file, index);
+      })
+    } else {
+      console.log('current imgFiles:', temp)
+      console.log('files:', files)
+
+      Array.from(files).forEach((file, index) => {
+        const newIndex = temp.length + index;  // Adjust index to start after existing files
+        readImgFile(op_id, file, newIndex);
+      }
+    )}
   };
   
   const readImgFile = (op_id, file, index) => {
@@ -107,8 +116,8 @@ const ReturnOrder = () => {
   
     // Create new image div with proper index tracking
     const newDiv = (
-      <div id={uniqueID} key={uniqueID} className="relative" index={index}>
-        <CircleX onClick={() => clickRemoveUploads(op_id, uniqueID, index)} className="ro_circlex" />
+      <div id={uniqueID} key={uniqueID} className="relative">
+        <CircleX onClick={() => clickRemoveUploads(op_id, uniqueID, file)} className="ro_circlex" />
         <img src={src} className="ro_img" alt="Uploaded preview" />
       </div>
     );
