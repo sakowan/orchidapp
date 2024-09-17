@@ -26,7 +26,7 @@ const ReturnOrder = () => {
     // Create a new FormData object to hold the form's data
     const formData = new FormData(event.target);
   
-    // To see the collected data, you can log it like this:
+    // Put form data in data object
     let temp = {...data}
     for (let [k, val] of formData.entries()) {
       const {key, id} = getOpIdFromInput(k)
@@ -34,6 +34,12 @@ const ReturnOrder = () => {
         temp[id][key] = val
       }
     }
+
+    // Sort files into data object
+    Object.keys(imgFiles).forEach(id => {
+      temp[id]['files'] = imgFiles[id]
+    })
+
     setData(temp)
     console.log(temp)
     // Submit form data via an API request or handle it as needed
