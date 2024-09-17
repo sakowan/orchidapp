@@ -1,14 +1,41 @@
 import api from './api'
 import React, { useState, useEffect, useContext } from 'react';
+import { useLocation} from 'react-router-dom'
+
 import { Heart, ShoppingCart, User } from 'lucide-react';
 
 import DropdownUser from './DropdownUser';
 import { CartContext } from './cart/CartContext';
 
 const Navbar = () => {
+  const noNavUrls = [
+    /^(?!\/orders\/\d+$).*/
+  ]
+
+  const [offersDiv, setOffersDiv] = useState();
+
+  const testUrls = () => {
+    noNavUrls.forEach((pattern) => {
+      if(pattern.test(location.pathname) == false){
+        setOffersDiv(<></>)
+        console.log('asdf')
+        return
+      } else {
+        setOffersDiv(
+          <div className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
+            <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+              {currentName}
+            </span>
+          </div>
+        )
+      }
+    })
+  }
+
+  const location = useLocation();
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const { cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer} = useContext(CartContext);
+  const { setCartProds, numCartProds, setNumCartProds, setOpenDrawer} = useContext(CartContext);
   const names = ['💸 FREE SHIPPING ON ORDERS OVER ¥2500 💸', '🚀 DELIVERY TIME 2-3 BUSINESS DAYS 🚀', '💖 SIGN UP NOW FOR ¥500 OFF YOUR FIRST PURCHASE 💖'];
   const [currentName, setCurrentName] = useState(names[0]);
   const [fade, setFade] = useState(false);
@@ -48,6 +75,10 @@ const Navbar = () => {
 
     fetchCartProds();
   }, []);
+
+  useEffect(() => {
+    testUrls()
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -101,12 +132,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-
-      <div className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
-        <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
-          {currentName}
-        </span>
-      </div>
+      {offersDiv}
     </div>
   );
 };
