@@ -1,4 +1,5 @@
 from .cart_products import CartProductViewSet
+from .complaints import ComplaintViewSet
 from .categories import CategoryViewSet
 from .countries import CountryViewSet
 from .orders import OrderViewSet, save_stripe_info

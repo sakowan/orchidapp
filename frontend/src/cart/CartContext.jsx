@@ -55,7 +55,6 @@ export const CartProvider = ({ children }) => {
     }).catch(error => {
       // Current product does not yet exist in user's cart
       api.post("cart_products/", {cart_id: user.cart_id, product_id: pid, quantity:1}).then((res1) => {
-        console.log('Function: adjustQty. First time adding THIS product to cart', res1)
         setCartProds(res1.data.cart_products)
         setNumCartProds(res1.data.num_items);
       })
