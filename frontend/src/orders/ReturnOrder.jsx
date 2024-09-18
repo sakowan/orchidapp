@@ -20,31 +20,71 @@ const ReturnOrder = () => {
   const maxUploads = 3;
   const [data, setData] = useState({});
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+  const handleFormSubmit = (e) => {
     
+    const form = document.getElementById("returnForm")
     // Create a new FormData object to hold the form's data
-    const formData = new FormData(event.target);
+    const formData = new FormData(form);
+    const submitData = new FormData();
+
+    console.log(formData)
   
     // Put form data in data object
     let temp = {...data}
     for (let [k, val] of formData.entries()) {
       const {key, id} = getOpIdFromInput(k)
-      if(key && id){
+      if(key && id && (id in temp)){
         temp[id][key] = val
+        submitData.append(`${key}_${id}`, val)
       }
     }
 
     // Sort files into data object
     Object.keys(imgFiles).forEach(id => {
-      temp[id]['files'] = imgFiles[id]
+      if(id in temp){
+        temp[id]['files'] = imgFiles[id]
+        // submitData.append(`img_${id}`, imgFiles[id]); // Use unique keys for each
+
+        imgFiles[id].forEach((file, index) => {
+          // submitData.append(`img_${id}_${index}`, file); // Use unique keys for each
+          submitData.append(`imgFiles${id}[]`, file); // Use unique keys for each
+        })
+      }
     })
 
     setData(temp)
-    console.log(temp)
+    // console.log(temp)
     // Submit form data via an API request or handle it as needed
-    // Example: axios.post('/submit', formData)
+    // api.post("complaints/", submitData)
+    api.post("complaints/", submitData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Axios will set this automatically
+      }
+    });
+    
   };
+
+  // const handleFormSubmit = (e) => {
+  //   // e.preventDefault(); // Prevent default form submission
+    
+  //   const form = document.getElementById("returnForm");
+  //   const formData = new FormData(form); // Hold the form's data
+    
+  //   // Append files to the formData
+  //   Object.keys(imgFiles).forEach(id => {
+  //     imgFiles[id].forEach((file, index) => {
+  //       formData.append(`imgFiles_${id}_${index}`, file); // Use unique keys for each file
+  //     });
+  //   });
+
+  //   // Submit the formData via an API request
+    // api.post("complaints/", formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data', // Axios will set this automatically
+    //   }
+    // });
+  // };
+
 
   const getOpIdFromInput = (string) => {
     console.log('Function: getOpIdFromInput')
@@ -67,11 +107,24 @@ const ReturnOrder = () => {
     });
   };
 
-  const toggleCollapse = (op) => {
+  const toggleCheck = (op) => {
+    var checked = !collapseStates[op]
     setCollapseStates((prevStates) => ({
       ...prevStates,
       [op]: !prevStates[op]
     }));
+
+    // If checked then add op key to data for submitting.
+    var temp = {...data}
+    if(checked){
+      console.log('checked')
+      temp[op] = {}
+    } else {
+      console.log('uncheck')
+      delete temp[op]
+    }
+    console.log('check', temp)
+    setData(temp)
   };
 
   const clickRemoveUploads = (op_id, uniqueID, index) => {
@@ -205,7 +258,7 @@ const ReturnOrder = () => {
   useEffect(() => {
     console.log("useEffect")
     // Initialise data object that will be submitted with form
-    initData()
+    // initData()
 
     // Initiate uploadDivs and imgFiles, object of empty arrays based on number of order_products. OpID as keys.
     initUploadDivsAndImgFiles()
@@ -221,7 +274,7 @@ const ReturnOrder = () => {
           <p className="w-1/4">QTY</p>
           <p className="w-1/4">REFUNDABLE AMOUNT</p>
         </div>
-        <form onSubmit={handleFormSubmit} className="flex w-full items-center justify-center">
+        <form id="returnForm" className="flex w-full items-center justify-center">
 
           <div key={order} className="w-[70%] border rounded-bl-lg rounded-br-lg p-4 !mt-0">
             {order.order_products.map((op) => (
@@ -229,7 +282,7 @@ const ReturnOrder = () => {
                 <div className="flex w-full py-2">
                   <div className="flex w-2/4 items-center">
                     <div className="flex items-center me-4">
-                      <input name={`order_product_${op.id}`} onChange={() => toggleCollapse(op.id)} type="checkbox" id={op.id} value={op.id} className="w-4 h-4 bg-colour-4"/>
+                      <input name={`order_product_${op.id}`} onChange={() => toggleCheck(op.id)} type="checkbox" id={op.id} value={op.id} className="w-4 h-4 bg-colour-4"/>
                     </div>
                     <img src={`/src/assets/images/${op.product_info.main_img}`} className="ord_img" alt={op.product_info.name}/>
                     <p className="text-gray-600">{op.product_info.name}</p>
@@ -285,8 +338,8 @@ const ReturnOrder = () => {
               </div>
             ))}
           </div>
-          <button type="submit" className="btn-submit">Submit Return</button>
         </form>
+        <button onClick={() => handleFormSubmit()} className="">Submit Return</button>
       </div>
     </MainBody>
   )

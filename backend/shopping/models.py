@@ -187,16 +187,17 @@ class BamUserCoupon(TimeStampedModel):
         unique_together = ('user', 'coupon')
 
 class Complaint(TimeStampedModel):
-    TYPES = [
-        (1, 'Order Missing'),
-        (2, 'Incomplete Order'),
-        (3, 'Damaged/Defective'),
+    STATUSES = [
+        (1, 'Unassigned'),
+        (2, 'In Progress'),
+        (3, 'Resolved'),
     ]
 
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    type = models.PositiveIntegerField(choices = TYPES)
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='complaints')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='complaints')
+    status = models.PositiveIntegerField(choices = STATUSES)
     resolved = models.BooleanField(default=False)
-    # status = models.PositiveIntegerField(choices = STATUSES)
+    info = models.JSONField(null=False, blank=False)
 
 class Review(TimeStampedModel):
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='reviews')

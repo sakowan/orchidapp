@@ -18,7 +18,6 @@ const Navbar = () => {
     noNavUrls.forEach((pattern) => {
       if(pattern.test(location.pathname) == false){
         setOffersDiv(<></>)
-        console.log('asdf')
         return
       } else {
         setOffersDiv(
