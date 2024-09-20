@@ -76,6 +76,12 @@ class ComplaintViewSet(ModelViewSet):
         op_id = match.group(1)
         for img in request.FILES.getlist(imgKey):
           print(type(img))
+          print(f"File Name: {img.name}")
+          print(f"The File: {type(img.file)}")
+
+          print(f"File Size: {img.size} bytes")
+          print(f"Content Type: {img.content_type}")
+
           cop_img = ComplaintOPImage.objects.create(
             complaint_order_product = cop,
             image = img
@@ -83,3 +89,19 @@ class ComplaintViewSet(ModelViewSet):
         print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
     
+
+# HOW I DID S3 IMAGE UPLOADS BEFORE WITH A SPECIFIED PATH BUT IM NO LONGER USING THIS BUT I MIGHT WANNA KEEP IT FOR THE FUTURE <3
+#   s3 = boto3.resource('s3')
+
+#   # Define the folder path in the S3 bucket
+#   folder = f'complaints/{complaint.id}/'
+  
+#   # Create a unique S3 key for the image
+#   bucket_path = f'{folder}{img.name}'
+
+#   # Upload the file to S3 directly from the InMemoryUploadedFile
+#   s3.meta.client.upload_fileobj(
+#       img.file,  # The file object to upload
+#       'orchid-app-bucket',  # S3 bucket name
+#       bucket_path  # Destination path in the bucket
+#   )

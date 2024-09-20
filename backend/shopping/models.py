@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.forms import ValidationError
 from datetime import datetime, date, timedelta
-from .helpers import gen_random_string
+from .helpers import gen_random_string, complaint_img_upload_path
 
 # Signals
 from django.dispatch import receiver
@@ -224,15 +224,7 @@ class ComplaintOrderProduct(TimeStampedModel):
 
 class ComplaintOPImage(TimeStampedModel):
     complaint_order_product = models.ForeignKey(ComplaintOrderProduct, on_delete=models.CASCADE, related_name='complaint_op_images')
-    image = models.ImageField()  # Use the callable function
-
-    # def save(self, *args, **kwargs):
-    #     # Validate the number of images attached to the complaint
-    #     if self.complaint_order_product.complaint_op_images.count() >= 3:
-    #         raise ValidationError("You can only upload up to 3 images per complaint.")
-        
-    #     # Call the parent class's save method
-    #     super().save(*args, **kwargs)
+    image = models.ImageField(upload_to=complaint_img_upload_path)
 
 class Review(TimeStampedModel):
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='reviews')
