@@ -21,70 +21,45 @@ const ReturnOrder = () => {
   const [data, setData] = useState({});
 
   const handleFormSubmit = (e) => {
-    
     const form = document.getElementById("returnForm")
     // Create a new FormData object to hold the form's data
     const formData = new FormData(form);
-    const submitData = new FormData();
+    const newData = new FormData();
 
     console.log(formData)
   
     // Put form data in data object
     let temp = {...data}
+    temp['order_id'] = order.id
+
     for (let [k, val] of formData.entries()) {
       const {key, id} = getOpIdFromInput(k)
       if(key && id && (id in temp)){
         temp[id][key] = val
-        submitData.append(`${key}_${id}`, val)
       }
     }
+
+    newData.append('details', JSON.stringify(temp))
 
     // Sort files into data object
     Object.keys(imgFiles).forEach(id => {
       if(id in temp){
         temp[id]['files'] = imgFiles[id]
-        // submitData.append(`img_${id}`, imgFiles[id]); // Use unique keys for each
-
-        imgFiles[id].forEach((file, index) => {
-          // submitData.append(`img_${id}_${index}`, file); // Use unique keys for each
-          submitData.append(`imgFiles${id}[]`, file); // Use unique keys for each
+        imgFiles[id].forEach((file) => {
+          newData.append(`imgFiles${id}[]`, file); // Use unique keys for each
         })
       }
     })
 
+
     setData(temp)
-    // console.log(temp)
-    // Submit form data via an API request or handle it as needed
-    // api.post("complaints/", submitData)
-    api.post("complaints/", submitData, {
+    api.post("complaints/", newData, {
       headers: {
         'Content-Type': 'multipart/form-data', // Axios will set this automatically
       }
     });
     
   };
-
-  // const handleFormSubmit = (e) => {
-  //   // e.preventDefault(); // Prevent default form submission
-    
-  //   const form = document.getElementById("returnForm");
-  //   const formData = new FormData(form); // Hold the form's data
-    
-  //   // Append files to the formData
-  //   Object.keys(imgFiles).forEach(id => {
-  //     imgFiles[id].forEach((file, index) => {
-  //       formData.append(`imgFiles_${id}_${index}`, file); // Use unique keys for each file
-  //     });
-  //   });
-
-  //   // Submit the formData via an API request
-    // api.post("complaints/", formData, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data', // Axios will set this automatically
-    //   }
-    // });
-  // };
-
 
   const getOpIdFromInput = (string) => {
     console.log('Function: getOpIdFromInput')
@@ -339,7 +314,7 @@ const ReturnOrder = () => {
             ))}
           </div>
         </form>
-        <button onClick={() => handleFormSubmit()} className="">Submit Return</button>
+        <button onClick={() => handleFormSubmit()} className="btn-1 hover:btn-1-hover !rounded-3xl">Submit Return</button>
       </div>
     </MainBody>
   )
