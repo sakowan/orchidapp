@@ -197,3 +197,14 @@ HUBSPOT_API_URL = 'https://api.hubapi.com'
 
 # # Specifies the path to which the CSRF cookie is accessible. '/' makes it accessible across the entire domain.
 # CSRF_COOKIE_PATH = '/'
+
+
+AWS_ACCESS_KEY_ID = 'AKIA3LET5YXPP35KUM5B'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'orchid-app-bucket'
+AWS_S3_SIGNATURE_NAME = 's3v4',
+AWS_S3_REGION_NAME = 'ap-southeast-2'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL =  None
+AWS_S3_VERIFY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

@@ -1,8 +1,9 @@
-from django.db import models
+from django.db import IntegrityError, models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.forms import ValidationError
 from datetime import datetime, date, timedelta
+from .helpers import gen_random_string
 
 # Signals
 from django.dispatch import receiver
@@ -25,6 +26,7 @@ class Country(models.Model):
     country_code = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='JP')
     currency_code = models.CharField(max_length=3)
     calling_code = models.PositiveIntegerField()
+    flagImg = models.ImageField()
 
     def __str__(self):
         return self.name #can add more desc later
@@ -187,17 +189,50 @@ class BamUserCoupon(TimeStampedModel):
         unique_together = ('user', 'coupon')
 
 class Complaint(TimeStampedModel):
-    STATUSES = [
-        (1, 'Unassigned'),
-        (2, 'In Progress'),
-        (3, 'Resolved'),
-    ]
-
+    id = models.CharField(max_length=12, default=gen_random_string, unique=True, primary_key=True)
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='complaints')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='complaints')
-    status = models.PositiveIntegerField(choices = STATUSES)
     resolved = models.BooleanField(default=False)
-    info = models.JSONField(null=False, blank=False)
+    
+    STATUSES = [
+        (0, 'Unassigned'),
+        (1, 'In Progress'),
+        (2, 'Resolved'),
+    ]
+    status = models.PositiveIntegerField(choices = STATUSES, default=0)
+
+    def save(self, *args, **kwargs):
+        while True:
+            try:
+                super().save(*args, **kwargs)
+                break
+            except IntegrityError:
+                # Generate a new random string and try to save again
+                self.id = gen_random_string()
+
+class ComplaintOrderProduct(TimeStampedModel):
+    #JOINS table
+    complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE)
+    order_product = models.ForeignKey(OrderProduct, on_delete=models.CASCADE)
+
+    title = models.CharField(blank=True, null=True)
+    body = models.CharField(blank=True, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ('complaint', 'order_product')
+
+class ComplaintOPImage(TimeStampedModel):
+    complaint_order_product = models.ForeignKey(ComplaintOrderProduct, on_delete=models.CASCADE, related_name='complaint_op_images')
+    image = models.ImageField()  # Use the callable function
+
+    # def save(self, *args, **kwargs):
+    #     # Validate the number of images attached to the complaint
+    #     if self.complaint_order_product.complaint_op_images.count() >= 3:
+    #         raise ValidationError("You can only upload up to 3 images per complaint.")
+        
+    #     # Call the parent class's save method
+    #     super().save(*args, **kwargs)
 
 class Review(TimeStampedModel):
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='reviews')

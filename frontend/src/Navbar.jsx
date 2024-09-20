@@ -8,29 +8,6 @@ import DropdownUser from './DropdownUser';
 import { CartContext } from './cart/CartContext';
 
 const Navbar = () => {
-  const noNavUrls = [
-    /^(?!\/orders\/\d+$).*/
-  ]
-
-  const [offersDiv, setOffersDiv] = useState();
-
-  const testUrls = () => {
-    noNavUrls.forEach((pattern) => {
-      if(pattern.test(location.pathname) == false){
-        setOffersDiv(<></>)
-        return
-      } else {
-        setOffersDiv(
-          <div className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
-            <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
-              {currentName}
-            </span>
-          </div>
-        )
-      }
-    })
-  }
-
   const location = useLocation();
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
@@ -39,6 +16,11 @@ const Navbar = () => {
   const [currentName, setCurrentName] = useState(names[0]);
   const [fade, setFade] = useState(false);
   let index = 0;
+  
+  const noNavUrls = [
+    /^(?!\/orders\/\d+$).*/
+  ]
+
   const navOpenDrawer = () => setOpenDrawer(true);
 
   useEffect(() => {
@@ -49,7 +31,7 @@ const Navbar = () => {
         setCurrentName(names[index]);
         setFade(true);
       }, 1000); // Match the fade duration
-    }, 3500); // Interval to switch names
+    }, 3000); // Interval to switch names
 
     return () => clearInterval(interval); // Clean up interval on unmount
   }, []);
@@ -75,9 +57,9 @@ const Navbar = () => {
     fetchCartProds();
   }, []);
 
-  useEffect(() => {
-    testUrls()
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   testUrls()
+  // }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -131,7 +113,17 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      {offersDiv}
+      {/* {noNavUrls.forEach((pattern) => {
+        if(pattern.test(location.pathname) == false){
+          return <></>}
+        else { */}
+          <div className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
+            <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+              {currentName}
+            </span>
+          </div>
+        {/* }
+      })} */}
     </div>
   );
 };
