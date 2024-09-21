@@ -1,7 +1,9 @@
 from ...models import Complaint, ComplaintOrderProduct, Order, OrderProduct, ComplaintOPImage
 from rest_framework.viewsets import ModelViewSet
 from ..serializers import ComplaintSerializer
-from rest_framework import permissions
+from rest_framework import permissions, status
+from rest_framework.response import Response
+
 import json
 import re
 
@@ -54,6 +56,7 @@ class ComplaintViewSet(ModelViewSet):
     complaint.save()
 
     # Initialise the complaints made on each order_product
+    cops = []
     for key in details:
       values = details[key]
       order_product = OrderProduct.objects.get(id=values['order_product'])
@@ -65,20 +68,18 @@ class ComplaintViewSet(ModelViewSet):
         quantity = values['quantity'],
       )
       cop.save()
+      cops.append(cop)
     
     # Handle the images
     imgIDpattern = r'imgFiles(\d+)\[\]'
+    cop_imgs = []
     for imgKey in rawdata:
-      
       #Strip the digits (order_product_id) from the key imgFilesXXX[]
       match = re.search(imgIDpattern, imgKey)
       if match:
         op_id = match.group(1)
         for img in request.FILES.getlist(imgKey):
-          print(type(img))
           print(f"File Name: {img.name}")
-          print(f"The File: {type(img.file)}")
-
           print(f"File Size: {img.size} bytes")
           print(f"Content Type: {img.content_type}")
 
@@ -86,10 +87,11 @@ class ComplaintViewSet(ModelViewSet):
             complaint_order_product = cop,
             image = img
           )
-        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+          cop_imgs.append(cop_imgs)
     
-
+    return Response({
+      'Complaint created:': complaint.id}, status=status.HTTP_201_CREATED)
+    
 # HOW I DID S3 IMAGE UPLOADS BEFORE WITH A SPECIFIED PATH BUT IM NO LONGER USING THIS BUT I MIGHT WANNA KEEP IT FOR THE FUTURE <3
 #   s3 = boto3.resource('s3')
 
