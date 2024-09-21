@@ -53,10 +53,11 @@ class OrderProductSerializer(ProductInfoSerializerMixin, ModelSerializer):
 class OrderSerializer(ModelSerializer):
     order_products = OrderProductSerializer(many=True)
     address = AddressSerializer()
+    complaint = ComplaintSerializer()
 
     class Meta:
         model = Order
-        fields = ['id', 'status', 'created_at', 'updated_at', 'address', 'num_products', 'shipping_fee', 'shipping_type', 'subtotal', 'total', 'order_products']
+        fields = ['id', 'status', 'created_at', 'updated_at', 'address', 'num_products', 'shipping_fee', 'shipping_type', 'subtotal', 'total', 'order_products', 'complaint']
 
 class ReviewSerializer(ModelSerializer):
     class Meta:
