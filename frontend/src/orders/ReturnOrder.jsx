@@ -1,9 +1,10 @@
 import api from '../api'
-import React, { useState, useEffect, useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, } from 'react-router-dom';
 
 // Components
 import MainBody from '../MainBody';
+import LoadingSpinner from '../LoadingSpinner';
 
 // Styling
 import { Collapse } from "@material-tailwind/react";
@@ -17,10 +18,16 @@ const ReturnOrder = () => {
   const [uploadDivs, setUploadDivs] = useState({});
   const [rmUploadArgs, setRmUploadArgs] = useState(null);
   const [runRemoveUpload, setRunRemoveUpload] = useState(false);
-  const maxUploads = 3;
   const [data, setData] = useState({});
+  const [disableBtn, setdisableBtn] = useState(false);
+  const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
+
+  const maxUploads = 3;
 
   const handleFormSubmit = (e) => {
+    setdisableBtn(true)
+    setShowLoadingSpinner(true)
+
     const form = document.getElementById("returnForm")
     // Create a new FormData object to hold the form's data
     const formData = new FormData(form);
@@ -51,12 +58,14 @@ const ReturnOrder = () => {
       }
     })
 
-
     setData(temp)
     api.post("complaints/", newData, {
       headers: {
         'Content-Type': 'multipart/form-data', // Axios will set this automatically
       }
+    }).then((response) => {
+      console.log('response', response.status)
+      setShowLoadingSpinner(false)
     });
     
   };
@@ -136,13 +145,11 @@ const ReturnOrder = () => {
         [op_id]: updatedDivs
       };
     });
-
   }
 
   const uploadImg = (e, op_id) => {
     console.log("Function: uploadImg");
     const files = e.target.files;
-    // Cut files array if adding eg. one by one, so index shouldn't start from 0.
 
     // Iterate through files and pass their index explicitly
     const temp = [...imgFiles[op_id]]
@@ -216,107 +223,113 @@ const ReturnOrder = () => {
     setImgFiles(tempImgFiles)
   }
 
-  const initData = () => {
-    console.log('Function: initData')
-    var tempData = {}
-    order.order_products.forEach(elem => {
-      tempData[elem.id] = {
-        title: '',
-        body: '',
-        quantity: 0,
-        files: []
-      }
-    })
-    setData(tempData)
-  }
-
   useEffect(() => {
     console.log("useEffect")
-    // Initialise data object that will be submitted with form
-    // initData()
-
     // Initiate uploadDivs and imgFiles, object of empty arrays based on number of order_products. OpID as keys.
     initUploadDivsAndImgFiles()
-    
   }, [])
 
   return (
-    <MainBody>
-      <div className='ord_main_div'>
-        <h1 className="pv-h1 mt-2">Return</h1>
-        <div className='ro_column_headers'>
-          <p className="w-2/4">ITEMS</p>
-          <p className="w-1/4">QTY</p>
-          <p className="w-1/4">REFUNDABLE AMOUNT</p>
-        </div>
-        <form id="returnForm" className="flex w-full items-center justify-center">
+    <>
+      {showLoadingSpinner && <LoadingSpinner message='Submitting your complaint...' showLoadingSpinner={showLoadingSpinner}/>}
+      
+      <MainBody>
+        <div className='ord_main_div'>
 
-          <div key={order} className="w-[70%] border rounded-bl-lg rounded-br-lg p-4 !mt-0">
-            {order.order_products.map((op) => (
-              <div key={op.id}>
-                <div className="flex w-full py-2">
-                  <div className="flex w-2/4 items-center">
-                    <div className="flex items-center me-4">
-                      <input name={`order_product_${op.id}`} onChange={() => toggleCheck(op.id)} type="checkbox" id={op.id} value={op.id} className="w-4 h-4 bg-colour-4"/>
-                    </div>
-                    <img src={`/src/assets/images/${op.product_info.main_img}`} className="ord_img" alt={op.product_info.name}/>
-                    <p className="text-gray-600">{op.product_info.name}</p>
-                  </div>
 
-                  <div className="flex w-1/4 justify-center items-center ibm-light">
-                    <select name={`quantity_${op.id}`} className="w-1/5 h-3/5 p-2 border border-gray-300 rounded-md">
-                      {Array.from({ length: op.quantity }, (_, i) => (
-                        <option key={i} value={i + 1}>{i + 1}</option>
-                      ))}
-                    </select>
-                  </div>
+          <h1 className="pv-h1 mt-2">Return</h1>
+          <div className='ro_column_headers'>
+            <p className="w-2/4">ITEMS</p>
+            <p className="w-1/4">QTY</p>
+            <p className="w-1/4">REFUNDABLE AMOUNT</p>
+          </div>
+          <form id="returnForm" className="flex w-full items-center justify-center">
 
-                  <div className="flex w-1/4 justify-center items-center">
-                    <p>hi</p>
-                  </div>
-
-                </div>
-                <Collapse open={collapseStates[op.id] || false}>
-                  <div className="flex w-full p-4 mt-2 bg-gray-50">
-                    <div className='flex flex-col w-3/5 '>
-                      <h2 className="ro_text_h2">Order Return Request</h2>
-                      <input name={`title_${op.id}`} type='text' className="h-10 ro_text_input"/>
-                      <h2 className="ro_text_h2 mt-4">Reason for Return</h2>
-                      <textarea name={`body_${op.id}`} className="h-40 ro_text_input"></textarea>
+            <div key={order} className="w-[70%] border rounded-bl-lg rounded-br-lg p-4 !mt-0">
+              {order.order_products.map((op) => (
+                <div key={op.id}>
+                  <div className="flex w-full py-2 text-gray-600">
+                    <div className="flex w-2/4 items-center">
+                      <div className="flex items-center me-4">
+                        <input name={`order_product_${op.id}`} onChange={() => toggleCheck(op.id)} type="checkbox" id={op.id} value={op.id} className="w-4 h-4 bg-colour-4"/>
+                      </div>
+                      <img src={`/src/assets/images/${op.product_info.main_img}`} className="ord_img" alt={op.product_info.name}/>
+                      <p>{op.product_info.name}</p>
                     </div>
 
-                    <div className='flex flex-col w-2/5 justify-end'>
-                      <div className="flex w-full h-full">
-                        <label htmlFor={`dropzone-file${op.id}`} className="ro_dropzone_label">
-                            <div className="flex flex-col items-center py-">
-                                <CloudUpload className="w-10 h-10 text-colour-5"/>
-                                <p className="mb-2 text-sm text-colour-5"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p className="text-xs text-colour-5">(MAX 4 IMAGES)</p>
-                            </div>
-                            <input 
-                              id={`dropzone-file${op.id}`}
-                              name="files"
-                              type="file"
-                              accept=".png, .jpeg, .jpg"
-                              multiple
-                              onChange={(e) => uploadImg(e, op.id)}
-                              className="hidden" />
-                        </label>
-                      </div> 
-                      <div className="flex w-full space-x-4">
-                        {uploadDivs[op.id]}
+                    <div className="flex w-1/4 justify-center items-center ibm-light">
+                      <select 
+                        name={`quantity_${op.id}`} 
+                        className="w-1/5 h-3/5 p-2 border border-gray-300 rounded-md"
+                        onChange={(e) => {
+                          const selectedQuantity = e.target.value;
+                          const pricePerItem = op.product_info.price;
+                          const totalPrice = pricePerItem * selectedQuantity;
+                    
+                          // Update the price displayed
+                          document.getElementById(`price_${op.id}`).textContent = totalPrice;
+                        }}>
+                        {Array.from({ length: op.quantity }, (_, i) => (
+                          <option key={i} value={i + 1}>{i + 1}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex w-1/4 justify-center items-center">
+                      <span>¥</span>
+                      <p id={`price_${op.id}`}>{op.product_info.price}</p>
+                    </div>
+
+                  </div>
+                  <Collapse open={collapseStates[op.id] || false}>
+                    <div className="flex w-full p-4 mt-2 bg-gray-50">
+                      <div className='flex flex-col w-3/5 '>
+                        <h2 className="ro_text_h2">Order Return Request</h2>
+                        <input name={`title_${op.id}`} type='text' className="h-10 ro_text_input"/>
+                        <h2 className="ro_text_h2 mt-4">Reason for Return</h2>
+                        <textarea name={`body_${op.id}`} className="h-40 ro_text_input"></textarea>
+                      </div>
+
+                      <div className='flex flex-col w-2/5 justify-end'>
+                        <div className="flex w-full h-full">
+                          <label htmlFor={`dropzone-file${op.id}`} className="ro_dropzone_label">
+                              <div className="flex flex-col items-center py-">
+                                  <CloudUpload className="w-10 h-10 text-colour-5"/>
+                                  <p className="mb-2 text-sm text-colour-5"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                  <p className="text-xs text-colour-5">(MAX 4 IMAGES)</p>
+                              </div>
+                              <input 
+                                id={`dropzone-file${op.id}`}
+                                name="files"
+                                type="file"
+                                accept=".png, .jpeg, .jpg"
+                                multiple
+                                onChange={(e) => uploadImg(e, op.id)}
+                                className="hidden" />
+                          </label>
+                        </div> 
+                        <div className="flex w-full space-x-4">
+                          {uploadDivs[op.id]}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Collapse>
-                <hr className='border-gray-300'/>
-              </div>
-            ))}
-          </div>
-        </form>
-        <button onClick={() => handleFormSubmit()} className="btn-1 hover:btn-1-hover !rounded-3xl">Submit Return</button>
-      </div>
-    </MainBody>
+                  </Collapse>
+                  <hr className='border-gray-300'/>
+                </div>
+              ))}
+            </div>
+          </form>
+          <button 
+            disabled={disableBtn} 
+            onClick={handleFormSubmit} 
+            className={`btn-1 !rounded-3xl ${disableBtn ? 'bg-gray-300' : 'hover:btn-1-hover'}`}
+          >
+            Submit Return
+          </button>
+
+        </div>
+      </MainBody>
+    </>
   )
 }
 
