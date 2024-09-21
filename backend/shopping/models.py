@@ -191,7 +191,7 @@ class BamUserCoupon(TimeStampedModel):
 class Complaint(TimeStampedModel):
     id = models.CharField(max_length=12, default=gen_random_string, unique=True, primary_key=True)
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='complaints')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='complaints')
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='complaint')
     resolved = models.BooleanField(default=False)
     
     STATUSES = [

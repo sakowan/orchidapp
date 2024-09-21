@@ -90,7 +90,7 @@ class ComplaintViewSet(ModelViewSet):
           cop_imgs.append(cop_imgs)
     
     return Response({
-      'Complaint created:': complaint.id}, status=status.HTTP_201_CREATED)
+      'message': 'Complaint created successfully.', 'complaint': complaint.id}, status=status.HTTP_201_CREATED)
     
 # HOW I DID S3 IMAGE UPLOADS BEFORE WITH A SPECIFIED PATH BUT IM NO LONGER USING THIS BUT I MIGHT WANNA KEEP IT FOR THE FUTURE <3
 #   s3 = boto3.resource('s3')
