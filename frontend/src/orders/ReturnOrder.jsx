@@ -1,6 +1,6 @@
 import api from '../api'
 import React, { useState, useEffect } from 'react';
-import { useLocation, } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Components
 import MainBody from '../MainBody';
@@ -12,6 +12,7 @@ import { CloudUpload, CircleX } from 'lucide-react';
 
 const ReturnOrder = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { order } = location.state || {};
   const [collapseStates, setCollapseStates] = useState({});
   const [imgFiles, setImgFiles] = useState({});
@@ -64,8 +65,10 @@ const ReturnOrder = () => {
         'Content-Type': 'multipart/form-data', // Axios will set this automatically
       }
     }).then((response) => {
-      console.log('response', response.status)
+      console.log('response', response)
       setShowLoadingSpinner(false)
+      console.log('Complaint code:', response.data.complaint)
+      navigate('/orders', { state: { successComplaint: response.data.complaint } })
     });
     
   };
