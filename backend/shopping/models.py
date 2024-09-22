@@ -212,7 +212,7 @@ class Complaint(TimeStampedModel):
 
 class ComplaintOrderProduct(TimeStampedModel):
     #JOINS table
-    complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE)
+    complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE, related_name='complaint_order_products')
     order_product = models.ForeignKey(OrderProduct, on_delete=models.CASCADE)
 
     title = models.CharField(blank=True, null=True)

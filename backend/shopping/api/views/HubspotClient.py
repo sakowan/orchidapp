@@ -10,7 +10,25 @@ class HubSpotClient():
     self.base_url = f"{self.hubspot_url}/crm/v3/objects/"
     self.access_token = settings.HUBSPOT_API_KEY
     self.headers = {"authorization" : f"Bearer {self.access_token}"}
-    
+  
+  def make_content(self, complaint):
+    print("Function: make_content()")
+    print(complaint)
+
+    content = ""
+    cops = complaint.complaint_order_products.all()
+    for cop in cops:
+      product = cop.order_product.product
+      entry = f"""
+        Title: {cop.title}\n
+        Description: {cop.body}\n
+        Product: {product.id}\n
+        Product Name: {product.name}\n
+        Requested Return Qty: {cop.quantity}\n\n
+      """
+      content += entry
+    return content
+
   def create_ticket(self, user, order, complaint, subject, content):
     self.tickets_url = f"{self.base_url}tickets"
     self.headers["content-type"] = "application/json"
@@ -24,15 +42,12 @@ class HubSpotClient():
             "order_id": order.id,
             "complaint_id": complaint.id,
             
-            "subject": complaint.id,
+            "subject": f"Complaint: {complaint.id}",
             "content": f"""
-                <strong>This is bold text.</strong><br>
-                Here is a new line.<br>
-                <ul>
-                    <li>Bullet point 1</li>
-                    <li>Bullet point 2</li>
-                </ul>
-                <p>Normal paragraph text.</p>
+            User ID: {user.id}\n
+            User email: {user.email}\n
+            Order ID: {order.id}\n
+            {self.make_content(complaint)}
             """,
             
             # Ticket settings

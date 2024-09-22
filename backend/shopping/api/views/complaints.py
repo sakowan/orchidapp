@@ -48,11 +48,11 @@ class ComplaintViewSet(ModelViewSet):
     print('************************************************************************************************************')
     print('************************************************************************************************************')
     user = request.user
-
     rawdata = request.data
     details = rawdata.pop('details', None)
     details = json.loads(details[0])
     order_id = details.pop('order_id', None)
+    print(details)
     
     if user and details and order_id:
       try:
@@ -71,6 +71,7 @@ class ComplaintViewSet(ModelViewSet):
           try:
             # Initialise the complaints made on each order_product
             for key in details:
+              print(key)
               values = details[key]
               order_product = OrderProduct.objects.get(id=values['order_product'])
 
@@ -84,32 +85,32 @@ class ComplaintViewSet(ModelViewSet):
               cop.save()
               cops.append(cop)
           
-              try:
-                # Handle the images
-                imgIDpattern = r'imgFiles(\d+)\[\]'
-                cop_imgs = []
+            try:
+              # Handle the images
+              imgIDpattern = r'imgFiles(\d+)\[\]'
+              cop_imgs = []
 
-                for imgKey in rawdata:
-                  #Strip the digits (order_product_id) from the key imgFilesXXX[]
-                  match = re.search(imgIDpattern, imgKey)
-                  if match:
-                    op_id = match.group(1)
-                    for img in request.FILES.getlist(imgKey):
-                      print(f"File Name: {img.name}")
-                      print(f"File Size: {img.size} bytes")
-                      print(f"Content Type: {img.content_type}")
+              for imgKey in rawdata:
+                #Strip the digits (order_product_id) from the key imgFilesXXX[]
+                match = re.search(imgIDpattern, imgKey)
+                if match:
+                  op_id = match.group(1)
+                  for img in request.FILES.getlist(imgKey):
+                    print(f"File Name: {img.name}")
+                    print(f"File Size: {img.size} bytes")
+                    print(f"Content Type: {img.content_type}")
 
-                      cop_img = ComplaintOPImage.objects.create(
-                        complaint_order_product = cop,
-                        image = img
-                      )
-                      cop_imgs.append(cop_imgs)
-                
-                self.create_hubspot_ticket(user, order, complaint, "My subject", "My contents")
-                return Response({'message': 'Complaint created successfully.', 'complaint': complaint.id}, status=status.HTTP_201_CREATED)
+                    cop_img = ComplaintOPImage.objects.create(
+                      complaint_order_product = cop,
+                      image = img
+                    )
+                    cop_imgs.append(cop_imgs)
               
-              except Exception as e:
-                return Response(f"Error creating ComplaintOPImage: {e}", status=400)
+              self.create_hubspot_ticket(user, order, complaint, "My subject", "My contents")
+              return Response({'message': 'Complaint created successfully.', 'complaint': complaint.id}, status=status.HTTP_201_CREATED)
+            
+            except Exception as e:
+              return Response(f"Error creating ComplaintOPImage: {e}", status=400)
           
           except Exception as e:
             # Delete any ComplaintOrderProduct that couldn't been created before one crashed
