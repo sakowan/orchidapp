@@ -98,3 +98,8 @@ class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def list(self, request):
+        queryset = request.user.orders.all().order_by('-created_at')
+        orders = OrderSerializer(queryset, many=True).data
+        return Response(orders)

@@ -3,6 +3,9 @@ from rest_framework.viewsets import ModelViewSet
 from ..serializers import ComplaintSerializer
 from rest_framework import permissions, status
 from rest_framework.response import Response
+from .HubspotClient import HubSpotClient
+
+from django.core.exceptions import ObjectDoesNotExist
 
 import json
 import re
@@ -17,6 +20,11 @@ class ComplaintViewSet(ModelViewSet):
   queryset = Complaint.objects.all()
   serializer_class = ComplaintSerializer
   permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+  def create_hubspot_ticket(self, user, order, complaint, subject, content):
+    print('Function: create_hubspot_ticket()')
+    hs_client = HubSpotClient()
+    hs_client.create_ticket(user, order, complaint, subject, content)
 
   def create_cop(complaint, data):
     for key in data.keys():
@@ -37,60 +45,85 @@ class ComplaintViewSet(ModelViewSet):
         # Create the ComplaintOPImage
   
   def create(self, request, *args, **kwargs):
+    print('************************************************************************************************************')
+    print('************************************************************************************************************')
+    user = request.user
+
     rawdata = request.data
-    # details = json.loads(rawdata['details'])
     details = rawdata.pop('details', None)
     details = json.loads(details[0])
     order_id = details.pop('order_id', None)
-    order = Order.objects.get(id=order_id)
-    print('************************************************************************************************************')
-    print('************************************************************************************************************')
     
-    # Create the main complaint
-    complaint = Complaint(
-      user = request.user,
-      order = order,
-      status = self.__class__.STATUSES['unassigned'],
-      resolved = False
-    )
-    complaint.save()
-
-    # Initialise the complaints made on each order_product
-    cops = []
-    for key in details:
-      values = details[key]
-      order_product = OrderProduct.objects.get(id=values['order_product'])
-      cop = ComplaintOrderProduct(
-        complaint = complaint,
-        order_product = order_product,
-        title = values['title'],
-        body = values['body'],
-        quantity = values['quantity'],
-      )
-      cop.save()
-      cops.append(cop)
-    
-    # Handle the images
-    imgIDpattern = r'imgFiles(\d+)\[\]'
-    cop_imgs = []
-    for imgKey in rawdata:
-      #Strip the digits (order_product_id) from the key imgFilesXXX[]
-      match = re.search(imgIDpattern, imgKey)
-      if match:
-        op_id = match.group(1)
-        for img in request.FILES.getlist(imgKey):
-          print(f"File Name: {img.name}")
-          print(f"File Size: {img.size} bytes")
-          print(f"Content Type: {img.content_type}")
-
-          cop_img = ComplaintOPImage.objects.create(
-            complaint_order_product = cop,
-            image = img
+    if user and details and order_id:
+      try:
+        order = Order.objects.get(id=order_id)  
+        try:
+          #Create the main complaint
+          complaint = Complaint(
+            user = user,
+            order = order,
+            status = self.__class__.STATUSES['unassigned'],
+            resolved = False
           )
-          cop_imgs.append(cop_imgs)
-    
-    return Response({
-      'message': 'Complaint created successfully.', 'complaint': complaint.id}, status=status.HTTP_201_CREATED)
+          complaint.save()
+
+          cops = []
+          try:
+            # Initialise the complaints made on each order_product
+            for key in details:
+              values = details[key]
+              order_product = OrderProduct.objects.get(id=values['order_product'])
+
+              cop = ComplaintOrderProduct(
+                complaint = complaint,
+                order_product = order_product,
+                title = values['title'],
+                body = values['body'],
+                quantity = values['quantity'],
+              )
+              cop.save()
+              cops.append(cop)
+          
+              try:
+                # Handle the images
+                imgIDpattern = r'imgFiles(\d+)\[\]'
+                cop_imgs = []
+
+                for imgKey in rawdata:
+                  #Strip the digits (order_product_id) from the key imgFilesXXX[]
+                  match = re.search(imgIDpattern, imgKey)
+                  if match:
+                    op_id = match.group(1)
+                    for img in request.FILES.getlist(imgKey):
+                      print(f"File Name: {img.name}")
+                      print(f"File Size: {img.size} bytes")
+                      print(f"Content Type: {img.content_type}")
+
+                      cop_img = ComplaintOPImage.objects.create(
+                        complaint_order_product = cop,
+                        image = img
+                      )
+                      cop_imgs.append(cop_imgs)
+                
+                self.create_hubspot_ticket(user, order, complaint, "My subject", "My contents")
+                return Response({'message': 'Complaint created successfully.', 'complaint': complaint.id}, status=status.HTTP_201_CREATED)
+              
+              except Exception as e:
+                return Response(f"Error creating ComplaintOPImage: {e}", status=400)
+          
+          except Exception as e:
+            # Delete any ComplaintOrderProduct that couldn't been created before one crashed
+            ComplaintOrderProduct.objects.filter(id__in=[instance.id for instance in cops]).delete()
+            return Response(f"Error creating  and saving ComplaintOrderProduct: {e}", status=400)
+        
+        except Exception as e:
+          return Response(f"Error creating Complaint: {e}", status=400)
+      
+      except:
+        return Response({"message": f"Order with id: {order_id} not found."}, status=404)
+    else:
+      return Response({"message": f"Necessary data not provided / not found {json.loads({"user":user, "order_id": order_id, "details": details})}"}, status=404)
+
     
 # HOW I DID S3 IMAGE UPLOADS BEFORE WITH A SPECIFIED PATH BUT IM NO LONGER USING THIS BUT I MIGHT WANNA KEEP IT FOR THE FUTURE <3
 #   s3 = boto3.resource('s3')

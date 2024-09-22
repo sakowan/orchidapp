@@ -143,7 +143,7 @@ class Order(TimeStampedModel):
         (4, 'Delivered'),
         (5, 'Cancelled'),
     ]
-    user = models.ForeignKey(BamUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='orders')
 
     email = models.EmailField()
     address = models.OneToOneField('Address', on_delete=models.CASCADE)
