@@ -24,8 +24,15 @@ class HubSpotClient():
         Description: {cop.body}\n
         Product: {product.id}\n
         Product Name: {product.name}\n
-        Requested Return Qty: {cop.quantity}\n\n
+        Requested Return Qty: {cop.quantity}\n
       """
+      cop_images = cop.complaint_op_images.all()
+      image_entry = "Images:\n"
+      
+      for index,image in enumerate(cop_images):
+        image_entry += f"{index+1}. {image.image.url}\n"
+
+      entry += image_entry
       content += entry
     return content
 
@@ -45,7 +52,7 @@ class HubSpotClient():
             "subject": f"Complaint: {complaint.id}",
             "content": f"""
             User ID: {user.id}\n
-            User email: {user.email}\n
+            Email: {user.email}\n
             Order ID: {order.id}\n
             {self.make_content(complaint)}
             """,
