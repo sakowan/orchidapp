@@ -25,8 +25,8 @@ const ReturnOrder = () => {
 
   const maxUploads = 3;
 
-  const handleFormSubmit = (e) => {
-    setdisableBtn(true)
+  const handleFormSubmit = async (e) => {
+    // setdisableBtn(true)
     setShowLoadingSpinner(true)
 
     const form = document.getElementById("returnForm")
@@ -60,17 +60,22 @@ const ReturnOrder = () => {
     })
 
     setData(temp)
-    api.post("complaints/", newData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // Axios will set this automatically
-      }
-    }).then((response) => {
-      console.log('response', response)
-      setShowLoadingSpinner(false)
-      console.log('Complaint code:', response.data.complaint)
-      navigate('/orders', { state: { successComplaint: response.data.complaint } })
-    });
     
+    try {
+      const response = await api.post("complaints/", newData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Axios will set this automatically
+        }
+      });
+    
+      console.log('response', response);
+      setShowLoadingSpinner(false);
+      console.log('Complaint code:', response.data.complaint);
+      navigate('/orders', { state: { successComplaint: response.data.complaint } });
+    } catch (error) {
+      console.error('Error posting complaint:', error);
+      setShowLoadingSpinner(false);
+    }
   };
 
   const getOpIdFromInput = (string) => {
