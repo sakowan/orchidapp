@@ -1,15 +1,15 @@
-import api from './api'
+import api from '../api'
 import React, { createContext, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from './UserContext';
+import { UserContext } from '../UserContext';
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const [subtotal, setSubTotal] = useState(0.00);
-  const [shippingCost, setShippingCost] = useState(0.00);
+  const [subtotal, setSubTotal] = useState(0);
+  const [shippingFee, setShippingFee] = useState(0);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [cartProds, setCartProds] = useState([]);
   const [numCartProds, setNumCartProds] = useState(0);
@@ -55,7 +55,6 @@ export const CartProvider = ({ children }) => {
     }).catch(error => {
       // Current product does not yet exist in user's cart
       api.post("cart_products/", {cart_id: user.cart_id, product_id: pid, quantity:1}).then((res1) => {
-        console.log('Function: adjustQty. First time adding THIS product to cart', res1)
         setCartProds(res1.data.cart_products)
         setNumCartProds(res1.data.num_items);
       })
@@ -90,7 +89,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, adjustQty, removeCartProduct, shippingCost, setShippingCost}}>
+    <CartContext.Provider value={{ cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer, subtotal, setSubTotal, adjustQty, removeCartProduct, shippingFee, setShippingFee}}>
       {children}
     </CartContext.Provider>
   );

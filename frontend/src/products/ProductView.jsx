@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from './api'
+import api from '../api'
 import axios from 'axios'
 
 // COMPONENT IMPORTS
-import { UserContext } from './UserContext';
-import MainBody from './MainBody'
-import { CartContext } from './CartContext';
-import CartDrawer from './CartDrawer';
+import { UserContext } from '../UserContext';
+import MainBody from '../MainBody'
+import { CartContext } from '../cart/CartContext';
+import CartDrawer from '../cart/CartDrawer';
 
 // STYLE IMPORTS
 import { Rating } from '@smastrom/react-rating'
-import { starStyling } from "./constants";
+import { starStyling } from "../constants";
 import { Collapse } from "@material-tailwind/react";
 import { ShoppingCart, CirclePlus, CircleMinus } from 'lucide-react';
 

@@ -1,18 +1,26 @@
 import api from './api'
 import React, { useState, useEffect, useContext } from 'react';
+import { useLocation} from 'react-router-dom'
+
 import { Heart, ShoppingCart, User } from 'lucide-react';
 
 import DropdownUser from './DropdownUser';
-import { CartContext } from './CartContext';
+import { CartContext } from './cart/CartContext';
 
 const Navbar = () => {
+  const location = useLocation();
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const { cartProds, setCartProds, numCartProds, setNumCartProds, openDrawer, setOpenDrawer} = useContext(CartContext);
+  const { setCartProds, numCartProds, setNumCartProds, setOpenDrawer} = useContext(CartContext);
   const names = ['💸 FREE SHIPPING ON ORDERS OVER ¥2500 💸', '🚀 DELIVERY TIME 2-3 BUSINESS DAYS 🚀', '💖 SIGN UP NOW FOR ¥500 OFF YOUR FIRST PURCHASE 💖'];
   const [currentName, setCurrentName] = useState(names[0]);
   const [fade, setFade] = useState(false);
   let index = 0;
+  
+  const noNavUrls = [
+    /^(?!\/orders\/\d+$).*/
+  ]
+
   const navOpenDrawer = () => setOpenDrawer(true);
 
   useEffect(() => {
@@ -23,7 +31,7 @@ const Navbar = () => {
         setCurrentName(names[index]);
         setFade(true);
       }, 1000); // Match the fade duration
-    }, 3500); // Interval to switch names
+    }, 3000); // Interval to switch names
 
     return () => clearInterval(interval); // Clean up interval on unmount
   }, []);
@@ -49,6 +57,10 @@ const Navbar = () => {
     fetchCartProds();
   }, []);
 
+  // useEffect(() => {
+  //   testUrls()
+  // }, [location.pathname]);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollTop = document.documentElement.scrollTop;
@@ -69,9 +81,9 @@ const Navbar = () => {
   }, [lastScrollTop]);
 
   return (
-    <div id="full nav" className={`relative z-[999] transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'
+    <div id="full nav" className={`relative z-[990] transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'
     }`}>
-      <nav className="flex items-center justify-center z-[999] ibm-extralight h-[4.5rem] text-2xl fixed top-0 left-0 right-0 bg-my-muted">
+      <nav className="flex items-center justify-center z-[990] ibm-extralight h-[4.5rem] text-2xl fixed top-0 left-0 right-0 bg-my-muted">
         <div className="relative h-full w-full container my-auto flex items-center">
           <div className="flex w-1/5 items-center space-x-6">
             <a className='nav-link' href="/products">All</a>
@@ -101,12 +113,17 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-
-      <div className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
-        <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
-          {currentName}
-        </span>
-      </div>
+      {/* {noNavUrls.forEach((pattern) => {
+        if(pattern.test(location.pathname) == false){
+          return <></>}
+        else { */}
+          <div className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
+            <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+              {currentName}
+            </span>
+          </div>
+        {/* }
+      })} */}
     </div>
   );
 };

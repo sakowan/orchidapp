@@ -1,8 +1,9 @@
-from django.db import models
+from django.db import IntegrityError, models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.forms import ValidationError
 from datetime import datetime, date, timedelta
+from .helpers import gen_random_string, complaint_img_upload_path
 
 # Signals
 from django.dispatch import receiver
@@ -25,6 +26,7 @@ class Country(models.Model):
     country_code = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='JP')
     currency_code = models.CharField(max_length=3)
     calling_code = models.PositiveIntegerField()
+    flagImg = models.ImageField()
 
     def __str__(self):
         return self.name #can add more desc later
@@ -72,7 +74,7 @@ class Product(models.Model):
     url_name = models.CharField(max_length=150, blank=True, editable=False, unique=True)
     desc_brief = models.CharField(max_length=100)
     desc_long = models.CharField()
-    price = models.DecimalField(max_digits=8, decimal_places=2, default = 0.00)
+    price = models.PositiveIntegerField(default = 0)
     stock = models.PositiveIntegerField()
     main_img = models.CharField(max_length=100)
     img_urls = models.JSONField(default=list)
@@ -122,34 +124,48 @@ class ProductItem(models.Model):
 
 class Address(models.Model):
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE)
-    post_code = models.CharField()
-    prefecture = models.CharField()
-    city = models.CharField()
-    street = models.CharField()
-    building_name = models.CharField()
-    recipient_name = models.CharField()
-    recipient_phone = models.CharField()
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    country = models.CharField(max_length=50)
+    post_code = models.CharField(max_length=20)
+    prefecture = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    street = models.CharField(max_length=100)
+    building = models.CharField(max_length=50, null=True, blank=True)
+    contact = models.CharField(max_length=20)
 
 class Order(TimeStampedModel):
     STATUS_CHOICES = [
-        (1, 'Placed'),
+        (0, 'Unpaid'),
+        (1, 'Paid'),
         (2, 'Shipped'),
         (3, 'Out for delivery'),
         (4, 'Delivered'),
         (5, 'Cancelled'),
     ]
-    user = models.ForeignKey(BamUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='orders')
+
+    email = models.EmailField()
     address = models.OneToOneField('Address', on_delete=models.CASCADE)
+    num_products = models.PositiveIntegerField()
+    payment_method_id = models.CharField(max_length=100)
+    shipping_type = models.CharField(max_length=100)
+    shipping_fee = models.PositiveIntegerField()
+    subtotal = models.PositiveIntegerField()
+    total = models.PositiveIntegerField()
+    
     user_coupon = models.OneToOneField('BamUserCoupon',on_delete=models.CASCADE, null=True, blank=True)
     status = models.PositiveIntegerField(choices=STATUS_CHOICES)
 
-class OrderProductItem(models.Model):
+class OrderProduct(TimeStampedModel):
     #JOINS table
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product_item = models.ForeignKey(ProductItem, on_delete=models.CASCADE) #not on cascade
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name="order_products")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_products")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="order_products") #To number of units sold on product view page
+    quantity = models.PositiveIntegerField()
     
     class Meta:
-        unique_together = ('order', 'product_item')
+        unique_together = ('order', 'product')
 
 class Coupon(TimeStampedModel):
     TYPES = [
@@ -173,16 +189,42 @@ class BamUserCoupon(TimeStampedModel):
         unique_together = ('user', 'coupon')
 
 class Complaint(TimeStampedModel):
-    TYPES = [
-        (1, 'Order Missing'),
-        (2, 'Incomplete Order'),
-        (3, 'Damaged/Defective'),
-    ]
-
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    type = models.PositiveIntegerField(choices = TYPES)
+    id = models.CharField(max_length=12, default=gen_random_string, unique=True, primary_key=True)
+    user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='complaints')
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='complaint')
     resolved = models.BooleanField(default=False)
-    # status = models.PositiveIntegerField(choices = STATUSES)
+    
+    STATUSES = [
+        (0, 'Unassigned'),
+        (1, 'In Progress'),
+        (2, 'Resolved'),
+    ]
+    status = models.PositiveIntegerField(choices = STATUSES, default=0)
+
+    def save(self, *args, **kwargs):
+        while True:
+            try:
+                super().save(*args, **kwargs)
+                break
+            except IntegrityError:
+                # Generate a new random string and try to save again
+                self.id = gen_random_string()
+
+class ComplaintOrderProduct(TimeStampedModel):
+    #JOINS table
+    complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE, related_name='complaint_order_products')
+    order_product = models.ForeignKey(OrderProduct, on_delete=models.CASCADE)
+
+    title = models.CharField(blank=True, null=True)
+    body = models.CharField(blank=True, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ('complaint', 'order_product')
+
+class ComplaintOPImage(TimeStampedModel):
+    complaint_order_product = models.ForeignKey(ComplaintOrderProduct, on_delete=models.CASCADE, related_name='complaint_op_images')
+    image = models.ImageField(upload_to=complaint_img_upload_path)
 
 class Review(TimeStampedModel):
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='reviews')

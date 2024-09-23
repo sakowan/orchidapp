@@ -3,18 +3,20 @@ import { BrowserRouter as Router, Routes, Route, useLocation} from 'react-router
 
 // Components
 import { UserProvider } from './UserContext';
-import { CartProvider } from './CartContext';
+import { CartProvider } from './cart/CartContext';
 import Navbar from "./Navbar"
 import Checkout from "./checkout/Checkout"
 import Home from "./Home"
-import Products from "./Products"
-import ProductView from "./ProductView"
+import Products from "./products/Products"
+import Orders from "./orders/Orders"
+import ReturnOrder from './orders/ReturnOrder';
+import ProductView from "./products/ProductView"
 import LoginSignupForm from "./LoginSignupForm"
 import ProtectedRoute from './ProtectedRoute';
 // End Components
 
 // Stripe
-import {Elements, PaymentElement} from '@stripe/react-stripe-js';
+import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from "@stripe/stripe-js";
 const stripe = loadStripe('pk_test_51PjvhiGEkvCddTMkhHMT4uNQPMbbxSSZCX2cog0AgqEFN3V75yGstvBgiO59THwZqifQnZxhhhI4gDqQtHns4n5n00LV8g4A1k');
 // End Stripe
@@ -30,6 +32,18 @@ function App() {
                     <Route path='/' element={<Home/>}></Route>
                     <Route path='/products' element={<Products/>}></Route>
                     <Route path='/products/:url_name' element={<ProductView/>}></Route>
+                    
+                    <Route path='/orders' element={
+                        <ProtectedRoute>
+                            <Orders/>
+                        </ProtectedRoute>
+                        }></Route>
+                    <Route path="/orders/:id" element={
+                        <ProtectedRoute>
+                            <ReturnOrder />
+                        </ProtectedRoute>
+                        } />
+
                     <Route path='/checkout' element={
                         <ProtectedRoute>
                             <Elements stripe={stripe}>
