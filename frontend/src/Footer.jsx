@@ -26,7 +26,7 @@ const Footer = () => {
         <div className="w-1/3 flex flex-col">
           <h2 className="">Need help? Email us here</h2>
           <form>
-            <input className="rounded-md my-2 h-9 w-[70%] bg-white p-2 custom-placeholder" placeholder="example@mail.com" type='text'/>
+            <input className="rounded-md my-2 h-9 w-[70%] bg-white p-2 custom-placeholder focus:outline-none" placeholder="example@mail.com" type='text'/>
           </form>
         </div>
       </div>
