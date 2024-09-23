@@ -23,7 +23,7 @@ const DropdownUser = () => {
                 <>
                     <li className="flex items-center px-2 h-8 text-xs font-bold">{user.email}</li>
                     <li className="dropdown-li">Account</li>
-                    <li className="dropdown-li">Orders</li>
+                    <li className="dropdown-li" onClick={() => navigate('/orders')}>Orders</li>
                     <hr/>
                     <li className="dropdown-li"><button className= "w-full text-left" onClick={submitLogout}>Logout</button></li>
                 </>

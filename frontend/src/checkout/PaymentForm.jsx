@@ -1,7 +1,6 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { CartContext } from '../cart/CartContext'
 import api from '../api';
-import { CSRF_TOKEN } from '../constants';
-
-import React, { useState, useEffect } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import {useElements, useStripe, CardNumberElement, CardExpiryElement, CardCvcElement} from "@stripe/react-stripe-js";
 
@@ -16,7 +15,8 @@ const stripeStyles = {
     }
   };
 
-const PaymentForm = ({ formData, onEditShippingData}) => {
+const PaymentForm = ({ formData, setFormData, onEditShippingData}) => {
+    const { cartProds, numCartProds, subtotal, shippingFee } = useContext(CartContext);
     const stripe = useStripe();
     const elements = useElements();
 
@@ -26,12 +26,11 @@ const PaymentForm = ({ formData, onEditShippingData}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
-        const email = 'sarah3@gmail.com'
+        console.log(formData.email)
 
         // Check if Stripe.js has loaded yet
         if (!stripe || !elements) {
-            console.log('Strip has not loaded.')
+            console.log('Stripe has not loaded.')
             return;
         }
 
@@ -49,8 +48,24 @@ const PaymentForm = ({ formData, onEditShippingData}) => {
             card,
         });
 
-        const data = {payment_method_id: paymentMethod.id, formData: formData}
+        // Update form data with shipping fee and subtotal
+        // setFormData(prevData => ({
+        //     ...prevData,
+        //     'cartProds': cartProds,
+        //     'numCartProds': numCartProds,
+        //     'subtotal': subtotal,
+        //     'shippingFee':  shippingFee,
+        // })); 
 
+        const data = {
+            payment_method_id: paymentMethod.id,
+            ...formData,  // Spread the formData object properties
+            cart_prods: cartProds,
+            num_cart_prods: numCartProds,
+            subtotal: subtotal,
+            shipping_fee: shippingFee,
+          };
+          
         api.post('/save-stripe-info/', data)
           .then(response => {
             console.log(response.data);

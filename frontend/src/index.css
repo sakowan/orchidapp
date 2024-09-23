@@ -142,6 +142,37 @@ body {
   @apply text-2xl font-bold text-gray
 }
 
+/* ORDER ALL */
+.ord_img {
+  @apply w-[4rem] h-[4rem] mr-4 border border-gray-100 rounded-sm flex-shrink-0
+}
+.ord_main_div {
+  @apply flex flex-col justify-center items-center mt-10 w-full space-y-6
+}
+/* RETURN ORDER */
+.ro_column_headers {
+  @apply w-[70%] flex font-bold text-gray-600 bg-gray-100 text-center p-2 rounded-tl-lg rounded-tr-lg
+}
+
+.ro_text_h2 {
+  @apply text-gray-600 font-bold
+}
+
+.ro_text_input {
+  @apply w-[95%] rounded-md border-[1.5px] border-gray-300 p-2 focus:border-2 focus:border-colour-4 focus:outline-none
+}
+.ro_dropzone_label {
+  @apply flex flex-col items-center justify-center w-full h-36 border-2 border-colour-3 border-dashed rounded-lg cursor-pointer bg-gray-50
+}
+.ro_circlex {
+  @apply absolute right-[-0.7rem] top-[-0.7rem] text-gray-700 hover:cursor-pointer
+}
+
+.ro_img {
+  @apply w-24 aspect-square rounded-md
+}
+/* END RETURN ORDER */
+
 .text-gray {
   /* color: rgb(173, 174, 176) */
   color: rgb(63, 64, 66)
