@@ -39,7 +39,7 @@ const CartProdsMainList = () => {
         {cartProds && cartProds.map((cp) => (
           <div key={cp.id} className="my-2">
             <div className='flex py-2'>
-              <img src={`/src/assets/images/${cp.product_info.main_img}`} className="w-[6rem] h-[6rem] mr-4 border border-gray-100 rounded-sm flex-shrink-0" alt={cp.product_info.name} />
+              <img src={`/src/assets/images/${cp.product_info.main_img}`} className="w-[6rem] h-[6rem] mr-4 rounded-sm flex-shrink-0" alt={cp.product_info.name} />
               <div className="flex flex-col justify-between w-full">
                 <div className="flex justify-between w-full h-full">
                   <h3 className="pv-h3 w-4/5">
