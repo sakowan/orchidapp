@@ -73,7 +73,7 @@ body {
 }
 
 .dropdown-main {
-  @apply absolute mt-8 w-[14rem] bg-white border border-gray-200 rounded-sm text-base text-gray-600 ibm-light
+  @apply fixed right-4 mt-9 w-[15rem] bg-white border border-gray-200 rounded-sm text-base text-gray-600 ibm-light
 }
 
 .dropdown-li {
