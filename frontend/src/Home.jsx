@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <div>
       <CartDrawer/>
-      <div className="flex flex-col w-screen h-screen relative top-[7.7rem]">
+      <div className="flex flex-col w-screen h-screen relative mt-2">
         <div className='flex justify-center mx-auto w-[98%] h-[80%] bg-white animate-zoomOut'>
           <div id="banner1" className="flex justify-center w-full h-full bg-[url('/src/assets/images/bg4_transparent.png')] bg-cover bg-center rounded-lg">
             <div className='w-1/2 h-full flex flex-col items-center justify-center text-center'>
