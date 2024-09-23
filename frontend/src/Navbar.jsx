@@ -18,11 +18,27 @@ const Navbar = () => {
   const [fade, setFade] = useState(false);
   let index = 0;
   
-  const noNavUrls = [
-    /^(?!\/orders\/\d+$).*/
-  ]
-
   const navOpenDrawer = () => setOpenDrawer(true);
+  
+  const goHome = () => {
+    navigate('/')
+  }
+
+  useEffect(() => {
+    // For reordering the navbars based on pathname
+    const offerNav = document.getElementById('nav-offers')
+    const defaultrNav = document.getElementById('nav-default')
+    
+    if(location.pathname == '/'){
+      offerNav.classList.add('order-2')
+      defaultrNav.classList.add('order-1')
+
+    } else {
+      offerNav.classList.add('order-1')
+      defaultrNav.classList.add('order-2')
+    }
+
+  }, [location.pathname])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,10 +74,6 @@ const Navbar = () => {
     fetchCartProds();
   }, []);
 
-  const goHome = () => {
-    navigate('/')
-  }
-
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollTop = document.documentElement.scrollTop;
@@ -82,9 +94,13 @@ const Navbar = () => {
   }, [lastScrollTop]);
 
   return (
-    <div id="full nav" className={`relative z-[990] transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'
-    }`}>
-      <nav className="flex items-center justify-center z-[990] ibm-extralight h-[4.5rem] text-2xl fixed top-0 left-0 right-0 bg-my-muted">
+    <div className={`flex flex-col relative z-[990] transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'}`}>
+      <nav id="nav-offers" className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center bg-colour-1'>
+        <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+          {currentName}
+        </span>
+      </nav>
+      <nav id="nav-default" className="flex items-center justify-center z-[990] ibm-extralight h-[4.5rem] text-2xl bg-my-muted">
         <div className="relative h-full w-full container my-auto flex items-center">
           <div className="flex w-1/5 items-center space-x-6">
             <a className='nav-link' href="/products">All</a>
@@ -114,17 +130,6 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      {/* {noNavUrls.forEach((pattern) => {
-        if(pattern.test(location.pathname) == false){
-          return <></>}
-        else { */}
-          <div className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center fixed top-[4.8rem] left-0 right-0 bg-colour-1'>
-            <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
-              {currentName}
-            </span>
-          </div>
-        {/* }
-      })} */}
     </div>
   );
 };
