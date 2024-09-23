@@ -13,7 +13,7 @@ const CartDrawer = () => {
         placement="right"
         open={openDrawer}
         onClose={cdCloseDrawer}
-        className={openDrawer ? '!w-2/5 !max-w-none' : ''}
+        className={openDrawer ? 'fixed top-0 !w-2/5 !max-w-none' : ''}
       >
         <CartProdsMainList/>  
       </Drawer>

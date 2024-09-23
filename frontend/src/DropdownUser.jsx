@@ -21,7 +21,7 @@ const DropdownUser = () => {
             <ul>
                 {user ? 
                 <>
-                    <li className="flex items-center px-2 h-8 text-xs font-bold">{user.email}</li>
+                    <li className="flex items-center px-2 h-10 font-bold hover:cursor-default">{user.email}</li>
                     <li className="dropdown-li">Account</li>
                     <li className="dropdown-li" onClick={() => navigate('/orders')}>Orders</li>
                     <hr/>
