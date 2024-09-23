@@ -2,8 +2,11 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// Components
 import MainBody from '../MainBody'
 import ProductCard from './ProductCard'
+import CartDrawer from '../cart/CartDrawer'
+import Footer from '../Footer'
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -28,15 +31,19 @@ const Products = () => {
   };
 
   return (
-    <MainBody>
-      <ul className='flex flex-wrap items-center justify-center -mx-6 mt-[2.1rem]'>
-        {products.map(product => (
-          <li onClick={() => goProductView(product)} className="w-1/3" key={product.id}>
-            <ProductCard product={product}/>
-          </li>
-        ))}
-      </ul>
-    </MainBody>
+    <div>
+      <MainBody>
+        <CartDrawer/>
+        <ul className='flex flex-wrap items-center justify-center -mx-6 mt-[2.1rem]'>
+          {products.map(product => (
+            <li onClick={() => goProductView(product)} className="w-1/3" key={product.id}>
+              <ProductCard product={product}/>
+            </li>
+          ))}
+        </ul>
+      </MainBody>
+      <Footer/>
+    </div>
   );
 };
 
