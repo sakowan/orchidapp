@@ -119,7 +119,7 @@ body {
 }
 
 .pv-hr {
-  @apply border-gray-500
+  @apply border-gray-300
 }
 
 .pv-rm-btn {
@@ -147,7 +147,7 @@ body {
   @apply w-[4rem] h-[4rem] mr-4 border border-gray-100 rounded-sm flex-shrink-0
 }
 .ord_main_div {
-  @apply flex flex-col justify-center items-center mt-10 w-full space-y-6
+  @apply flex flex-col justify-center items-center my-10 w-full space-y-6
 }
 /* RETURN ORDER */
 .ro_column_headers {

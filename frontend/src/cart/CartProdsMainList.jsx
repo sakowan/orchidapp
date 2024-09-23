@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { CartContext } from './CartContext';
 import { Minus, Plus, Frown } from 'lucide-react';
 
-
 const CartProdsMainList = () => {
   const navigate = useNavigate();
   const location = useLocation();

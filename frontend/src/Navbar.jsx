@@ -1,6 +1,6 @@
 import api from './api'
 import React, { useState, useEffect, useContext } from 'react';
-import { useLocation} from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Heart, ShoppingCart, User } from 'lucide-react';
 
@@ -9,6 +9,7 @@ import { CartContext } from './cart/CartContext';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const { setCartProds, numCartProds, setNumCartProds, setOpenDrawer} = useContext(CartContext);
@@ -57,9 +58,9 @@ const Navbar = () => {
     fetchCartProds();
   }, []);
 
-  // useEffect(() => {
-  //   testUrls()
-  // }, [location.pathname]);
+  const goHome = () => {
+    navigate('/')
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,7 +94,7 @@ const Navbar = () => {
           </div>
 
           <div className="flex-1 w-3/5 flex justify-center">
-            <img src="/src/assets/images/princess1.webp" alt="Brand Logo" className="h-12" />
+            <img onClick={() => goHome()} src="/src/assets/images/princess1.webp" alt="Brand Logo" className="h-12 hover:cursor-pointer"/>
           </div>
 
           <div className="flex w-1/5 h-full justify-end space-x-4">
