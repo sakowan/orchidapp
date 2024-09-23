@@ -9,6 +9,11 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.custom-placeholder::placeholder {
+  color: #c7cdf2;
+  opacity: 1; /* Firefox */
+}
+
 @layer components {
   .autofill-text:-webkit-autofill {
     -webkit-text-fill-color: #6071d9;

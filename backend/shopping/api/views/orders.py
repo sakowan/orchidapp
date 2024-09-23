@@ -90,8 +90,11 @@ def save_stripe_info(request):
     ########## END CREATE NEW ORDER ##########
 
     return Response(status=status.HTTP_200_OK, 
-        data={'message': 'Success', 'data': {
-        'customer_id': customer.id, 'extra_msg': extra_msg}
+        data={'message': 'Success',
+            'data': {
+                'order_id': order.id,
+                'customer_id': customer.id,
+                'extra_msg': extra_msg}
     })
 
 class OrderViewSet(ModelViewSet):

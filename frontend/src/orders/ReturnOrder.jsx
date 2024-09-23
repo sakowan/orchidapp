@@ -71,7 +71,11 @@ const ReturnOrder = () => {
       console.log('response', response);
       setShowLoadingSpinner(false);
       console.log('Complaint code:', response.data.complaint);
-      navigate('/orders', { state: { successComplaint: response.data.complaint } });
+      navigate('/orders', { state: { 
+        flashObjectId: response.data.complaint,
+        flashHeader: "Complaint ID",
+        flashBody: "We've received your complaint, please allow us up to 48 hours to response."
+      }});
     } catch (error) {
       console.error('Error posting complaint:', error);
       setShowLoadingSpinner(false);
