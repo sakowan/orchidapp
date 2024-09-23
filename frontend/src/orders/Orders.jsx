@@ -11,26 +11,31 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
   const location = useLocation()
-  const [showComplaint, setShowComplaint] = useState(false);
-  const [complaintId, setComplaintId] = useState();
-
+  const [showFlashMessage, setShowFlashMessage] = useState(false);
+  const [flashObject, setFlashObject] = useState({});
 
   const goReturnOrderPage = (order) => {
     navigate(`/orders/${order.id}`, { state: { order } });
   }
 
-  const removeComplaint = () => {
-    // Remove the successComplaint from the state
-    setShowComplaint(false);
+  const removeFlashMessage = () => {
+    // Remove the flashMessage from the state
+    setShowFlashMessage(false);
     navigate(location.pathname, { replace: true });
   }
 
   useEffect(() => {
-    // If the page loads with successComplaint in location.state, show it
-    if (location.state?.successComplaint) {
-      setShowComplaint(true);
-      setComplaintId(location.state?.successComplaint)
-      // Clear the successComplaint from location state on page refresh
+    // If page loads with flashMessage in location.state, show it
+    if (location.state?.flashObjectId && location.state?.flashHeader && location.state?.flashBody) {
+      setFlashObject({
+        id: location.state?.flashObjectId,
+        header: location.state?.flashHeader,
+        body: location.state?.flashBody,
+      });
+      
+      setShowFlashMessage(true);
+
+      // Clear the flashMessage from location state on page refresh
       navigate(location.pathname, { replace: true });
     }
 
@@ -53,13 +58,13 @@ const Orders = () => {
       <MainBody>
         <div className='ord_main_div'>
           <h1 className="pv-h1 mt-2">Orders</h1>
-          {showComplaint && 
+          {showFlashMessage && 
           <div className="w-[70%] bg-gray-100 border border-green-400 bg-green-50 rounded-lg p-4 text-green-500">
             <div className="flex justify-between items-center">
-              <h2 className="font-bold">Complaint ID: {complaintId}</h2>
-              <CircleX className="hover:cursor-pointer" onClick={removeComplaint}/>
+              <h2 className="font-bold">{flashObject.header}: {flashObject.id}</h2>
+              <CircleX className="hover:cursor-pointer" onClick={removeFlashMessage}/>
             </div>
-            <p>We've received your complaint, please allow us up to 48 hours to response.</p>
+            <p>{flashObject.body}</p>
           </div>
           }
           {orders && orders.map((order) => (

@@ -1,8 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { CartContext } from '../cart/CartContext'
 import api from '../api';
-import { ChevronLeft } from 'lucide-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import {useElements, useStripe, CardNumberElement, CardExpiryElement, CardCvcElement} from "@stripe/react-stripe-js";
+import { ChevronLeft } from 'lucide-react';
+
+// Components
+import { CartContext } from '../cart/CartContext'
+import LoadingSpinner from '../LoadingSpinner'
 
 const stripeStyles = {
     style: {
@@ -16,9 +21,12 @@ const stripeStyles = {
   };
 
 const PaymentForm = ({ formData, setFormData, onEditShippingData}) => {
+    const navigate = useNavigate()
     const { cartProds, numCartProds, subtotal, shippingFee } = useContext(CartContext);
     const stripe = useStripe();
     const elements = useElements();
+    const [paymentPlaced, setPaymentPlaced] = useState(false);
+    const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
 
     const editShippingData = () => {
         onEditShippingData();
@@ -26,6 +34,8 @@ const PaymentForm = ({ formData, setFormData, onEditShippingData}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setPaymentPlaced(true)
+        setShowLoadingSpinner(true)
         console.log(formData.email)
 
         // Check if Stripe.js has loaded yet
@@ -48,15 +58,6 @@ const PaymentForm = ({ formData, setFormData, onEditShippingData}) => {
             card,
         });
 
-        // Update form data with shipping fee and subtotal
-        // setFormData(prevData => ({
-        //     ...prevData,
-        //     'cartProds': cartProds,
-        //     'numCartProds': numCartProds,
-        //     'subtotal': subtotal,
-        //     'shippingFee':  shippingFee,
-        // })); 
-
         const data = {
             payment_method_id: paymentMethod.id,
             ...formData,  // Spread the formData object properties
@@ -69,6 +70,12 @@ const PaymentForm = ({ formData, setFormData, onEditShippingData}) => {
         api.post('/save-stripe-info/', data)
           .then(response => {
             console.log(response.data);
+            setShowLoadingSpinner(false)
+            navigate('/orders', { state: { 
+                flashObjectId: response.data.data.order_id,
+                flashHeader: "Order ID",
+                flashBody: "🎉 Your order has been placed! A confirmation email has been sent. Thank you for your purchase! 💖."
+            }});
           }).catch(error => {
             console.log(error)
         });
@@ -76,6 +83,9 @@ const PaymentForm = ({ formData, setFormData, onEditShippingData}) => {
 
     return (
         <div className='py-6'>
+            {showLoadingSpinner &&
+                <LoadingSpinner message='Placing your order...' showLoadingSpinner={true}/>
+            }
             <p className="form-header">Payment</p>
             <p>All transactions are secure and encrypted.</p>
             <div className="flex flex-col justify-between mt-4 p-8 relative border border-gray-400 rounded-md bg-gray-100">
@@ -119,7 +129,7 @@ const PaymentForm = ({ formData, setFormData, onEditShippingData}) => {
                     <ChevronLeft strokeWidth={1}/>
                     <a onClick={() => editShippingData()} className="underline">Return to Shipping</a>
                 </div>
-                <button onClick={(e) => handleSubmit(e)} className='btn-1 btn-1-hover'>Pay now</button>
+                <button onClick={(e) => handleSubmit(e)} className='btn-1 btn-1-hover' disabled={paymentPlaced}>Pay now</button>
             </div>
         </div>
     );
