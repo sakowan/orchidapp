@@ -29,7 +29,7 @@ const Navbar = () => {
     const offerNav = document.getElementById('nav-offers')
     const defaultrNav = document.getElementById('nav-default')
     
-    if(location.pathname == '/'){
+    if(location.pathname === '/'){
       offerNav.classList.add('order-2')
       defaultrNav.classList.add('order-1')
 
@@ -38,7 +38,13 @@ const Navbar = () => {
       defaultrNav.classList.add('order-2')
     }
 
-  }, [location.pathname])
+    // Clean up: Remove classes to prevent duplication
+    return () => {
+      offerNav.classList.remove('order-1', 'order-2');
+      defaultrNav.classList.remove('order-1', 'order-2');
+    };
+
+  }, [location])
 
   useEffect(() => {
     const interval = setInterval(() => {
