@@ -45,7 +45,7 @@ const Products = () => {
   return (
     <div className="px-10">
       <CartDrawer/>
-      <div className="flex items-center w-full my-6 h-14 p-4 border-b border-gray-200 space-x-2 text-gray-400">
+      <div className="flex items-center w-1/3 my-6 h-14 p-4 border-b border-gray-200 space-x-2 text-gray-400">
         <Search/>
         <input
         value={searchTerm} 
@@ -53,7 +53,7 @@ const Products = () => {
         type="text" placeholder='Looking for something?'
         className="w-full h-full text-gray-700 focus:outline-none"/>
       </div>
-      <ul className='flex flex-wrap items-center justify-center -mx-6'>
+      <ul className='flex flex-wrap items-center justify-center'>
         {filteredProducts.map(product => (
           <li onClick={() => goProductView(product)} className="w-1/3" key={product.id}>
             <ProductCard product={product}/>

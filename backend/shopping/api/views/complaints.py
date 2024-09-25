@@ -32,7 +32,6 @@ class ComplaintViewSet(ModelViewSet):
         op_id = key.split('_')[-1]
         order_product = OrderProduct.objects.get(id=op_id)
 
-
         cop = ComplaintOrderProduct(
           complaint = complaint,
           order_product = order_product,

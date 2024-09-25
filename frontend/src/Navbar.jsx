@@ -27,21 +27,16 @@ const Navbar = () => {
   useEffect(() => {
     // For reordering the navbars based on pathname
     const offerNav = document.getElementById('nav-offers')
-    const defaultrNav = document.getElementById('nav-default')
     
-    if(location.pathname === '/'){
-      offerNav.classList.add('order-2')
-      defaultrNav.classList.add('order-1')
-
+    if(location.pathname !== '/'){
+      offerNav.classList.remove('hidden')
     } else {
-      offerNav.classList.add('order-1')
-      defaultrNav.classList.add('order-2')
+      offerNav.classList.add('hidden');
     }
 
     // Clean up: Remove classes to prevent duplication
     return () => {
-      offerNav.classList.remove('order-1', 'order-2');
-      defaultrNav.classList.remove('order-1', 'order-2');
+      offerNav.classList.remove('hidden');
     };
 
   }, [location])
@@ -101,12 +96,12 @@ const Navbar = () => {
 
   return (
     <div className={`flex flex-col relative z-[990] transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'}`}>
-      <nav id="nav-offers" className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center bg-colour-1'>
+      <nav id="nav-offers" className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center bg-colour-0'>
         <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
           {currentName}
         </span>
       </nav>
-      <nav id="nav-default" className="flex items-center justify-center z-[990] ibm-extralight h-[4.5rem] text-2xl bg-my-muted">
+      <nav id="nav-default" className="flex items-center justify-center z-[990] ibm-extralight h-[4.5rem] text-2xl border-b bg-gray-100">
         <div className="relative h-full w-full container my-auto flex items-center">
           <div className="flex w-1/5 items-center space-x-6">
             <a className='nav-link' href="/products">All</a>
@@ -116,7 +111,7 @@ const Navbar = () => {
           </div>
 
           <div className="flex-1 w-3/5 flex justify-center">
-            <img onClick={() => goHome()} src="/src/assets/images/princess1.webp" alt="Brand Logo" className="h-12 hover:cursor-pointer"/>
+            <img onClick={() => goHome()} src={location.pathname === "/" ? '/src/assets/images/princess4.webp' : '/src/assets/images/princess1.webp'} alt="Brand Logo" className="h-12 hover:cursor-pointer"/>
           </div>
 
           <div className="flex w-1/5 h-full justify-end space-x-4">

@@ -1,0 +1,37 @@
+a="Hydration Boost: Provides deep hydration, leaving your skin plump and moisturized throughout the day."
+b="Anti-Aging: Reduces the appearance of fine lines and wrinkles, promoting a youthful and radiant complexion."
+c="Brightening: Enhances skin luminosity and evens out skin tone for a more radiant and glowing appearance."
+d="Soothing Relief: Calms irritated or sensitive skin, reducing redness and discomfort for a more balanced complexion."
+e="Pore Refining: Minimizes the appearance of pores and helps to smooth the skin’s texture for a flawless finish."
+f="Nourishing: Delivers essential vitamins and nutrients to the skin, improving overall health and vitality."
+g="Firming Effect: Improves skin elasticity and firmness, helping to lift and tighten the skin for a more youthful look."
+h="Acne Control: Targets blemishes and controls excess oil, reducing the frequency and severity of breakouts."
+i="Sun Protection: Shields the skin from harmful UV rays, preventing sun damage and premature aging."
+j="Even Skin Tone: Helps to fade dark spots and discoloration, promoting a more even and uniform skin tone."
+benefits = [a,b,c,d,e,f,g,h,i,j]
+[p.__setattr__('benefits', random.choice(benefits)) or p.save() for p in Product.objects.all()]
+
+a="Hydration Boost: Provides deep hydration, leaving your skin plump and moisturized throughout the day."
+b="Anti-Aging: Reduces the appearance of fine lines and wrinkles, promoting a youthful and radiant complexion."
+c="Brightening: Enhances skin luminosity and evens out skin tone for a more radiant and glowing appearance."
+d="Soothing Relief: Calms irritated or sensitive skin, reducing redness and discomfort for a more balanced complexion."
+e="Pore Refining: Minimizes the appearance of pores and helps to smooth the skin’s texture for a flawless finish."
+f="Nourishing: Delivers essential vitamins and nutrients to the skin, improving overall health and vitality."
+g="Firming Effect: Improves skin elasticity and firmness, helping to lift and tighten the skin for a more youthful look."
+h="Acne Control: Targets blemishes and controls excess oil, reducing the frequency and severity of breakouts."
+i="Sun Protection: Shields the skin from harmful UV rays, preventing sun damage and premature aging."
+j="Even Skin Tone: Helps to fade dark spots and discoloration, promoting a more even and uniform skin tone."
+application = [a,b,c,d,e,f,g,h,i,j]
+[p.__setattr__('application', random.choice(application)) or p.save() for p in Product.objects.all()]
+
+ingredients = [
+'Aqua, Camellia Oleifera (Green Tea) Leaf Extract (Anti-Irritant), Epilobium Angustifolium (Willow Herb) Extract (Anti-Irritant), Vitis Vinifera (Grape) Fruit Extract (Antioxidant), Sodium Hyaluronate (Water-Binding Agent), Glycerin (Humectant), Methyl Gluceth-20 (Skin-Conditioning Agent), Sodium Pca (Water-Binding Agent), Allantoin (Anti-Irritant), Butylene Glycol (Water-Binding Agent Humectant/\u200bSlip Agent), Caprylyl Glycol (Preservative), Hexylene Glycol (Preservative), Bisabolol (Anti-Irritanting Agent), Panthenol (Anti-Irritating), Polysorbate 20 (Emulsifier), Peg-90M (Stabilizer), Sodium Chloride (Ph Adjuster), Sodium Citrate (Ph Adjuster), Citric Acid (Ph Adjuster), Potassium Phosphate (Ph Adjuster), Phenoxyethanol (Preservative)',
+'hydrogenated polyisobutene, diisostearyl malate, butyrospermum parkii (shea) butter, polybutene, microcrystalline wax (cera microcristallina) (cire microcristalline), synthetic wax, octyldodecanol, polyglyceryl-2 triisostearate, hydrogenated poly(c6-14 olefin), tocopherol, tocopheryl acetate, tetrahexyldecyl ascorbate, palmitoyl tripeptide-1, orbignya oleifera seed oil, theobroma grandiflorum seed butter, lactic acid, tribehenin, caprylic/capric triglyceride, phytosteryl/isostearyl/cetyl/stearyl/behenyl dimer dilinoleate, ethylhexyl palmitate, diethylhexyl syringylidenemalonate, sorbitan isostearate, disteardimonium hectorite, titanium dioxide (ci 77891), red 7 (ci 15850), red 6 (ci 15850), yellow 5 lake (ci 19140).',
+'Water, Lauramidopropyl Betaine, Sodium C14-16 Olefin Sulfonate, Sodium Lauroyl Methylaminopropionate, Glycerin, Cocamide DEA, Tea-Cocoyl Glutamate, Fragrance, Polyquaternium-10, Sodium Benzoate, Myristyl Betaine, Phenoxyethanol, Citric Acid, Disodium EDTA, Polyquaternium-47, Menthol, Caramel, Honey, Arginine, Panthenol, Argania Spinosa Kernel Oil, Shea Butter Glycereth-8 Esters, Butylene Glycol, Gluconobacter/\u200bHoney Ferment Filtrate, Ppg-7, Acacia Senegal Gum, Honey Extract, Coco-Glucoside, Keratin, Hydrolyzed Honey Protein, Royal Jelly Extract, Paeonia Officinalis Flower Extract, Propolis Extract, Hydrolyzed Silk, Hydroxypropyltrimonium Hyaluronate, Potassium Sorbate, Magnesium Nitrate, Magnesium Chloride, Methylchloroisothiazolinone, Methylisothiazolinone',
+'trimethylsiloxysilicate, methyl trimethicone, synthetic wax, isododecane, diphenylsiloxy phenyl trimethicone, euphorbia cerifera (candelilla) wax/candelilla cera/cire de candelilla, dimethicone, ethylene/propylene copolymer, sucrose tetrastearate triacetate, disteardimonium hectorite, synthetic fluorphlogopite, candelilla wax esters, propylene carbonate, caprylyl glycol, ethylhexylglycerin, polyhydroxystearic acid, copernicia cerifera (carnauba) wax/cera',
+'Water, Isopropyl Myristate, Glyceryl Stearate, Ceteareth-20, Stearic Acid, Polysilicone-1 Crosspolymer, Cyclopentasiloxane, Palmitic Acid, Propylene Glycol, Cetyl Alcohol, Fragrance, Phenoxyethanol, Allantoin, Triethanolamine, Ci 77891, Tocopheryl Acetate, Carbomer, Cocos Nucifera Oil, Niacinamide, Cocos Nucifera Water, Ethylhexylglycerin, Caramel, Sodium Benzoate, Aloe Barbadensis Leaf Extract, PEG-40 Hydrogenated Castor Oil, Potassium Sorbate, Disodium EDTA',
+'Aqua, Niacinamide, Squalane, Glycerin, Methyl Gluceth-20, Allantoin, Phenoxyethanol, Polyacrylate Crosspolymer-6, Cetearyl Olivate, Sodium Hyaluronate, Ceramide NP, Albatrellus Confluens (Mushroom) Extract, Chlorphenesin, Propanediol, Bisabolol, Sorbitan Olivate, Caprylic/\u200bCapric Triglyceride, Disodium EDTA, Deoxyphytantriyl Palmitamide Mea, Hydrogenated Lecithin, Cholesterol, Citric Acid',
+'Water, Cyclopentasiloxane, Propanediol, Glycerin, Cyclohexasiloxane, Peg-10 Dimethicone, Squalane, Arbutin, Phenyl Trimethicone, Disteardimonium Hectorite, Adenosine, Orchid Extract, Tangerine Peel Extract, Green Tea Extract, Prickly Pear Extract, Camellia Leaf Extract, Pea Extract, 1,2-Hexanediol, Dimethicone, Dimethicone/\u200bPhenyl Vinyl Dimethicone Crosspolymer, Lauryl Peg-9 Polydimethylsiloxyethyl Dimethicone, Sodium Chloride, Ethylhexylglycerin, Kaolin, Polysilicone-11, Disodium Edta, Fragrance (Jeju Orchid Extract)',
+'Water/\u200bAqua/\u200bEau, Rosa Damascena Flower Water, Glycerin, Lonicera Japonica (Honeysuckle) Flower Extract, Lonicera Caprifolium (Honeysuckle) Extract, Aloe Barbadensis Leaf Extract, Trisodium Ethylenediamine Disuccinate, Citric Acid, Potassium Sorbate, Sodium Benzoate'
+]
+[p.__setattr__('ingredients', random.choice(ingredients)) or p.save() for p in Product.objects.all()]

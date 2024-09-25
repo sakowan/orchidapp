@@ -16,6 +16,8 @@ export default withMT({
         'colour-3': '#b3baed',
         'colour-2': '#c7cdf2',
         'colour-1': '#dcdff7',
+        'colour-0': '#f1f2fc',
+
       },
       keyframes: {
         zoomOut: {
