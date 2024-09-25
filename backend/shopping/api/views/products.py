@@ -3,12 +3,13 @@ from ..serializers import ProductSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, generics
 from rest_framework.response import Response
+from django.db.models import Count
+from rest_framework.decorators import action
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    lookup_field = 'url_name'
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_permissions(self):
         if (self.action == 'list') or (self.action == 'retrieve'):
@@ -30,6 +31,19 @@ class ProductViewSet(ModelViewSet):
         self.permission_classes = [permissions.AllowAny]
         
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def bestsellers(self, request, *args, **kwargs):
+        # The @action decorator creates a custom route for 'bestsellers'.
+        # detail=False means it's a collection route, not for a specific instance.
+        queryset = Product.objects.annotate(order_count=Count('order_products')).order_by('-order_count')[:12]
+        serializer = ProductSerializer(queryset, many=True)
+
+         # Split the serialized data into chunks of 3
+        data = serializer.data
+        chunked_data = [data[i:i + 3] for i in range(0, len(data), 3)]
+        print(chunked_data)
+        return Response(chunked_data)
 
 class GetProductView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
