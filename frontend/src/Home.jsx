@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 // Components
 import CartDrawer from './cart/CartDrawer';
 import Footer from './Footer'
+import ProductCarousel from './products/ProductCarousel';
+
+// Design
+import { ChevronsDown } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -25,42 +29,47 @@ const Home = () => {
     navigate("/products");
   }
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <CartDrawer/>
-      <div className="flex flex-col w-screen h-screen relative mt-2">
-        <div className='flex justify-center mx-auto w-[98%] h-[80%] bg-white animate-zoomOut'>
-          <div id="banner1" className="flex justify-center w-full h-full bg-[url('/src/assets/images/bg4_transparent.png')] bg-cover bg-center rounded-lg">
-            <div className='w-1/2 h-full flex flex-col items-center justify-center text-center'>
-              <h1 className="home-h1">Introducing Orchid</h1>
-              <h2 className='text-colour-7'>
-                Explore our collection for a subtle blend of feminine grace and soft allure.
-              </h2>
-              <button 
-              className='home-shopnow-btn'
-              onClick={() => shopNow()}
-              >Shop Now</button>
-            </div>
-            <div className='w-1/2 h-full flex justify-center relative overflow-hidden'>
-              <img className="absolute w-[42rem] z-1 rotate-[25deg]" src="/src/assets/images/stock/pinkcircle.png"/>
-              <img className="opacity-95 h-full z-10" src="/src/assets/images/stock/girl5.png" alt="Girl" />
-
-              <img className="absolute w-[15rem] right-[20%] rotate-[-45deg] z-10" src="/src/assets/images/stock/flower1.png"/>
-              <img className="absolute w-[17rem] bottom-0 left-[15%] rotate-[-30deg] z-10" src="/src/assets/images/stock/moon.png"/>
-
+      {/* Main Content */}
+      <div className="flex-grow w-screen">
+        <div className='flex w-full h-full justify-center items-center mx-auto h-[80%] animate-zoomOut'>
+          <video
+            src="/src/assets/videos/video1.mov"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-screen opacity-85"
+          />
+          <div className="absolute flex flex-col justify-center items-center text-white ">
+            <h1 className="text-[300px] rubik-80s-fade-regular">Orchid</h1>
+            <div className="animate-pulse flex flex-col items-center">
+              <p className="text-[25px] rubik-80s-fade-regular">Scroll down</p>
+              <ChevronsDown/>
             </div>
           </div>
         </div>
-
-        {/* <div id="banner2" className="flex flex-col items-center justify-center w-[98%] h-3/4 mx-auto mt-2 border border-gray-400">
-          <h1 className="home-h1">What's New</h1>
-          <div id="new-products" className='flex justify-center'>
+        
+        <div className="flex justify-center w-full p-8 bg-[url('/src/assets/images/bg4_transparent.png')] bg-cover bg-center ">
+          <div className="w-1/2 h-full">
+            <div className="flex flex-col">
+              <img src="/src/assets/images/stock/palette1.webp" className="h-[42rem] w-[38rem]"></img>
+            </div>
           </div>
-        </div> */}
+          <div className="flex flex-col justify-center w-1/2 text-gray-700">
+          <h2 className="text-[36px] text-colour-4 rubik-80s-fade-regular">Just in!</h2>
+          <h2 className="text-[36px] rubik-80s-fade-regular">Retro eyeshadow pallete</h2>
+          <p>Dive into the vibrant essence of the 80s with our "Retro Eyeshadow Palette," a dazzling collection inspired by the neon lights and bustling streets of Tokyo.</p>
+          </div>
+        </div>
 
+        <ProductCarousel/>
       </div>
+      {/* Footer */}
       <Footer/>
     </div>
   )
 }
 
-export default Home
+export default Home;
