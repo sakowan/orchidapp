@@ -18,7 +18,6 @@ const TailwindCarousel = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}products/bestsellers`);
-        console.log('Carousel', response.data);
         setProducts(response.data);
       } catch (e) {
         console.log('Error fetching carousel products:', e);
