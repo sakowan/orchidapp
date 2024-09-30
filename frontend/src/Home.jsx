@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import CartDrawer from './cart/CartDrawer';
 import Footer from './Footer'
 import TailwindCarousel from './products/TailwindCarousel';
+import { SubscribeNewsletter } from './mailing/SubscribeNewsletter';
 
 // Design
 import { ChevronsDown } from 'lucide-react';
@@ -30,6 +31,7 @@ const Home = () => {
   }
   return (
     <div className="flex flex-col min-h-screen">
+      <SubscribeNewsletter/>
       <CartDrawer/>
       {/* Main Content */}
       <div className="flex-grow w-screen">
