@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // Components
 import CartDrawer from './cart/CartDrawer';
 import Footer from './Footer'
-import ProductCarousel from './products/ProductCarousel';
+import TailwindCarousel from './products/TailwindCarousel';
 
 // Design
 import { ChevronsDown } from 'lucide-react';
@@ -64,7 +64,7 @@ const Home = () => {
           </div>
         </div>
 
-        <ProductCarousel/>
+        <TailwindCarousel/>
       </div>
       {/* Footer */}
       <Footer/>

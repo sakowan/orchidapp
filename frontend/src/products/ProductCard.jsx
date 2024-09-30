@@ -9,7 +9,7 @@ const starStyling = {
   inactiveFillColor: '#D1D5DB' //gray-300
 }
 
-export const ProductCard = ({ product }) => {
+export const ProductCard = ({ product, height }) => {
   const [avgRating, setAvgRating] = useState(0);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const ProductCard = ({ product }) => {
   }, [])
 
   return (
-    <div className="h-[44rem] mb-4 mx-2 cursor-pointer bg-white shadow duration-150 hover:shadow-lg rounded-md">
+    <div className={`${height ? height : 'h-[44rem]'} mb-4 mx-2 cursor-pointer bg-white shadow duration-150 hover:shadow-lg rounded-md`}>
       <img className="h-5/6 w-full object-cover object-center" src={`/src/assets/images/${product.main_img}`} alt="product" />
       <div className='p-1'>
         <div className='flex justify-between items-center'>
