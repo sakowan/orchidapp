@@ -42,6 +42,10 @@ const Navbar = () => {
   }, [location])
 
   useEffect(() => {
+    // Immediately display the first name and trigger the fade effect
+    setFade(true);
+    setCurrentName(names[0]);
+  
     const interval = setInterval(() => {
       setFade(false);
       setTimeout(() => {
@@ -50,7 +54,7 @@ const Navbar = () => {
         setFade(true);
       }, 1000); // Match the fade duration
     }, 3000); // Interval to switch names
-
+  
     return () => clearInterval(interval); // Clean up interval on unmount
   }, []);
   
