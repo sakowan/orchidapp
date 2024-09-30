@@ -48,9 +48,6 @@ export const newsletterTheme = {
     },
     styles: {
       base: {
-        dialog:{
-          backgroundOpacity: "bg-opacity-25",
-        },
         backdrop: {
           display: "grid",
           placeItems: "place-items-center",

@@ -14,6 +14,8 @@ import { ChevronsDown } from 'lucide-react';
 const Home = () => {
   const navigate = useNavigate();
   const [newProds, setNewProds] = useState([])
+  const [showNewsletter, setShowNewsletter] = useState(false)
+  
   useEffect(() => {
     const getWhatsNew = async () => {
       try {
@@ -26,12 +28,21 @@ const Home = () => {
     getWhatsNew();
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowNewsletter(true);
+    }, 5000);
+
+    // Cleanup the timer on 
+    return () => clearTimeout(timer);
+  }, []);
+
   function shopNow() {
     navigate("/products");
   }
   return (
     <div className="flex flex-col min-h-screen">
-      <SubscribeNewsletter/>
+      <SubscribeNewsletter showNewsletter={showNewsletter}/>
       <CartDrawer/>
       {/* Main Content */}
       <div className="flex-grow w-screen">
