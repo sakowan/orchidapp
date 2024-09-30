@@ -89,7 +89,11 @@ const ProductCarousel = () => {
               el: document.getElementById('carousel-item-4'),
           },
       ];
-      const carousel = new Carousel(carouselElement, items);
+      const carousel = new Carousel(carouselElement, items, {
+        duration: 700,  // Control the speed of the transition
+        timingFunction: 'ease-in-out',
+        slide: true,
+      });
       $prevButton.addEventListener('click', () => {
         carousel.prev();
       });
@@ -103,33 +107,33 @@ const ProductCarousel = () => {
   return (
     <div id="parent" className="p-6 bg-gray-50">
       <h2 className="text-[36px] text-colour-4 rubik-80s-fade-regular text-center">Bestsellers</h2>
-      <div id="carousel-example" className="w-full relative h-[44rem] overflow-hidden">
+      <div id="carousel-example" className="w-full relative h-[44rem]">
         {products.length > 0 && 
         <div>
-          <div id="carousel-item-1" className="flex w-full hidden duration-700 ease-in-out">
+          <div id="carousel-item-1" className="flex w-full hidden duration-700 ease-in-out bg-gray-50">
             {products[0].map(product => (
-              <div>
+              <div key={product.id}>
                 <ProductCard product={product}/>
               </div>
             ))}
           </div>
-          <div id="carousel-item-2" className="flex w-full hidden duration-700 ease-in-out">
+          <div id="carousel-item-2" className="flex w-full hidden duration-700 ease-in-out bg-gray-50">
             {products[1].map(product => (
-              <div>
+              <div key={product.id}>
                 <ProductCard product={product}/>
               </div>
             ))}
           </div>
-          <div id="carousel-item-3" className="flex w-full hidden duration-700 ease-in-out">
+          <div id="carousel-item-3" className="flex w-full hidden duration-700 ease-in-out bg-gray-50">
             {products[2].map(product => (
-              <div>
+              <div key={product.id}>
                 <ProductCard product={product}/>
               </div>
             ))}
           </div>
-          <div id="carousel-item-4" className="flex w-full hidden duration-700 ease-in-out">
+          <div id="carousel-item-4" className="flex w-full hidden duration-700 ease-in-out bg-gray-50">
             {products[3].map(product => (
-              <div>
+              <div key={product.id}>
                 <ProductCard product={product}/>
               </div>
             ))}
