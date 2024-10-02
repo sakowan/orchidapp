@@ -33,6 +33,7 @@ const TailwindCarousel = () => {
         <div id="carousel" className="w-full relative h-[38rem] overflow-hidden">
           <Carousel
             autoplay={true}
+            autoplayDelay={3000}
             loop={true}
             className="rounded-xl"
             navigation={({ setActiveIndex, activeIndex, length }) => (
