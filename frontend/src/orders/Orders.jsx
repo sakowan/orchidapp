@@ -42,7 +42,6 @@ const Orders = () => {
     const fetchOrders = async () => {
       try{
         const response = await api.get("orders")
-        console.log('Orders:', response.data)
         setOrders(response.data)
       } catch (e) {
           console.log('Error fetching orders:', e)

@@ -39,6 +39,7 @@ const ProductView = () => {
     console.log('Function: getCurrentPageProduct')
 
     try{
+      // console.log('asdfdsadsfdsafdafdfdfasdfas', !location.state?.product)
       const response =  await axios.get(import.meta.env.VITE_API_URL + location.pathname.substring(1))
       if (response.data.id != null) {
         setLocalProduct(response.data)
@@ -64,7 +65,9 @@ const ProductView = () => {
       }
     };
     fetchReviews();
-    getCurrentPageProduct();
+    if(!location.state?.product){
+      getCurrentPageProduct();
+    }
   }, [])
 
   useEffect(() => {

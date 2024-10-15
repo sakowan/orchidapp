@@ -1,0 +1,13 @@
+@import '../index.css';
+
+.index-main {
+  @apply flex items-center w-1/3 my-6 h-14 p-4 border-b border-gray-200 space-x-2 text-gray-400
+}
+
+.index-ul {
+  @apply flex flex-wrap items-center justify-center
+}
+
+.index-search-input {
+  @apply w-full h-full text-gray-700 focus:outline-none
+}

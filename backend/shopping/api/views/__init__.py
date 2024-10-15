@@ -7,3 +7,5 @@ from .products import ProductViewSet, GetProductView
 from .reviews import ReviewViewSet
 from .users import CreateUserView, GetUserView
 from .views import GetCSRFToken
+from .mailing import test_send_email
+

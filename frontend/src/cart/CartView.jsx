@@ -11,7 +11,6 @@ const CartView = () => {
     api.get('cart_products').then((res) => {
       setCartProds(res.data.cart_products)
       setNumCartProds(res.data.num_items)
-      console.log("Updated cart products in UI:", cartProds);
     })
   }, []);
 

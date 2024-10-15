@@ -34,6 +34,7 @@ class ProductViewSet(ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def bestsellers(self, request, *args, **kwargs):
+        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
         # The @action decorator creates a custom route for 'bestsellers'.
         # detail=False means it's a collection route, not for a specific instance.
         queryset = Product.objects.annotate(order_count=Count('order_products')).order_by('-order_count')[:12]
@@ -42,7 +43,6 @@ class ProductViewSet(ModelViewSet):
          # Split the serialized data into chunks of 3
         data = serializer.data
         chunked_data = [data[i:i + 3] for i in range(0, len(data), 3)]
-        print(chunked_data)
         return Response(chunked_data)
 
 class GetProductView(generics.RetrieveAPIView):
