@@ -42,7 +42,10 @@ urlpatterns = [
 
     path('save-stripe-info/', save_stripe_info, name='save_stripe_info'),
     path('products/bestsellers/', ProductViewSet.as_view({'get': 'bestsellers'})),
-    
+    path('products/<str:url_name>', GetProductView.as_view()),
+
     path('csrf-cookie', GetCSRFToken.as_view()),
     path('cart_products/<int:pid>/', CartProductViewSet.as_view({'get': 'retrieve'})),
+
+    path('test-send-email/', test_send_email, name='test_send_email'),
 ]

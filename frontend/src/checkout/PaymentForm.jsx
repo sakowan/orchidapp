@@ -36,7 +36,6 @@ const PaymentForm = ({ formData, setFormData, onEditShippingData}) => {
         e.preventDefault();
         setPaymentPlaced(true)
         setShowLoadingSpinner(true)
-        console.log(formData.email)
 
         // Check if Stripe.js has loaded yet
         if (!stripe || !elements) {

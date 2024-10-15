@@ -24,8 +24,6 @@ export const CartProvider = ({ children }) => {
     // Check if current product already exists in users Cart
     api.get(`cart_products/${pid}`).then((res1) => {
       if(res1.status === 200){
-        console.log("Cart product adjustQty status:", res1.data.cart_product.quantity)
-
         // Product exists in cart, get quantity
         let quantity = res1.data.cart_product.quantity;
         
@@ -38,11 +36,9 @@ export const CartProvider = ({ children }) => {
 
         // Update quantity and update in backend
         api.patch(`cart_products/${res1.data.cart_product.id}/`, {quantity: quantity}).then(res2 => {
-          console.log('Product updated successfully, quantity:', res2.data.quantity);
           
           // Update All Cart products
           api.get("cart_products/").then((res3) => {
-            console.log('Call all cart products:', res3.data.cart_products)
             setCartProds(res3.data.cart_products);
             setNumCartProds(res3.data.num_items);
         });
@@ -76,7 +72,6 @@ export const CartProvider = ({ children }) => {
       setCartProds(data.cart_products);
   
       // Update NumCartProds state for Navbar
-      console.log('Update NumCartProds state for Navbar', data.num_items)
       if(data.num_items){
         setNumCartProds(data.num_items);
       } else {
