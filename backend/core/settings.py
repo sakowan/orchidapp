@@ -95,7 +95,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -166,41 +165,40 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:5173',
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
+# CORS_ALLOW_METHODS = [
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+#     ]
+
+# CORS_ALLOW_HEADERS = [
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'x-csrftoken',
+#     'x-requested-with',
+#     ]
+
 HUBSPOT_API_KEY = "pat-na1-5f7ce832-8cf6-4d3e-a1fb-5ed5010587ec"
 HUBSPOT_API_URL = 'https://api.hubapi.com'
 
-## CAN IGNORE ALL THE BELOW WHEN NOT WORKING ON CSRF
+TWILLIO_RECOVERY = "4RVUDAQM4P9WU8SMN2Y95ZKB"
 
-# # Specifies whether the CSRF cookie is accessible via JavaScript. Setting to False allows access from client-side scripts.
-# CSRF_COOKIE_HTTPONLY = False
-
-# # Allows the browser to include credentials (like cookies and HTTP authentication) in cross-origin requests.
-# CORS_ALLOW_CREDENTIALS = True
-
-# # Specifies that cookies should be sent with cross-site requests and is required for cross-origin requests in some cases.
-# CSRF_COOKIE_SAMESITE = 'None'
-
-# # Specifies whether the CSRF cookie should only be sent over HTTPS. Should be set to True in production.
-# CSRF_COOKIE_SECURE = True
-
-# # Configures cookies used for sessions to be sent with cross-site requests.
-# SESSION_COOKIE_SAMESITE = 'None'
-
-# # Ensures that session cookies are only sent over HTTPS, enhancing security in production.
-# SESSION_COOKIE_SECURE = True
-
-# # Indicates whether to store the CSRF token in the session instead of a cookie.
-# CSRF_USE_SESSIONS = False
-
-# # Specifies the domain to which the CSRF cookie applies. 'None' indicates no specific domain restriction.
-# CSRF_COOKIE_DOMAIN = 'None'
-
-# # Specifies the path to which the CSRF cookie is accessible. '/' makes it accessible across the entire domain.
-# CSRF_COOKIE_PATH = '/'
-
-
+#S3 BUCKET AMAZON KEYS
 AWS_ACCESS_KEY_ID = 'AKIA3LET5YXPP35KUM5B'
 AWS_SECRET_ACCESS_KEY = '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'
+
+#EMAIL AMAZON KEYS ses-user raegalib; local code
+# AWS_ACCESS_KEY_ID = 'AKIA3LET5YXPHF5HWV76'
+# AWS_SECRET_ACCESS_KEY = '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'
+
 AWS_STORAGE_BUCKET_NAME = 'orchid-app-bucket'
 AWS_S3_SIGNATURE_NAME = 's3v4',
 AWS_S3_REGION_NAME = 'ap-southeast-2'
@@ -208,3 +206,8 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL =  None
 AWS_S3_VERIFY = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_SES_REGION_NAME = 'ap-southeast-2'
+AWS_SES_REGION_ENDPOINT = 'email.ap-southeast-2.amazonaws.com'
+DEFAULT_FROM_EMAIL = 'orchidapp.team@gmail.com'

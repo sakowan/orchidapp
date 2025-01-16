@@ -32,6 +32,39 @@ export const drawerTheme = {
   },
 };
 
+export const newsletterTheme = {
+  dialog: {
+    defaultProps: {
+      size: "md",
+      dismiss: {},
+      animate: {
+        unmount: {},
+        mount: {},
+      },
+      className: "",
+    },
+    valid: {
+      sizes: ["xs", "sm", "md", "lg", "xl", "xxl"],
+    },
+    styles: {
+      base: {
+        backdrop: {
+          display: "grid",
+          placeItems: "place-items-center",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "w-screen",
+          height: "h-screen",
+          backgroundColor: "bg-black",
+          backgroundOpacity: "bg-opacity-25",
+          backdropFilter: "backdrop-blur-sm",
+        },
+      },
+    }
+  }
+}
+
 import { ThinStar } from '@smastrom/react-rating'
 export const starStyling = {
   itemShapes: ThinStar,

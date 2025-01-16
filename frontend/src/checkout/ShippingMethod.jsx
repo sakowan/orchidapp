@@ -29,13 +29,12 @@ const ShippingMethod = ({formData, onSendShippingData, onEditAddressData}) => {
   };
 
   const editAddressData = () => {
-    console.log('editAddressData')
+    console.log('Function: editAddressData')
     sendShippingData(true)
     onEditAddressData()
   }
 
   useEffect(() => {
-    console.log('ShippingMethod.jsx reloaded', formData.shipping_type)
     if(formData.shipping_type=='free_shipping'){
       setIsFreeChecked(true)
       setIsExpChecked(false)

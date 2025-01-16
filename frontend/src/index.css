@@ -14,12 +14,11 @@ body {
   @apply !overflow-x-hidden
 }
 
-.rubik-80s-fade-regular {
+.rubiks {
   font-family: "Rubik 80s Fade", system-ui;
   font-weight: 400;
   font-style: normal;
 }
-
 
 .custom-placeholder::placeholder {
   color: #c7cdf2;
