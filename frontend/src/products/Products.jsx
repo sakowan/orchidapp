@@ -9,6 +9,7 @@ import Footer from '../Footer'
 
 // Design
 import { Search } from 'lucide-react';
+import './products.css'
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -39,21 +40,22 @@ const Products = () => {
   }, []);
 
   const goProductView = (product) => {
+    console.log('url name', product.url_name)
     navigate(`/products/${product.url_name}`, { state: { product } });
   };
 
   return (
     <div className="px-10">
       <CartDrawer/>
-      <div className="flex items-center w-1/3 my-6 h-14 p-4 border-b border-gray-200 space-x-2 text-gray-400">
+      <div className="index-main">
         <Search/>
         <input
         value={searchTerm} 
         onChange={searchProduct} 
         type="text" placeholder='Looking for something?'
-        className="w-full h-full text-gray-700 focus:outline-none"/>
+        className="index-search-input"/>
       </div>
-      <ul className='flex flex-wrap items-center justify-center'>
+      <ul className='index-ul'>
         {filteredProducts.map(product => (
           <li onClick={() => goProductView(product)} className="w-1/3" key={product.id}>
             <ProductCard product={product}/>

@@ -2,8 +2,9 @@ from django.db import IntegrityError, models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.forms import ValidationError
-from datetime import datetime, date, timedelta
+from datetime import date, timedelta
 from .helpers import gen_random_string, complaint_img_upload_path
+from storages.backends.s3boto3 import S3Boto3Storage
 
 # Signals
 from django.dispatch import receiver
@@ -224,7 +225,7 @@ class ComplaintOrderProduct(TimeStampedModel):
 
 class ComplaintOPImage(TimeStampedModel):
     complaint_order_product = models.ForeignKey(ComplaintOrderProduct, on_delete=models.CASCADE, related_name='complaint_op_images')
-    image = models.ImageField(upload_to=complaint_img_upload_path)
+    image = models.ImageField(upload_to=complaint_img_upload_path, storage=S3Boto3Storage())
 
 class Review(TimeStampedModel):
     user = models.ForeignKey(BamUser, on_delete=models.CASCADE, related_name='reviews')

@@ -52,7 +52,7 @@ const Navbar = () => {
         index = (index + 1) % names.length;
         setCurrentName(names[index]);
         setFade(true);
-      }, 1000); // Match the fade duration
+      }, 750); // Match the fade duration
     }, 3000); // Interval to switch names
   
     return () => clearInterval(interval); // Clean up interval on unmount
@@ -101,11 +101,11 @@ const Navbar = () => {
   return (
     <div className={`flex flex-col relative z-[990] transition-transform duration-300 ease-in-out ${scrollingDown ? 'transform -translate-y-[8rem]' : 'transform translate-y-0'}`}>
       <nav id="nav-offers" className='flex justify-center items-center ibm-bold h-[2.5rem] text-colour-6 text-center bg-colour-0'>
-        <span className={`transition-opacity duration-1000 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+        <span className={`transition-opacity duration-750 ${fade ? 'opacity-100' : 'opacity-0'}`}>
           {currentName}
         </span>
       </nav>
-      <nav id="nav-default" className="flex items-center justify-center z-[990] ibm-extralight h-[4.5rem] text-2xl border-b bg-gray-100">
+      <nav id="nav-default" className="flex items-center justify-center z-[990] ibm-extralight h-[4.5rem] text-2xl border-b border-gray-100 bg-gray-50">
         <div className="relative h-full w-full container my-auto flex items-center">
           <div className="flex w-1/5 items-center space-x-6">
             <a className='nav-link' href="/products">All</a>

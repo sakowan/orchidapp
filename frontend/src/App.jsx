@@ -6,7 +6,7 @@ import { UserProvider } from './UserContext';
 import { CartProvider } from './cart/CartContext';
 import Navbar from "./Navbar"
 import Checkout from "./checkout/Checkout"
-import Home from "./Home"
+import Home from "./home/Home"
 import Products from "./products/Products"
 import Orders from "./orders/Orders"
 import ReturnOrder from './orders/ReturnOrder';

@@ -12,13 +12,11 @@ const TailwindCarousel = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    console.log("useEffect for fetchProducts");
-
     // Fetch product data once when the component loads
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}products/bestsellers`);
-        console.log('Carousel', response.data);
+        console.log('hitz', response)
         setProducts(response.data);
       } catch (e) {
         console.log('Error fetching carousel products:', e);
@@ -29,10 +27,12 @@ const TailwindCarousel = () => {
   }, []);
   return (
     <div id="parent" className="p-6 bg-gray-50">
-      <h2 className="text-[48px] text-colour-4 rubik-80s-fade-regular text-center mb-4">Bestsellers</h2>
+      <h2 className="text-[48px] text-colour-4 rubiks text-center mb-4">Bestsellers</h2>
       {products.length > 0 &&
         <div id="carousel" className="w-full relative h-[38rem] overflow-hidden">
           <Carousel
+            autoplay={true}
+            autoplayDelay={3000}
             loop={true}
             className="rounded-xl"
             navigation={({ setActiveIndex, activeIndex, length }) => (

@@ -33,8 +33,6 @@ const ReturnOrder = () => {
     const formData = new FormData(form);
     const newData = new FormData();
 
-    console.log(formData)
-  
     // Put form data in data object
     let temp = {...data}
     temp['order_id'] = order.id
@@ -112,13 +110,10 @@ const ReturnOrder = () => {
     // If checked then add op key to data for submitting.
     var temp = {...data}
     if(checked){
-      console.log('checked')
       temp[op] = {}
     } else {
-      console.log('uncheck')
       delete temp[op]
     }
-    console.log('check', temp)
     setData(temp)
   };
 
@@ -235,7 +230,6 @@ const ReturnOrder = () => {
   }
 
   useEffect(() => {
-    console.log("useEffect")
     // Initiate uploadDivs and imgFiles, object of empty arrays based on number of order_products. OpID as keys.
     initUploadDivsAndImgFiles()
   }, [])

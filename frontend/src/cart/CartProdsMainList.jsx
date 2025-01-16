@@ -20,7 +20,6 @@ const CartProdsMainList = () => {
   };
 
   useEffect(() => {
-    console.log("Updated cart products in UI:", cartProds);
     const st = calculateSubtotal()
     setSubTotal(st)
     setTotal(st + shippingFee)

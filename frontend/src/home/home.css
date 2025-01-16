@@ -1,0 +1,29 @@
+@import '../index.css';
+
+.panel-1-vid-holder {
+  @apply flex w-full h-full justify-center items-center mx-auto h-[80%] animate-zoomOut
+}
+
+.panel-1-vid {
+  @apply w-screen opacity-85
+}
+
+.panel-1-sub {
+  @apply absolute flex flex-col justify-center items-center text-white rubiks
+}
+
+.home-h2 {
+  @apply text-[36px] rubiks
+}
+
+.panel-2-main {
+  @apply flex justify-center w-full p-8 bg-cover bg-center
+}
+
+.panel-2-sub {
+  @apply flex flex-col justify-center w-1/2 text-gray-700
+}
+
+.panel-2-img {
+  @apply h-[42rem] w-[38rem]
+}
