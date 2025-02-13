@@ -1,4 +1,5 @@
-# 🌺 OrchidApp Version 1. An E-Commerce platform selling beauty products.
+# 🌺 OrchidApp Version 1. 
+An E-Commerce platform selling beauty products.
 
 ## ⚙️ Tech Stack
 - **Backend:** Python Django (Database models, APIs, Authentication, etc.)
