@@ -80,4 +80,49 @@ Note: This is a slightly older version of the application to protect the current
 <br/>
 <br/>
 
-## Submitting a complaint demonstration
+## You can see a list of the orders you've placed
+<img width="1470" alt="Screenshot 2025-02-24 at 16 55 10" src="https://github.com/user-attachments/assets/0472752c-f96b-4337-842c-72ac8dd71c5e" />
+
+<br/>
+<br/>
+
+## You can choose to return an order. For orders where multiple items were purchased, you can choose which items you'd like to return.
+<img width="1470" alt="Screenshot 2025-02-24 at 16 57 04" src="https://github.com/user-attachments/assets/98d0bf1d-bc3d-491e-81f7-edf0ddcea55f" />
+<img width="1470" alt="Screenshot 2025-02-24 at 16 56 31" src="https://github.com/user-attachments/assets/4418c0ab-b44c-43c3-b665-eb2fa81179c3" />
+
+<br/>
+<br/>
+
+## Submit the Return Order request
+<img width="1470" alt="Screenshot 2025-02-24 at 16 59 15" src="https://github.com/user-attachments/assets/1f491771-76e7-4a9f-ad1e-e7a2be76e5fa" />
+<img width="1470" alt="Screenshot 2025-02-24 at 16 59 30" src="https://github.com/user-attachments/assets/4cd1860c-b956-4389-b5cb-81a755997cf3" />
+
+<br/>
+<br/>
+
+## A successfully submitted return will have a green success flash message with the Return ID
+<img width="1470" alt="Screenshot 2025-02-24 at 16 59 40" src="https://github.com/user-attachments/assets/78e220b0-1c71-4bd2-a74b-e3d8eacabecd" />
+
+<br/>
+<br/>
+
+## A HubSpot ticket will with the Return ID as an identifier
+<img width="1470" alt="Screenshot 2025-02-24 at 17 01 08" src="https://github.com/user-attachments/assets/0a9549d8-eabf-4c2e-8949-e3abe5a5e769" />
+
+<br/>
+<br/>
+
+## You can find the return order details within the HubSpot ticket description
+<img width="1470" alt="Screenshot 2025-02-24 at 17 01 27" src="https://github.com/user-attachments/assets/a72797c1-dafe-4f44-8bd5-e9ac05b72c24" />
+
+<br/>
+<br/>
+
+## Any pictures attached by the user to the Return Order request will be stored in a subfolder in the S3 bucket as complaints/<RETURN_ID>
+<img width="1470" alt="Screenshot 2025-02-24 at 17 01 39" src="https://github.com/user-attachments/assets/9de3fbb0-6abe-4b77-90ca-ec4e2878d78f" />
+
+<br/>
+<br/>
+
+## As you can see, the images are inside the correct folder
+<img width="1470" alt="Screenshot 2025-02-24 at 17 01 53" src="https://github.com/user-attachments/assets/07ba58cd-65a0-4f48-ac9d-c84c5b531102" />
