@@ -203,14 +203,15 @@ class Complaint(TimeStampedModel):
     status = models.PositiveIntegerField(choices = STATUSES, default=0)
 
     def save(self, *args, **kwargs):
-        while True:
-            try:
-                super().save(*args, **kwargs)
-                break
-            except IntegrityError:
-                # Generate a new random string and try to save again
-                self.id = gen_random_string()
+        if not self.id:
+            self.id = gen_random_string()
 
+        # Ensure the generated id is unique
+        while Complaint.objects.filter(id=self.id).exists():
+            self.id = gen_random_string()
+
+        super().save(*args, **kwargs)
+        
 class ComplaintOrderProduct(TimeStampedModel):
     #JOINS table
     complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE, related_name='complaint_order_products')
