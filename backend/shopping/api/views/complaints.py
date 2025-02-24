@@ -22,11 +22,12 @@ class ComplaintViewSet(ModelViewSet):
   permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
   def create_hubspot_ticket(self, user, order, complaint, subject, content):
-    print('Function: create_hubspot_ticket()')
+    print('Function: complaints.py --- create_hubspot_ticket()')
     hs_client = HubSpotClient()
     hs_client.create_ticket(user, order, complaint, subject, content)
 
   def create_cop(complaint, data):
+    print('Function: complaints.py --- create_cop()')
     for key in data.keys():
       if(key.startswith('order_product_')):
         op_id = key.split('_')[-1]
@@ -46,6 +47,7 @@ class ComplaintViewSet(ModelViewSet):
   def create(self, request, *args, **kwargs):
     print('************************************************************************************************************')
     print('************************************************************************************************************')
+    print('Function: complaints.py --- create()')
     user = request.user
     rawdata = request.data
     details = rawdata.pop('details', None)
@@ -55,20 +57,22 @@ class ComplaintViewSet(ModelViewSet):
     
     if user and details and order_id:
       try:
+        print('Try 1: Get Order')
         order = Order.objects.get(id=order_id)  
+
         try:
-          #Create the main complaint
+          print('Try 2: Create Complaint')
           complaint = Complaint(
-            user = user,
-            order = order,
-            status = self.__class__.STATUSES['unassigned'],
-            resolved = False
+              user=user,
+              order=order,
+              status=self.__class__.STATUSES['unassigned'],
+              resolved=False
           )
           complaint.save()
 
-          cops = []
           try:
-            # Initialise the complaints made on each order_product
+            print('Try 3: Create Complaint Order Products')
+            cops = []
             for key in details:
               values = details[key]
               order_product = OrderProduct.objects.get(id=values['order_product'])
@@ -83,28 +87,27 @@ class ComplaintViewSet(ModelViewSet):
               cop.save()
               cops.append(cop)
           
-              try:
-                # Handle the images
-                img_arr_key = f"imgFiles{order_product.id}[]"
-                if rawdata[img_arr_key]:
-                  for file in request.FILES.getlist(img_arr_key):
-                    print(f"File Name: {file.name}")
-                    print(f"File Size: {file.size} bytes")
-                    print(f"Content Type: {file.content_type}")
+              # try:
+              #   print('Try 4: Upload Images for each COP')
+              #   # Handle the images
+              #   img_arr_key = f"imgFiles{order_product.id}[]"
+              #   if rawdata[img_arr_key]:
+              #     for file in request.FILES.getlist(img_arr_key):
+              #       print(f"File Name: {file.name}")
+              #       print(f"File Size: {file.size} bytes")
+              #       print(f"Content Type: {file.content_type}")
 
-                    cop_img = ComplaintOPImage.objects.create(
-                      complaint_order_product = cop,
-                      image = file
-                    )
+              #       import pdb; pdb.set_trace()
+              #       ComplaintOPImage.objects.create(complaint_order_product = cop, image = file)
 
-              except Exception as e:
-                return Response(f"Error creating ComplaintOPImage: {e}", status=400)
+              # except Exception as e:
+              #   #Should delete halfway created COPS here.
+              #   return Response(f"Error creating ComplaintOPImage: {e}", status=400)
                 
             self.create_hubspot_ticket(user, order, complaint, "My subject", "My contents")
             return Response({'message': 'Complaint created successfully.', 'complaint': complaint.id}, status=status.HTTP_201_CREATED)
               
           except Exception as e:
-            # Delete any ComplaintOrderProduct that couldn't been created before one crashed
             ComplaintOrderProduct.objects.filter(id__in=[instance.id for instance in cops]).delete()
             return Response(f"Error creating  and saving ComplaintOrderProduct: {e}", status=400)
         
@@ -115,20 +118,3 @@ class ComplaintViewSet(ModelViewSet):
         return Response({"message": f"Order with id: {order_id} not found."}, status=404)
     else:
       return Response({"message": f"Necessary data not provided / not found {json.loads({"user":user, "order_id": order_id, "details": details})}"}, status=404)
-
-    
-# HOW I DID S3 IMAGE UPLOADS BEFORE WITH A SPECIFIED PATH BUT IM NO LONGER USING THIS BUT I MIGHT WANNA KEEP IT FOR THE FUTURE <3
-#   s3 = boto3.resource('s3')
-
-#   # Define the folder path in the S3 bucket
-#   folder = f'complaints/{complaint.id}/'
-  
-#   # Create a unique S3 key for the image
-#   bucket_path = f'{folder}{img.name}'
-
-#   # Upload the file to S3 directly from the InMemoryUploadedFile
-#   s3.meta.client.upload_fileobj(
-#       img.file,  # The file object to upload
-#       'orchid-app-bucket',  # S3 bucket name
-#       bucket_path  # Destination path in the bucket
-#   )
