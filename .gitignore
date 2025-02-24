@@ -1,0 +1,12 @@
+# Ignore Python virtual environment
+venv/
+
+# Ignore .env file containing sensitive information
+.env
+
+# Ignore .pyc files and __pycache__
+*.pyc
+__pycache__/
+
+# Ignore settings.py if you are using local settings
+backend/core/settings.py
