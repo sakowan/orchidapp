@@ -86,39 +86,39 @@ Note: This is a slightly older version of the application to protect the current
 <br/>
 <br/>
 
-## You can choose to return an order. For orders where multiple items were purchased, you can choose which items you'd like to return.
+## You can choose to submit a Complaint on an order. For orders where multiple items were purchased, you can choose which items you're having an issue with.
 <img width="1470" alt="Screenshot 2025-02-24 at 16 57 04" src="https://github.com/user-attachments/assets/98d0bf1d-bc3d-491e-81f7-edf0ddcea55f" />
 <img width="1470" alt="Screenshot 2025-02-24 at 16 56 31" src="https://github.com/user-attachments/assets/4418c0ab-b44c-43c3-b665-eb2fa81179c3" />
 
 <br/>
 <br/>
 
-## Submit the Return Order request
+## Submit the Complaint
 <img width="1470" alt="Screenshot 2025-02-24 at 16 59 15" src="https://github.com/user-attachments/assets/1f491771-76e7-4a9f-ad1e-e7a2be76e5fa" />
 <img width="1470" alt="Screenshot 2025-02-24 at 16 59 30" src="https://github.com/user-attachments/assets/4cd1860c-b956-4389-b5cb-81a755997cf3" />
 
 <br/>
 <br/>
 
-## A successfully submitted return will have a green success flash message with the Return ID
+## A successfully submitted Complaint will have a green success flash message with the Return ID
 <img width="1470" alt="Screenshot 2025-02-24 at 16 59 40" src="https://github.com/user-attachments/assets/78e220b0-1c71-4bd2-a74b-e3d8eacabecd" />
 
 <br/>
 <br/>
 
-## A HubSpot ticket will with the Return ID as an identifier
+## A HubSpot ticket will with the Complaint ID as an identifier
 <img width="1470" alt="Screenshot 2025-02-24 at 17 01 08" src="https://github.com/user-attachments/assets/0a9549d8-eabf-4c2e-8949-e3abe5a5e769" />
 
 <br/>
 <br/>
 
-## You can find the return order details within the HubSpot ticket description
+## You can find the Complaint details within the HubSpot ticket description
 <img width="1470" alt="Screenshot 2025-02-24 at 17 01 27" src="https://github.com/user-attachments/assets/a72797c1-dafe-4f44-8bd5-e9ac05b72c24" />
 
 <br/>
 <br/>
 
-## Any pictures attached by the user to the Return Order request will be stored in a subfolder in the S3 bucket as complaints/<RETURN_ID>
+## Any pictures attached by the user to the Complaint  will be stored in a subfolder in the S3 bucket as complaints/<COMPLAINT_ID>
 <img width="1470" alt="Screenshot 2025-02-24 at 17 01 39" src="https://github.com/user-attachments/assets/9de3fbb0-6abe-4b77-90ca-ec4e2878d78f" />
 
 <br/>
