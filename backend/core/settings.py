@@ -17,8 +17,8 @@ import os
 
 load_dotenv()
 #Stripe
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51PjvhiGEkvCddTMkhHMT4uNQPMbbxSSZCX2cog0AgqEFN3V75yGstvBgiO59THwZqifQnZxhhhI4gDqQtHns4n5n00LV8g4A1k'
-STRIPE_SECRET_KEY = 'sk_test_51PjvhiGEkvCddTMkI7McdSlvyjvBLRepuwJbtxXvyed473U7WQ9JWuUvEcQ1NNgJhIlxgWzLnKl6mkf8Exqeiys100zjMrprUJ'
+STRIPE_PUBLISHABLE_KEY=os.getenv('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY=os.getenv('STRIPE_SECRET_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mjpeg*@2(oj+^wvlc0&26x49kgpv+l)r*&ncg2d%!akve!%jbx'
+SECRET_KEY='django-insecure-mjpeg*@2(oj+^wvlc0&26x49kgpv+l)r*&ncg2d%!akve!%jbx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bamazon_db',  # Replace with your database name
+        'NAME': 'orchidapp',  # Replace with your database name
         'USER': 'bella',  # Replace with your PostgreSQL username
         'PASSWORD': 'sakowan21',  # Replace with your PostgreSQL password
         'HOST': 'localhost',  # Set to your PostgreSQL server address
@@ -186,18 +186,18 @@ CORS_ALLOW_CREDENTIALS = True
 #     'x-requested-with',
 #     ]
 
-HUBSPOT_API_KEY = "pat-na1-5f7ce832-8cf6-4d3e-a1fb-5ed5010587ec"
+HUBSPOT_API_KEY = os.getenv('HUBSPOT_API_KEY')
 HUBSPOT_API_URL = 'https://api.hubapi.com'
 
-TWILLIO_RECOVERY = "4RVUDAQM4P9WU8SMN2Y95ZKB"
+TWILLIO_RECOVERY = os.getenv('TWILLIO_RECOVERY')
 
 #S3 BUCKET AMAZON KEYS
-AWS_ACCESS_KEY_ID = 'AKIA3LET5YXPP35KUM5B'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 
 #EMAIL AMAZON KEYS ses-user raegalib; local code
-# AWS_ACCESS_KEY_ID = 'AKIA3LET5YXPHF5HWV76'
-# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_ACCESS_KEY_ID = os.getenv('MAIL_AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = os.getenv('MAIL_AWS_SECRET_ACCESS_KEY')
 
 AWS_STORAGE_BUCKET_NAME = 'orchid-app-bucket'
 AWS_S3_SIGNATURE_NAME = 's3v4',
