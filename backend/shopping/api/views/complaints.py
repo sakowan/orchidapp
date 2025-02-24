@@ -87,22 +87,23 @@ class ComplaintViewSet(ModelViewSet):
               cop.save()
               cops.append(cop)
           
-              # try:
-              #   print('Try 4: Upload Images for each COP')
-              #   # Handle the images
-              #   img_arr_key = f"imgFiles{order_product.id}[]"
-              #   if rawdata[img_arr_key]:
-              #     for file in request.FILES.getlist(img_arr_key):
-              #       print(f"File Name: {file.name}")
-              #       print(f"File Size: {file.size} bytes")
-              #       print(f"Content Type: {file.content_type}")
+              try:
+                print('Try 4: Upload Images for each COP')
+                # Handle the images
+                img_arr_key = f"imgFiles{order_product.id}[]"
+                if rawdata[img_arr_key]:
+                  for file in request.FILES.getlist(img_arr_key):
+                    print(f"File Name: {file.name}")
+                    print(f"File Size: {file.size} bytes")
+                    print(f"Content Type: {file.content_type}")
 
-              #       import pdb; pdb.set_trace()
-              #       ComplaintOPImage.objects.create(complaint_order_product = cop, image = file)
+                    # import pdb; pdb.set_trace()
+                    ComplaintOPImage.objects.create(complaint_order_product = cop, image = file)
 
-              # except Exception as e:
-              #   #Should delete halfway created COPS here.
-              #   return Response(f"Error creating ComplaintOPImage: {e}", status=400)
+              except Exception as e:
+                #Should delete halfway created COPS here.
+
+                return Response(f"Error creating ComplaintOPImage: {e}", status=400)
                 
             self.create_hubspot_ticket(user, order, complaint, "My subject", "My contents")
             return Response({'message': 'Complaint created successfully.', 'complaint': complaint.id}, status=status.HTTP_201_CREATED)
